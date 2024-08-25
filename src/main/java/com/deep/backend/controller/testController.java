@@ -20,7 +20,7 @@ public class TestController {
 
     @GetMapping("/hello")
     public TestDTO sayHello(){
-        return TestService.sayhello();
+        return testService.sayhello();
     }
 
 }

@@ -13,7 +13,7 @@ public class TestService {
 
     public TestService(TestMapper testMapper){ this.testMapper = testMapper;}
 
-    public static TestDTO sayhello() {
+    public TestDTO sayhello() {
         testMapper.incrementCount();
         return testMapper.getCurrentData();
     }
