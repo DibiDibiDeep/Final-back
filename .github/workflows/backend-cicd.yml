@@ -2,10 +2,8 @@ name: Build and Deply Backend to ECS
 
 on: 
   push:
-    paths: 
-      - "Final-back/**"
     branches:
-      - feature/eunseong
+      - main
 
 env:
   ECR_BACKEND_IMAGE: ${{ vars.ECR_BACKEND_IMAGE }}
