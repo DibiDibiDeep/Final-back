@@ -8,10 +8,10 @@ on:
       - develop
 
 env:
-  ECR_BACKEND_IMAGE: mongeul-mongeul/backend
-  AWS_DEFAULT_REGION: Asia Pasific (seoul)
-  ECS_CLUSTER: mongeul-mongeul
-  ECS_BACKEND_SERVICE: backend
+  ECR_BACKEND_IMAGE: ${{ vars.ECR_BACKEND_IMAGE }}
+  AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+  ECS_CLUSTER: ${{ vars.ECS_CLUSTER }}
+  ECS_BACKEND_SERVICE: ${{ vars.ECS_CLUSTER }}
 
 jobs:
   build-and-push:
@@ -29,8 +29,8 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS-ACCESS-KEY-ID }}
           aws-secret-access-key: ${{ secrets.AWS-SECRET-ACCESS-KEY }}
-          aws-region: Asia Pasific (seoul)
-
+          aws-region: ${{ vars.AWS_DEFAULT_REGION }}
+          
       - name: Login to Amazon ECR
         run: |
           aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
