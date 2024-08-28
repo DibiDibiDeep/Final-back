@@ -11,6 +11,6 @@
         SELECT * FROM sayhello
     </select>
     <update id="incrementCount">
-        UPDATE sayhello SET count = count + 1
+        UPDATE sayhello SET count = count + 3
     </update>
 </mapper>
