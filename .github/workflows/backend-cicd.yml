@@ -5,7 +5,7 @@ on:
     paths: 
       - "Final-back/**"
     branches:
-      - develop
+      - feature/eunseong
 
 env:
   ECR_BACKEND_IMAGE: ${{ vars.ECR_BACKEND_IMAGE }}
