@@ -41,7 +41,7 @@ jobs:
           docker buildx build --platform linux/arm64 -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_BACKEND_IMAGE:latest --push .
 
       - name: Deploy to ECS
-        uses: imehedi/actions-awscli-v2@v1.0.17
+        uses: aws-actions/aws-cli@v1
         with:
           args: ecs update-service --cluster AiVoiceAssistantCluster --service AiVoiceAssistantBackend --force-new-deployment
         env:
