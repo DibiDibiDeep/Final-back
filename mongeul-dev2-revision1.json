@@ -1,36 +1,22 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:992382489739:task-definition/mongeul-dev:1",
+    "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:992382489739:task-definition/mongeul-dev2:1",
     "containerDefinitions": [
         {
-            "name": "mongeul-dev-container",
-            "image": "mongeul-dev/dev",
+            "name": "backend-container",
+            "image": "992382489739.dkr.ecr.ap-northeast-2.amazonaws.com/mongeul-mongeul/backend:9dd98ed03147d14c91bc16de8a7c31d86b869321",
             "cpu": 0,
             "portMappings": [
                 {
-                    "name": "mongeul-dev-container-80-tcp",
+                    "name": "backend-container-80-tcp",
                     "containerPort": 80,
                     "hostPort": 80,
                     "protocol": "tcp",
                     "appProtocol": "http"
                 },
                 {
-                    "name": "mongeul-dev-container-8080-tcp",
+                    "name": "backend-container-8080-tcp",
                     "containerPort": 8080,
                     "hostPort": 8080,
-                    "protocol": "tcp",
-                    "appProtocol": "http"
-                },
-                {
-                    "name": "mongeul-dev-container-3000-tcp",
-                    "containerPort": 3000,
-                    "hostPort": 3000,
-                    "protocol": "tcp",
-                    "appProtocol": "http"
-                },
-                {
-                    "name": "mongeul-dev-container-3306-tcp",
-                    "containerPort": 3306,
-                    "hostPort": 3306,
                     "protocol": "tcp",
                     "appProtocol": "http"
                 }
@@ -44,7 +30,7 @@
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
-                    "awslogs-group": "/ecs/mongeul-dev",
+                    "awslogs-group": "/ecs/mongeul-dev2",
                     "mode": "non-blocking",
                     "awslogs-create-group": "true",
                     "max-buffer-size": "25m",
@@ -56,7 +42,7 @@
             "systemControls": []
         }
     ],
-    "family": "mongeul-dev",
+    "family": "mongeul-dev2",
     "executionRoleArn": "arn:aws:iam::992382489739:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
     "revision": 1,
@@ -70,10 +56,16 @@
             "name": "ecs.capability.execution-role-awslogs"
         },
         {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
         },
         {
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.28"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
         },
         {
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
@@ -91,7 +83,6 @@
         "FARGATE"
     ],
     "requiresCompatibilities": [
-        "EC2",
         "FARGATE"
     ],
     "cpu": "1024",
@@ -100,7 +91,7 @@
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-08-28T02:27:59.310Z",
+    "registeredAt": "2024-08-29T06:39:53.378Z",
     "registeredBy": "arn:aws:iam::992382489739:user/eunseong",
     "tags": []
 }
