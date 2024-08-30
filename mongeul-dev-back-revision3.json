@@ -1,9 +1,9 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:992382489739:task-definition/mongeul-dev2:1",
+    "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:992382489739:task-definition/mongeul-dev-back:3",
     "containerDefinitions": [
         {
             "name": "backend-container",
-            "image": "992382489739.dkr.ecr.ap-northeast-2.amazonaws.com/mongeul-mongeul/backend:9dd98ed03147d14c91bc16de8a7c31d86b869321",
+            "image": "992382489739.dkr.ecr.ap-northeast-2.amazonaws.com/mongeul-mongeul/backend:e14750254a4e979b1ea2d71c47da46c21bb73eea",
             "cpu": 0,
             "portMappings": [
                 {
@@ -30,7 +30,7 @@
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
-                    "awslogs-group": "/ecs/mongeul-dev2",
+                    "awslogs-group": "/ecs/mongeul-dev-back",
                     "mode": "non-blocking",
                     "awslogs-create-group": "true",
                     "max-buffer-size": "25m",
@@ -39,13 +39,22 @@
                 },
                 "secretOptions": []
             },
+            "healthCheck": {
+                "command": [
+                    "/health"
+                ],
+                "interval": 30,
+                "timeout": 5,
+                "retries": 3,
+                "startPeriod": 100
+            },
             "systemControls": []
         }
     ],
-    "family": "mongeul-dev2",
+    "family": "mongeul-dev-back",
     "executionRoleArn": "arn:aws:iam::992382489739:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
-    "revision": 1,
+    "revision": 3,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -63,6 +72,9 @@
         },
         {
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.28"
+        },
+        {
+            "name": "ecs.capability.container-health-check"
         },
         {
             "name": "ecs.capability.execution-role-ecr-pull"
@@ -91,7 +103,7 @@
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-08-29T06:39:53.378Z",
+    "registeredAt": "2024-08-30T04:19:23.670Z",
     "registeredBy": "arn:aws:iam::992382489739:user/eunseong",
     "tags": []
 }
