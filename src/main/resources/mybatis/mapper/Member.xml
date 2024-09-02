@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.finalproj.dao.MemberDao">
+
+    <!-- 회원 목록  -->
+    <select id ="mtdMemberList" resultType="com.example.finalproj.dto.MemberDto">
+        select * from user order by USER_CODE desc
+    </select>
+
+    <!-- 회원 가입 -->
+    <insert id="mtdMemberJoin">
+        insert into user (USER_EMAIL, USER_PW, USER_NICK, USER_PHONE)
+        values ( #{USER_EMAIL}, #{USER_PW}, #{USER_NICK}, #{USER_PHONE} )
+    </insert>
+
+    <!-- 회원 강제탈퇴 -->
+    <delete id="mtdMemberDelete">
+        delete from user where USER_CODE = #{USER_CODE}
+    </delete>
+
+</mapper>
