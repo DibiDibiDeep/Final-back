@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.finalproj.dao.MemoDao">
+    <!-- 기존 쿼리들은 그대로 유지 -->
+
+    <!-- 메모를 등록하는 SQL 쿼리 -->
+    <insert id="mtdMemoWrite">
+        insert into Memos (content)
+        values ( #{content} )
+    </insert>
+
+    <!-- 메모를 수정하는 SQL 쿼리 -->
+    <update id="mtdMemoUpdate">
+        update Memos
+        set content = #{content}
+        where id = #{id}
+    </update>
+
+    <!-- 메모를 삭제하는 SQL 쿼리 -->
+    <delete id="mtdMemoDelete">
+        delete from Memos where id = #{id}
+    </delete>
+
+    <!-- 날짜별로 메모를 그룹화하여 가져오는 SQL 쿼리 -->
+    <select id="mtdMemoListGroupByDate" resultType="java.util.HashMap">
+        SELECT DATE(created_at) as date,
+        GROUP_CONCAT(id ORDER BY created_at DESC SEPARATOR '||') as ids,
+        GROUP_CONCAT(content ORDER BY created_at DESC SEPARATOR '||') as contents,
+        GROUP_CONCAT(DATE_FORMAT(created_at, '%H:%i') ORDER BY created_at DESC SEPARATOR '||') as times
+        FROM Memos
+        GROUP BY DATE(created_at)
+        ORDER BY DATE(created_at) DESC
+    </select>
+
+    <!-- 특정 ID의 메모를 가져오는 SQL 쿼리 -->
+    <select id="mtdMemoGet" resultType="java.util.HashMap">
+        SELECT * FROM Memos WHERE id = #{id}
+    </select>
+
+    <!-- 검색어로 메모를 검색하는 SQL 쿼리 (새로 추가) -->
+    <select id="mtdMemoSearch" resultType="java.util.HashMap">
+        SELECT DATE(created_at) as date,
+        GROUP_CONCAT(id ORDER BY created_at DESC SEPARATOR '||') as ids,
+        GROUP_CONCAT(content ORDER BY created_at DESC SEPARATOR '||') as contents,
+        GROUP_CONCAT(DATE_FORMAT(created_at, '%H:%i') ORDER BY created_at DESC SEPARATOR '||') as times
+        FROM Memos
+        WHERE content LIKE CONCAT('%', #{searchTerm}, '%')
+        GROUP BY DATE(created_at)
+        ORDER BY DATE(created_at) DESC
+    </select>
+</mapper>
