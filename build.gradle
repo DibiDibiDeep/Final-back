@@ -42,6 +42,9 @@ dependencies {
     implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl'
 
     implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
