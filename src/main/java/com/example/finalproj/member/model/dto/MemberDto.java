@@ -1,4 +1,4 @@
-package com.example.finalproj.dto;
+package com.example.finalproj.member.model.dto;
 
 import lombok.Data;
 

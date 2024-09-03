@@ -1,4 +1,4 @@
-package com.example.finalproj.dto.Google;
+package com.example.finalproj.googleLogin.model.dto.Google;
 
 public class GoogleInfResponse {
 
