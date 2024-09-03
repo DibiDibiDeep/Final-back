@@ -1,0 +1,39 @@
+### gethello
+GET http://localhost:8080/api/events
+
+### create event
+POST http://localhost:8080/api/events
+Content-Type: application/json
+
+{
+  "eventPhotoId": null,
+  "userId": 2,
+  "fairyTaleId": 1,
+  "title": "Wdi",
+  "description": "Alice and Bob's 5th ",
+  "startTime": "2024-09-15T19:00:00",
+  "endTime": "2024-09-15T23:00:00",
+  "location": "Alice's House"
+}
+
+### get event
+GET http://localhost:8080/api/events/2
+
+###UPDATE EVENT
+PUT http://localhost:8080/api/events/2
+Content-Type: application/json
+
+{
+  "eventId": 2,
+  "eventPhotoId": null,
+  "userId": 2,
+  "fairyTaleId": 1,
+  "title": "Wdi",
+  "description": "Alice and Bob's 5th ",
+  "startTime": "2024-09-15T19:00:00",
+  "endTime": "2024-09-15T23:00:00",
+  "location": "Alice's House"
+}
+
+###delete event
+DELETE http://localhost:8080/api/events/2
