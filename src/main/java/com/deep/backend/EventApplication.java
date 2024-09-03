@@ -7,10 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @MapperScan(basePackages = "com.deep", annotationClass = Mapper.class)
-public class TestApplication {
+public class EventApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(com.deep.backend.TestApplication.class, args);
+		SpringApplication.run(EventApplication.class, args);
 	}
 
 }
