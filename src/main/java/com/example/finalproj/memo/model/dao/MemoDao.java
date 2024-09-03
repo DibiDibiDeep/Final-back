@@ -1,8 +1,8 @@
-package com.example.finalproj.dao;
+package com.example.finalproj.memo.model.dao;
 
 import java.util.List;
 import java.util.Map;
-import com.example.finalproj.dto.MemoDto;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

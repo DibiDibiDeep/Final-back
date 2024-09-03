@@ -44,28 +44,31 @@ $(function() {
     $saveMemoBtn.on('click', function(e) {
         e.preventDefault();
         const content = $content.val().trim();
-        if (content) {
-            $.ajax({
-                url: '/memoWrite',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ content: content }),
-                success: function(response) {
-                    if (response.status === "success") {
-                        $content.val('');
-                        $contentCharCount.text('0');
-                        $memoInput.addClass('hidden');
-                        location.reload();
-                    } else {
-                        alert("메모 저장에 실패했습니다.");
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("오류 상세:", xhr.responseText);
-                    alert("서버 오류가 발생했습니다.");
-                }
-            });
+        if (!content) {
+            // 메모가 비어있을 때 알림 표시
+            alert("메모가 비어있습니다. 메모를 작성해 주세요.");
+            return;
         }
+        $.ajax({
+            url: '/memoWrite',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ content: content }),
+            success: function(response) {
+                if (response.status === "success") {
+                    $content.val('');
+                    $contentCharCount.text('0');
+                    $memoInput.addClass('hidden');
+                    location.reload();
+                } else {
+                    alert("메모 저장에 실패했습니다.");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("오류 상세:", xhr.responseText);
+                alert("서버 오류가 발생했습니다.");
+            }
+        });
     });
 
     // 메모 내용 클릭 이벤트 처리 (전체 내용 보기 및 수정 준비)

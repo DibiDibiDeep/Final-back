@@ -1,4 +1,4 @@
-package com.example.finalproj;
+package com.example.finalproj.googleLogin.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;

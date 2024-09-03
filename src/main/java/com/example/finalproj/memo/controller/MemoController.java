@@ -1,9 +1,9 @@
-package com.example.finalproj;
+package com.example.finalproj.memo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import com.example.finalproj.dao.MemoDao;
+import com.example.finalproj.memo.model.dao.MemoDao;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 

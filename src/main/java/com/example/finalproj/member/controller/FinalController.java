@@ -1,11 +1,10 @@
-package com.example.finalproj;
+package com.example.finalproj.member.controller;
 
-import com.example.finalproj.dao.MemberDao;
+import com.example.finalproj.member.model.dao.MemberDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
