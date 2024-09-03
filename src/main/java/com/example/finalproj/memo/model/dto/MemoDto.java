@@ -1,5 +1,5 @@
 // DTO 클래스
-package com.example.finalproj.dto;
+package com.example.finalproj.memo.model.dto;
 
 import lombok.Data;
 import java.sql.Timestamp;

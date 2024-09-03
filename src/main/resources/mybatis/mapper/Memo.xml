@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.finalproj.dao.MemoDao">
+<mapper namespace="com.example.finalproj.memo.model.dao.MemoDao">
     <!-- 기존 쿼리들은 그대로 유지 -->
 
     <!-- 메모를 등록하는 SQL 쿼리 -->
