@@ -1,7 +1,7 @@
-package com.example.finalproj.dao;
+package com.example.finalproj.member.model.dao;
 
 import java.util.List;
-import com.example.finalproj.dto.MemberDto;
+import com.example.finalproj.member.model.dto.MemberDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
