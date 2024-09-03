@@ -1,0 +1,129 @@
+/* memberList.jsp 시작 */
+
+div#memberListwrap {
+    padding: 20px;
+    margin: 20px auto;
+}
+div#memberListwrap > h1 {
+    text-align: center;
+}
+
+/* Table Styles */
+div#memberListwrap > table#Listtable {
+    border-collapse: collapse;
+}
+
+/* Header Row Styles */
+#prnArea > tr#colArea {
+    background-color: rgba(170, 170, 170, 0.1);
+}
+
+/* Header Cell Styles */
+#prnArea > tr#colArea > th {
+    text-align: center;
+    padding: 15px;
+    border-bottom: 1px solid #000;
+    border: 1px solid #000;
+}
+
+#prnArea > tr#colArea > th:nth-child(1) {
+    width: 65px;
+}
+#prnArea > tr#colArea > th:nth-child(2) {
+    width: 65px;
+}
+#prnArea > tr#colArea > th:nth-child(3) {
+    width: 200px;
+}
+#prnArea > tr#colArea > th:nth-child(4) {
+    width: 200px;
+}
+#prnArea > tr#colArea > th:nth-child(5) {
+    width: 65px;
+}
+#prnArea > tr#colArea > th:nth-child(6) {
+    width: 110px;
+}
+#prnArea > tr#colArea > th:nth-child(7) {
+    width: 110px;
+}
+#prnArea > tr#colArea > th:nth-child(8) {
+    width: 110px;
+}
+#prnArea > tr#colArea > th:nth-child(9) {
+    width: 65px;
+}
+#prnArea > tr#colArea > th:nth-child(10) {
+    width: 110px;
+}
+#prnArea > tr#colArea > th:nth-child(11) {
+    width: 65px;
+}
+#prnArea > tr#colArea > th:nth-child(12) {
+    width: 65px;
+}
+
+/* Row Styles */
+#prnArea > tr.rowArea > td {
+    text-align: center;
+    padding: 15px;
+    border-bottom: 1px solid #000;
+}
+
+#prnArea > tr.rowArea > td:nth-child(1) {
+    width: 65px;
+}
+#prnArea > tr.rowArea > td:nth-child(2) {
+    width: 65px;
+}
+#prnArea > tr.rowArea > td:nth-child(3) {
+    width: 200px;
+}
+#prnArea > tr.rowArea > td:nth-child(4) {
+    width: 200px;
+}
+#prnArea > tr.rowArea > td:nth-child(5) {
+    width: 65px;
+}
+#prnArea > tr.rowArea > td:nth-child(6) {
+    width: 110px;
+}
+#prnArea > tr.rowArea > td:nth-child(7) {
+    width: 110px;
+}
+#prnArea > tr.rowArea > td:nth-child(8) {
+    width: 110px;
+}
+#prnArea > tr.rowArea > td:nth-child(9) {
+    width: 65px;
+}
+#prnArea > tr.rowArea > td:nth-child(10) {
+    width: 110px;
+}
+#prnArea > tr.rowArea > td:nth-child(11) {
+    width: 65px;
+}
+#prnArea > tr.rowArea > td:nth-child(12) {
+    width: 65px;
+}
+
+#prnArea > tr.rowArea > td.delIcon {
+    cursor: pointer;
+}
+
+/* memberList.jsp 끝 */
+
+/* memberJoin.jsp 시작 */
+
+div#memberJoinwrap {
+    border: 1px solid #000;
+    width: 500px;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 6px;
+}
+
+#memberJoinwrap>h1 {
+    text-align: center;
+}
+/* memberJoin.jsp 끝 */
