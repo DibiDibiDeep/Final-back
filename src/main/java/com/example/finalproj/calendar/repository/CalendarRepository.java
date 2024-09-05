@@ -1,4 +1,5 @@
 package com.example.finalproj.calendar.repository;
+
 import com.example.finalproj.calendar.entity.Calendar;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;

@@ -12,6 +12,11 @@ public class CalendarService {
     @Autowired
     private CalendarRepository calendarRepository;
 
+    public Calendar getCalendarById(Integer calendarId) {
+        Optional<Calendar> calendar = calendarRepository.findById(calendarId);
+        return calendar.orElse(null);
+    }
+
     public List<Calendar> getCalendarsByUserId(Integer userId) {
         return calendarRepository.findByUserId(userId);
     }
@@ -28,8 +33,8 @@ public class CalendarService {
         return calendarRepository.save(calendar);
     }
 
-    public Calendar updateCalendar(Integer id, Calendar calendarDetails) {
-        Optional<Calendar> calendar = calendarRepository.findById(id);
+    public Calendar updateCalendar(Integer calendarId, Calendar calendarDetails) {
+        Optional<Calendar> calendar = calendarRepository.findById(calendarId);
         if (calendar.isPresent()) {
             Calendar updatedCalendar = calendar.get();
             updatedCalendar.setUserId(calendarDetails.getUserId());
@@ -44,7 +49,7 @@ public class CalendarService {
         return null;
     }
 
-    public void deleteCalendar(Integer id) {
-        calendarRepository.deleteById(id);
+    public void deleteCalendar(Integer calendarId) {
+        calendarRepository.deleteById(calendarId);
     }
 }
