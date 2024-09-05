@@ -12,6 +12,7 @@ public class CalendarService {
     @Autowired
     private CalendarRepository calendarRepository;
 
+
     public Calendar getCalendarById(Integer calendarId) {
         Optional<Calendar> calendar = calendarRepository.findById(calendarId);
         return calendar.orElse(null);
@@ -35,6 +36,7 @@ public class CalendarService {
 
     public Calendar updateCalendar(Integer calendarId, Calendar calendarDetails) {
         Optional<Calendar> calendar = calendarRepository.findById(calendarId);
+
         if (calendar.isPresent()) {
             Calendar updatedCalendar = calendar.get();
             updatedCalendar.setUserId(calendarDetails.getUserId());
@@ -51,5 +53,6 @@ public class CalendarService {
 
     public void deleteCalendar(Integer calendarId) {
         calendarRepository.deleteById(calendarId);
+
     }
 }

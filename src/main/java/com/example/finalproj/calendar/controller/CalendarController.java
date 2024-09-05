@@ -42,6 +42,7 @@ public class CalendarController {
         return ResponseEntity.ok(calendarService.createCalendar(calendar));
     }
 
+
     @PutMapping("/{calendarId}")
     public ResponseEntity<Calendar> updateCalendar(@PathVariable Integer calendarId, @RequestBody Calendar calendarDetails) {
         Calendar updatedCalendar = calendarService.updateCalendar(calendarId, calendarDetails);
@@ -54,6 +55,7 @@ public class CalendarController {
     @DeleteMapping("/{calendarId}")
     public ResponseEntity<Void> deleteCalendar(@PathVariable Integer calendarId) {
         calendarService.deleteCalendar(calendarId);
+
         return ResponseEntity.ok().build();
     }
 }
