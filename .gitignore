@@ -1,5 +1,5 @@
 HELP.md
-.yml
+.env
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -36,6 +36,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-# Ignore application.yml
-src/main/resources/application.yml
