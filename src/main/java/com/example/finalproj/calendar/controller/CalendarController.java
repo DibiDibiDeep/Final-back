@@ -23,11 +23,10 @@ public class CalendarController {
         return ResponseEntity.ok(calendarService.getCalendarsByBabyId(babyId));
     }
 
-    @GetMapping("/date/{date}")
-    public ResponseEntity<List<Calendar>> getCalendarsByDate(@PathVariable String date) {
+    @GetMapping
+    public ResponseEntity<List<Calendar>> getCalendarsByDate(@RequestParam String date) {
         return ResponseEntity.ok(calendarService.getCalendarsByDate(date));
     }
-
     @PostMapping
     public ResponseEntity<Calendar> createCalendar(@RequestBody Calendar calendar) {
         return ResponseEntity.ok(calendarService.createCalendar(calendar));

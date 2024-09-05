@@ -63,3 +63,26 @@ GET http://localhost:8080/api/memos/2
 
 ###get alim
 GET http://localhost:8080/api/alims
+
+### 새 Calendar Photo 생성 (이미지 파일 업로드 포함)
+POST http://localhost:8080/api/calendar-photos
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="test_image.jpg"
+Content-Type: image/jpeg
+
+< C:\Users\Owner\Desktop\ㅇ.png
+--WebAppBoundary
+Content-Disposition: form-data; name="userId"
+
+1
+--WebAppBoundary
+Content-Disposition: form-data; name="babyId"
+
+1
+--WebAppBoundary
+Content-Disposition: form-data; name="takenAt"
+
+09-01
+--WebAppBoundary--
