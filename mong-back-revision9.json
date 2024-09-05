@@ -1,5 +1,5 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:992382489739:task-definition/mong-back:8",
+    "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:992382489739:task-definition/mong-back:9",
     "containerDefinitions": [
         {
             "name": "backend-container",
@@ -15,7 +15,20 @@
                 }
             ],
             "essential": true,
-            "environment": [],
+            "environment": [
+                {
+                    "name": "SPRING_DATASOURCE_USERNAME",
+                    "value": "root"
+                },
+                {
+                    "name": "SPRING_DATASOURCE_URL",
+                    "value": "jdbc:mysql://mongeul-db.c54cmc8iwsvi.ap-northeast-2.rds.amazonaws.com:3306/mongeul"
+                },
+                {
+                    "name": "SPRING_DATASOURCE_PASSWORD",
+                    "value": "qwer1234"
+                }
+            ],
             "mountPoints": [],
             "volumesFrom": [],
             "logConfiguration": {
@@ -45,7 +58,7 @@
     "taskRoleArn": "arn:aws:iam::992382489739:role/ecsTaskExecutionRole",
     "executionRoleArn": "arn:aws:iam::992382489739:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
-    "revision": 8,
+    "revision": 9,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -100,7 +113,7 @@
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-09-05T06:59:13.604Z",
+    "registeredAt": "2024-09-05T23:45:12.605Z",
     "registeredBy": "arn:aws:iam::992382489739:user/eunseong",
     "tags": []
 }
