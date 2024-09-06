@@ -1,17 +1,17 @@
 spring:
   datasource:
-    url: jdbc:mysql://mongeul-db.c54cmc8iwsvi.ap-northeast-2.rds.amazonaws.com:3306/mongeul
+    url: jdbc:mysql://localhost:3306/mongeul
     username: root
-    password: qwer1234
+    password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-jpa:
-  properties:
+  jpa:
     hibernate:
-      dialect: org.hibernate.dialect.MySQLDialect
-  hibernate:
-    ddl-auto: update
-  show-sql: true
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
   config:
     import: optional:file:.env[.properties]
