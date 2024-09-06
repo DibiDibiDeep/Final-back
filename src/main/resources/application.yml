@@ -5,13 +5,13 @@ spring:
     password: qwer1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  jpa:
+jpa:
+  properties:
     hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+      dialect: org.hibernate.dialect.MySQLDialect
+  hibernate:
+    ddl-auto: update
+  show-sql: true
 
   config:
     import: optional:file:.env[.properties]
