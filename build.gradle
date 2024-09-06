@@ -30,6 +30,8 @@ dependencies {
 	// AWS S3 SDK 추가
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.530'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	implementation 'me.paulschwarz:spring-dotenv:2.5.4'
 }
 
 tasks.named('test') {
