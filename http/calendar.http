@@ -1,2 +1,5 @@
 ###getbyid
 GET http://localhost:8080/api/calendars/2
+
+###getbyid
+GET http://localhost:8080/api/calendars/2
