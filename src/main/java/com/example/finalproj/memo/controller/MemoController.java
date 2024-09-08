@@ -1,20 +1,26 @@
 package com.example.finalproj.memo.controller;
+
 import com.example.finalproj.memo.entity.Memo;
 import com.example.finalproj.memo.service.MemoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/memos")
 public class MemoController {
+
     @Autowired
     private MemoService memoService;
 
-    @GetMapping
-    public ResponseEntity<List<Memo>> getAllMemos() {
-        return ResponseEntity.ok(memoService.getAllMemos());
+    @PostMapping
+    public ResponseEntity<Memo> createMemo(@RequestBody Memo memo) {
+        return ResponseEntity.ok(memoService.createMemo(memo));
     }
 
     @GetMapping("/{id}")
@@ -24,29 +30,16 @@ public class MemoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Memo>> getMemosByUserId(@PathVariable Integer userId) {
-        return ResponseEntity.ok(memoService.getMemosByUserId(userId));
+    @GetMapping
+    public ResponseEntity<List<Memo>> getAllMemos() {
+        return ResponseEntity.ok(memoService.getAllMemos());
     }
 
-    @GetMapping("/today/{todayId}")
-    public ResponseEntity<List<Memo>> getMemosByTodayId(@PathVariable Integer todayId) {
-        return ResponseEntity.ok(memoService.getMemosByTodayId(todayId));
-    }
-
-    @GetMapping("/calendar/{calendarId}")
-    public ResponseEntity<List<Memo>> getMemosByCalendarId(@PathVariable Integer calendarId) {
-        return ResponseEntity.ok(memoService.getMemosByCalendarId(calendarId));
-    }
-
-    @GetMapping("/date/{createdAt}")
-    public ResponseEntity<List<Memo>> getMemosByCreatedAt(@PathVariable String createdAt) {
-        return ResponseEntity.ok(memoService.getMemosByCreatedAt(createdAt));
-    }
-
-    @PostMapping
-    public ResponseEntity<Memo> createMemo(@RequestBody Memo memo) {
-        return ResponseEntity.ok(memoService.createMemo(memo));
+    @GetMapping("/date-range")
+    public List<Memo> getMemosByDateRange(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+        return memoService.getMemosByDateRange(startDate, endDate);
     }
 
     @PutMapping("/{id}")
@@ -62,5 +55,12 @@ public class MemoController {
     public ResponseEntity<Void> deleteMemo(@PathVariable Integer id) {
         memoService.deleteMemo(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/date/{date}")
+    public ResponseEntity<List<Memo>> getMemosByDate(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        List<Memo> memos = memoService.getMemosByDate(date);
+        return ResponseEntity.ok(memos);
     }
 }

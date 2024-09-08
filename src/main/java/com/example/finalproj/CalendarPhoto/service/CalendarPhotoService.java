@@ -49,6 +49,10 @@ public class CalendarPhotoService {
         return calendarPhotoRepository.findByDate(date);
     }
 
+    public List<CalendarPhoto> getCalendarPhotosByYearAndMonth(int year, int month) {
+        return calendarPhotoRepository.findByYearAndMonth(year, month);
+    }
+
     public CalendarPhoto createCalendarPhoto(MultipartFile file, Integer userId, Integer babyId, LocalDateTime date) throws IOException {
         String filePath = uploadFileToS3(file);
 

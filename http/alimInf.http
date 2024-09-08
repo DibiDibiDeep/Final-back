@@ -1,0 +1,55 @@
+### Variables
+@baseUrl = http://localhost:8080/api/alim-inf
+@contentType = application/json
+
+### Get all AlimInfs
+GET {{baseUrl}}
+
+### Get AlimInf by ID
+GET {{baseUrl}}/1
+
+### Create new AlimInf
+POST {{baseUrl}}
+Content-Type: {{contentType}}
+
+{
+  "alimId": 1,
+  "userId": 1,
+  "babyId": 1,
+  "todayId": 1,
+  "name": "Test Name",
+  "emotion": "Happy",
+  "health": "Good",
+  "nutrition": "Balanced",
+  "activities": "Playing",
+  "special": "First steps",
+  "keywords": "milestone,development",
+  "diary": "Today was a special day...",
+  "date": "2024-03-20T10:00:00"
+}
+
+### Update AlimInf
+PUT {{baseUrl}}/1
+Content-Type: {{contentType}}
+
+{
+  "alimId": 1,
+  "userId": 1,
+  "babyId": 1,
+  "todayId": 1,
+  "name": "Updated Name",
+  "emotion": "Excited",
+  "health": "Excellent",
+  "nutrition": "Very good",
+  "activities": "Learning",
+  "special": "Said first word",
+  "keywords": "milestone,language",
+  "diary": "Today was an amazing day...",
+  "date": "2024-03-21T11:00:00"
+}
+
+### Delete AlimInf
+DELETE {{baseUrl}}/1
+
+### Get AlimInfs by Date Range
+GET {{baseUrl}}/date-range?startDate=2024-03-01T00:00:00&endDate=2024-03-31T23:59:59

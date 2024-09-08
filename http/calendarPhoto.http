@@ -1,45 +1,43 @@
-### 새 Calendar Photo 생성 (이미지 파일 업로드 포함)
-POST http://localhost:8080/api/calendar-photos
-Content-Type: multipart/form-data; boundary=WebAppBoundary
+### Get all calendar photos
+GET http://localhost:8080/api/calendar-photos
 
---WebAppBoundary
-Content-Disposition: form-data; name="file"; filename="test_image.jpg"
+### Get a calendar photo by ID
+GET http://localhost:8080/api/calendar-photos/1
+
+### Get calendar photos by user ID
+GET http://localhost:8080/api/calendar-photos/user/1
+
+### Get calendar photos by baby ID
+GET http://localhost:8080/api/calendar-photos/baby/1
+
+### Get calendar photos by date
+GET http://localhost:8080/api/calendar-photos/date/2024-09-08T12:00:00
+
+### Get calendar photos by year and month
+GET http://localhost:8080/api/calendar-photos/year/2024/month/5
+
+### Create a new calendar photo
+POST http://localhost:8080/api/calendar-photos
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="photo.jpg"
 Content-Type: image/jpeg
 
-< C:\Users\Owner\Desktop\가정통신문\KakaoTalk_20240906_173842672.jpg
---WebAppBoundary
+< ./photo.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="userId"
 
 1
---WebAppBoundary
+------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="babyId"
 
 1
---WebAppBoundary
-Content-Disposition: form-data; name="takenAt"
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="date"
 
-09-01
---WebAppBoundary--
+2024-09-08T12:00:00
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
-### 새 Calendar Photo 생성 (이미지 파일 업로드 포함)
-POST http://localhost:8080/api/calendar-photos
-Content-Type: multipart/form-data; boundary=WebAppBoundary
-
---WebAppBoundary
-Content-Disposition: form-data; name="file"; filename="test_image.jpg"
-Content-Type: image/jpeg
-
-< C:\Users\Owner\Desktop\가정통신문\KakaoTalk_20240906_173842672.jpg
---WebAppBoundary
-Content-Disposition: form-data; name="userId"
-
-1
---WebAppBoundary
-Content-Disposition: form-data; name="babyId"
-
-1
---WebAppBoundary
-Content-Disposition: form-data; name="takenAt"
-
-09-01
---WebAppBoundary--
+### Delete a calendar photo
+DELETE http://localhost:8080/api/calendar-photos/1

@@ -45,6 +45,14 @@ public class CalendarPhotoController {
         return ResponseEntity.ok(calendarPhotoService.getCalendarPhotosByDate(date));
     }
 
+    @GetMapping("/year/{year}/month/{month}")
+    public ResponseEntity<List<CalendarPhoto>> getCalendarPhotosByYearAndMonth(
+            @PathVariable int year,
+            @PathVariable int month) {
+        List<CalendarPhoto> photos = calendarPhotoService.getCalendarPhotosByYearAndMonth(year, month);
+        return ResponseEntity.ok(photos);
+    }
+
     @PostMapping
     public ResponseEntity<CalendarPhoto> createCalendarPhoto(
             @RequestParam("file") MultipartFile file,

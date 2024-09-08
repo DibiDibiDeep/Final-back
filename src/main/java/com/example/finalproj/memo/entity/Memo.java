@@ -1,38 +1,42 @@
 package com.example.finalproj.memo.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Memo")
 public class Memo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "memo_id")
     private Integer memoId;
+
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
     @Column(name = "today_id")
     private Integer todayId;
 
-    @Column(name = "user_id")
-    private Integer userId;
+    @Column(name = "fairy_tale_id")
+    private Integer fairyTaleId;
 
-    @Column(name = "calendar_id")
-    private Integer calendarId;
+    @Column(name = "date")
+    private LocalDateTime date;
 
-    private String createdAt;  // MM-dd format
-
+    @Column(name = "content")
     private String content;
-
-    public Memo(Integer memoId, Integer todayId, Integer userId, Integer calendarId, String createdAt, String content) {
-        this.memoId = memoId;
-        this.todayId = todayId;
-        this.userId = userId;
-        this.calendarId = calendarId;
-        this.createdAt = createdAt;
-        this.content = content;
-    }
 
     public Memo() {
 
+    }
+
+    public Memo(Integer memoId, Integer userId, Integer todayId, Integer fairyTaleId, LocalDateTime date, String content) {
+        this.memoId = memoId;
+        this.userId = userId;
+        this.todayId = todayId;
+        this.fairyTaleId = fairyTaleId;
+        this.date = date;
+        this.content = content;
     }
 
     public Integer getMemoId() {
@@ -43,14 +47,6 @@ public class Memo {
         this.memoId = memoId;
     }
 
-    public Integer getTodayId() {
-        return todayId;
-    }
-
-    public void setTodayId(Integer todayId) {
-        this.todayId = todayId;
-    }
-
     public Integer getUserId() {
         return userId;
     }
@@ -59,20 +55,28 @@ public class Memo {
         this.userId = userId;
     }
 
-    public Integer getCalendarId() {
-        return calendarId;
+    public Integer getTodayId() {
+        return todayId;
     }
 
-    public void setCalendarId(Integer calendarId) {
-        this.calendarId = calendarId;
+    public void setTodayId(Integer todayId) {
+        this.todayId = todayId;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
+    public Integer getFairyTaleId() {
+        return fairyTaleId;
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public void setFairyTaleId(Integer fairyTaleId) {
+        this.fairyTaleId = fairyTaleId;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 
     public String getContent() {
@@ -87,10 +91,10 @@ public class Memo {
     public String toString() {
         return "Memo{" +
                 "memoId=" + memoId +
-                ", todayId=" + todayId +
                 ", userId=" + userId +
-                ", calendarId=" + calendarId +
-                ", createdAt='" + createdAt + '\'' +
+                ", todayId=" + todayId +
+                ", fairyTaleId=" + fairyTaleId +
+                ", date=" + date +
                 ", content='" + content + '\'' +
                 '}';
     }

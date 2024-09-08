@@ -43,6 +43,13 @@ public class CalendarController {
         return ResponseEntity.ok(calendars);
     }
 
+    @GetMapping("/date-range")
+    public List<Calendar> getCalendarsByDateRange(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+        return calendarService.getCalendarsByDateRange(startDate, endDate);
+    }
+
     @PostMapping
     public ResponseEntity<Calendar> createCalendar(@RequestBody Calendar calendar) {
         return ResponseEntity.ok(calendarService.createCalendar(calendar));

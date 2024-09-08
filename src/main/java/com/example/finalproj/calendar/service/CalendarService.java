@@ -32,6 +32,10 @@ public class CalendarService {
     public List<Calendar> getCalendarsByDate(LocalDate date) {
         return calendarRepository.findByStartTimeDate(date);
     }
+
+    public List<Calendar> getCalendarsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        return calendarRepository.findByStartTimeBetween(startDate, endDate);
+    }
     public Calendar createCalendar(Calendar calendar) {
         return calendarRepository.save(calendar);
     }
