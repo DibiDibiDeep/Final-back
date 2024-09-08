@@ -40,11 +40,13 @@ public class CalendarService {
         if (calendar.isPresent()) {
             Calendar updatedCalendar = calendar.get();
             updatedCalendar.setUserId(calendarDetails.getUserId());
-            updatedCalendar.setCalendarPhotoId(calendarDetails.getCalendarPhotoId());
             updatedCalendar.setBabyId(calendarDetails.getBabyId());
+            updatedCalendar.setCalendarPhotoId(calendarDetails.getCalendarPhotoId());
+            updatedCalendar.setTodayId(calendarDetails.getTodayId());
+            updatedCalendar.setFairyTaleId(calendarDetails.getFairyTaleId());
             updatedCalendar.setTitle(calendarDetails.getTitle());
-            updatedCalendar.setDescription(calendarDetails.getDescription());
-            updatedCalendar.setDate(calendarDetails.getDate());
+            updatedCalendar.setStartTime(calendarDetails.getStartTime());
+            updatedCalendar.setEndTime(calendarDetails.getEndTime());
             updatedCalendar.setLocation(calendarDetails.getLocation());
             return calendarRepository.save(updatedCalendar);
         }

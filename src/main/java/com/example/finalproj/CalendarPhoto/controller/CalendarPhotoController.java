@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -39,9 +40,9 @@ public class CalendarPhotoController {
         return ResponseEntity.ok(calendarPhotoService.getCalendarPhotosByBabyId(babyId));
     }
 
-    @GetMapping("/date/{takenAt}")
-    public ResponseEntity<List<CalendarPhoto>> getCalendarPhotosByTakenAt(@PathVariable String takenAt) {
-        return ResponseEntity.ok(calendarPhotoService.getCalendarPhotosByTakenAt(takenAt));
+    @GetMapping("/date/{date}")
+    public ResponseEntity<List<CalendarPhoto>> getCalendarPhotosByTakenAt(@PathVariable LocalDateTime date) {
+        return ResponseEntity.ok(calendarPhotoService.getCalendarPhotosByDate(date));
     }
 
     @PostMapping
@@ -49,8 +50,8 @@ public class CalendarPhotoController {
             @RequestParam("file") MultipartFile file,
             @RequestParam("userId") Integer userId,
             @RequestParam("babyId") Integer babyId,
-            @RequestParam("takenAt") String takenAt) throws IOException {
-        return ResponseEntity.ok(calendarPhotoService.createCalendarPhoto(file, userId, babyId, takenAt));
+            @RequestParam("date") LocalDateTime date) throws IOException {
+        return ResponseEntity.ok(calendarPhotoService.createCalendarPhoto(file, userId, babyId, date));
     }
 
     @DeleteMapping("/{id}")

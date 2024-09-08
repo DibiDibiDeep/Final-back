@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,18 +45,18 @@ public class CalendarPhotoService {
         return calendarPhotoRepository.findByBabyId(babyId);
     }
 
-    public List<CalendarPhoto> getCalendarPhotosByTakenAt(String takenAt) {
-        return calendarPhotoRepository.findByTakenAt(takenAt);
+    public List<CalendarPhoto> getCalendarPhotosByDate(LocalDateTime date) {
+        return calendarPhotoRepository.findByDate(String.valueOf(date));
     }
 
-    public CalendarPhoto createCalendarPhoto(MultipartFile file, Integer userId, Integer babyId, String takenAt) throws IOException {
+    public CalendarPhoto createCalendarPhoto(MultipartFile file, Integer userId, Integer babyId, LocalDateTime date) throws IOException {
         String filePath = uploadFileToS3(file);
 
         CalendarPhoto calendarPhoto = new CalendarPhoto();
         calendarPhoto.setUserId(userId);
         calendarPhoto.setBabyId(babyId);
         calendarPhoto.setFilePath(filePath);
-        calendarPhoto.setTakenAt(takenAt);
+        calendarPhoto.setDate(date);
 
         return calendarPhotoRepository.save(calendarPhoto);
     }

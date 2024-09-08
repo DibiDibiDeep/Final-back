@@ -2,6 +2,8 @@ package com.example.finalproj.CalendarPhoto.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "Calendar_Photo")
 public class CalendarPhoto {
@@ -17,14 +19,14 @@ public class CalendarPhoto {
 
     private String filePath;
 
-    private String takenAt;  // MM-dd format
+    private LocalDateTime date;
 
-    public CalendarPhoto(Integer calendarPhotoId, Integer userId, Integer babyId, String filePath, String takenAt) {
+    public CalendarPhoto(Integer calendarPhotoId, Integer userId, Integer babyId, String filePath, LocalDateTime date) {
         this.calendarPhotoId = calendarPhotoId;
         this.userId = userId;
         this.babyId = babyId;
         this.filePath = filePath;
-        this.takenAt = takenAt;
+        this.date = date;
     }
 
     public CalendarPhoto() {
@@ -63,12 +65,12 @@ public class CalendarPhoto {
         this.filePath = filePath;
     }
 
-    public String getTakenAt() {
-        return takenAt;
+    public LocalDateTime getDate() {
+        return date;
     }
 
-    public void setTakenAt(String takenAt) {
-        this.takenAt = takenAt;
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 
     @Override
@@ -78,7 +80,7 @@ public class CalendarPhoto {
                 ", userId=" + userId +
                 ", babyId=" + babyId +
                 ", filePath='" + filePath + '\'' +
-                ", takenAt='" + takenAt + '\'' +
+                ", date='" + date + '\'' +
                 '}';
     }
 }

@@ -1,6 +1,7 @@
 package com.example.finalproj.calendar.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Calendar")
@@ -12,32 +13,42 @@ public class Calendar {
     @Column(name = "user_id")
     private Integer userId;
 
-    @Column(name = "calendar_photo_id")
-    private Integer calendarPhotoId;
-
     @Column(name = "baby_id")
     private Integer babyId;
 
+    @Column(name = "calendar_photo_id")
+    private Integer calendarPhotoId;
+
+    @Column(name = "today_id")
+    private Integer todayId;
+
+    @Column(name = "fairy_tale_id")
+    private Integer fairyTaleId;
+
     private String title;
 
-    private String description;
+    @Column(name = "start_time")
+    private LocalDateTime startTime;
 
-    private String date;  // MM-dd format
+    @Column(name = "end_time")
+    private LocalDateTime endTime;
 
     private String location;
-    public Calendar() {
 
-    }
-    public Calendar(Integer calendarId, Integer userId, Integer calendarPhotoId, Integer babyId, String title, String description, String date, String location) {
+    public Calendar(Integer calendarId, Integer userId, Integer babyId, Integer calendarPhotoId, Integer todayId, Integer fairyTaleId, String title, LocalDateTime startTime, LocalDateTime endTime, String location) {
         this.calendarId = calendarId;
         this.userId = userId;
-        this.calendarPhotoId = calendarPhotoId;
         this.babyId = babyId;
+        this.calendarPhotoId = calendarPhotoId;
+        this.todayId = todayId;
+        this.fairyTaleId = fairyTaleId;
         this.title = title;
-        this.description = description;
-        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.location = location;
     }
+
+    public Calendar() {}
 
     public Integer getCalendarId() {
         return calendarId;
@@ -55,6 +66,14 @@ public class Calendar {
         this.userId = userId;
     }
 
+    public Integer getBabyId() {
+        return babyId;
+    }
+
+    public void setBabyId(Integer babyId) {
+        this.babyId = babyId;
+    }
+
     public Integer getCalendarPhotoId() {
         return calendarPhotoId;
     }
@@ -63,12 +82,20 @@ public class Calendar {
         this.calendarPhotoId = calendarPhotoId;
     }
 
-    public Integer getBabyId() {
-        return babyId;
+    public Integer getTodayId() {
+        return todayId;
     }
 
-    public void setBabyId(Integer babyId) {
-        this.babyId = babyId;
+    public void setTodayId(Integer todayId) {
+        this.todayId = todayId;
+    }
+
+    public Integer getFairyTaleId() {
+        return fairyTaleId;
+    }
+
+    public void setFairyTaleId(Integer fairyTaleId) {
+        this.fairyTaleId = fairyTaleId;
     }
 
     public String getTitle() {
@@ -79,20 +106,20 @@ public class Calendar {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
-    public String getDate() {
-        return date;
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public String getLocation() {
@@ -108,11 +135,13 @@ public class Calendar {
         return "Calendar{" +
                 "calendarId=" + calendarId +
                 ", userId=" + userId +
-                ", calendarPhotoId=" + calendarPhotoId +
                 ", babyId=" + babyId +
+                ", calendarPhotoId=" + calendarPhotoId +
+                ", todayId=" + todayId +
+                ", fairyTaleId=" + fairyTaleId +
                 ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", date='" + date + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
                 ", location='" + location + '\'' +
                 '}';
     }
