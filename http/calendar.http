@@ -3,3 +3,6 @@ GET http://localhost:8080/api/calendars/2
 
 ###getbyid
 GET http://localhost:8080/api/calendars/2
+
+###get by date
+GET http://localhost:8080/api/calendars?date=2024-05-15

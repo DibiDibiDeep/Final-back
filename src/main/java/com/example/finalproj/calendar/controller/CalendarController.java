@@ -3,9 +3,11 @@ package com.example.finalproj.calendar.controller;
 import com.example.finalproj.calendar.entity.Calendar;
 import com.example.finalproj.calendar.service.CalendarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -35,8 +37,10 @@ public class CalendarController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Calendar>> getCalendarsByDate(@RequestParam LocalDateTime startTime) {
-        return ResponseEntity.ok(calendarService.getCalendarsByDate(startTime));
+    public ResponseEntity<List<Calendar>> getCalendarsByDate(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        List<Calendar> calendars = calendarService.getCalendarsByDate(date);
+        return ResponseEntity.ok(calendars);
     }
 
     @PostMapping

@@ -5,6 +5,7 @@ import com.example.finalproj.calendar.repository.CalendarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -28,10 +29,9 @@ public class CalendarService {
         return calendarRepository.findByBabyId(babyId);
     }
 
-    public List<Calendar> getCalendarsByDate(LocalDateTime startTime) {
-        return calendarRepository.findByStartTime(startTime);
+    public List<Calendar> getCalendarsByDate(LocalDate date) {
+        return calendarRepository.findByStartTimeDate(date);
     }
-
     public Calendar createCalendar(Calendar calendar) {
         return calendarRepository.save(calendar);
     }
