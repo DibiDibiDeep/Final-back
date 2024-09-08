@@ -1,3 +1,7 @@
+###Get calendar all
+GET http://localhost:8080/api/calendars/all
+
+
 ### Get calendar by ID
 GET http://localhost:8080/api/calendars/1
 

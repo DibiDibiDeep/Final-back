@@ -15,7 +15,9 @@ public class CalendarService {
     @Autowired
     private CalendarRepository calendarRepository;
 
-
+    public List<Calendar> getAllCalendars() {
+        return calendarRepository.findAll();
+    }
     public Calendar getCalendarById(Integer calendarId) {
         Optional<Calendar> calendar = calendarRepository.findById(calendarId);
         return calendar.orElse(null);

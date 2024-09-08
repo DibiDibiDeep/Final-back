@@ -17,6 +17,12 @@ public class CalendarController {
     @Autowired
     private CalendarService calendarService;
 
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Calendar>> getAllCalendars() {
+        List<Calendar> calendars = calendarService.getAllCalendars();
+        return ResponseEntity.ok(calendars);
+    }
     @GetMapping("/{calendarId}")
     public ResponseEntity<Calendar> getCalendarById(@PathVariable Integer calendarId) {
         Calendar calendar = calendarService.getCalendarById(calendarId);
