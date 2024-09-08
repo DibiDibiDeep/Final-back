@@ -5,6 +5,8 @@ import com.example.finalproj.calendar.service.CalendarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -33,8 +35,8 @@ public class CalendarController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Calendar>> getCalendarsByDate(@RequestParam String date) {
-        return ResponseEntity.ok(calendarService.getCalendarsByDate(date));
+    public ResponseEntity<List<Calendar>> getCalendarsByDate(@RequestParam LocalDateTime startTime) {
+        return ResponseEntity.ok(calendarService.getCalendarsByDate(startTime));
     }
 
     @PostMapping

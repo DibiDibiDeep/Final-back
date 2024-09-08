@@ -46,7 +46,7 @@ public class CalendarPhotoService {
     }
 
     public List<CalendarPhoto> getCalendarPhotosByDate(LocalDateTime date) {
-        return calendarPhotoRepository.findByDate(String.valueOf(date));
+        return calendarPhotoRepository.findByDate(date);
     }
 
     public CalendarPhoto createCalendarPhoto(MultipartFile file, Integer userId, Integer babyId, LocalDateTime date) throws IOException {
