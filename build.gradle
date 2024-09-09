@@ -32,6 +32,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
 	implementation 'me.paulschwarz:spring-dotenv:2.5.4'
+	implementation 'mysql:mysql-connector-java:8.0.28'
 }
 
 tasks.named('test') {
