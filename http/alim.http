@@ -25,7 +25,7 @@ Content-Type: {{contentType}}
 {
   "userId": 1,
   "babyId": 1,
-  "content": "This is a test alim 바밤바.",
+  "content": "This is a test alim 바밤바나.",
   "date": "2024-09-08T10:00:00"
 }
 

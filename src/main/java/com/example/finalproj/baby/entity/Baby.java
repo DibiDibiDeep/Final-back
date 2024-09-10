@@ -23,16 +23,20 @@ public class Baby {
     @Column(name = "user_id", nullable = false)
     private Integer userId;
 
+    @Column(name = "baby_photo_id")
+    private Integer babyPhotoId;
+
     // 기본 생성자
     public Baby() {}
 
     // 모든 필드를 포함한 생성자
-    public Baby(Integer babyId, String babyName, LocalDate birth, String gender, Integer userId) {
+    public Baby(Integer babyId, String babyName, LocalDate birth, String gender, Integer userId, Integer babyPhotoId) {
         this.babyId = babyId;
         this.babyName = babyName;
         this.birth = birth;
         this.gender = gender;
         this.userId = userId;
+        this.babyPhotoId = babyPhotoId;
     }
 
     // Getter와 Setter 메서드
@@ -76,6 +80,14 @@ public class Baby {
         this.userId = userId;
     }
 
+    public Integer getBabyPhotoId() {
+        return babyPhotoId;
+    }
+
+    public void setBabyPhotoId(Integer babyPhotoId) {
+        this.babyPhotoId = babyPhotoId;
+    }
+
     @Override
     public String toString() {
         return "Baby{" +
@@ -84,6 +96,7 @@ public class Baby {
                 ", birth=" + birth +
                 ", gender='" + gender + '\'' +
                 ", userId=" + userId +
+                ", babyPhotoId=" + babyPhotoId +
                 '}';
     }
 }

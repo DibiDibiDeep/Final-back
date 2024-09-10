@@ -14,7 +14,7 @@ Content-Type: {{contentType}}
 
 {
   "userId": 1,
-  "title": "거북이의 모험",
+  "title": "토끼의 모험",
   "coverPath": "/covers/rabbit_adventure.jpg",
   "startDate": "2024-03-01T00:00:00",
   "endDate": "2024-03-07T23:59:59",
@@ -27,7 +27,7 @@ Content-Type: {{contentType}}
 
 {
   "userId": 1,
-  "title": "라이언의 신나는 모험",
+  "title": "토끼의 신나는 모험",
   "coverPath": "/covers/rabbit_adventure_updated.jpg",
   "startDate": "2024-03-01T00:00:00",
   "endDate": "2024-03-07T23:59:59",
