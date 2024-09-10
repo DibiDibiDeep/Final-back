@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `User` (
     `user_id` INT NOT NULL auto_increment,
     `name` VARCHAR(255) NOT NULL,
     `email` VARCHAR(255) NOT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`user_id`)
     );
 
@@ -55,7 +56,8 @@ CREATE TABLE IF NOT EXISTS `Book` (
     start_date DATETIME NOT NULL,
     end_date DATETIME NOT NULL,
     generated_date DATETIME NOT NULL,
-    PRIMARY KEY (book_id)
+    PRIMARY KEY (book_id),
+    FOREIGN KEY (user_id) REFERENCES User(user_id)
     );
 
 -- Book 테이블 더미 데이터

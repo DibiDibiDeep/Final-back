@@ -1,48 +1,55 @@
-package com.example.finalproj.FairyTale.entity;
+package com.example.finalproj.Book.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Fairy_Tale")
-public class FairyTale {
-
+@Table(name = "Book")
+public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "fairy_tale_id")
-    private Integer fairyTaleId;
+    @Column(name = "book_id")
+    private Integer bookId;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private Integer userId;
 
-    private String content;
+    @Column(name = "title", nullable = false)
+    private String title;
 
-    @Column(name = "start_date")
+    @Column(name = "cover_path", nullable = false)
+    private String coverPath;
+
+    @Column(name = "start_date", nullable = false)
     private LocalDateTime startDate;
 
-    @Column(name = "end_date")
+    @Column(name = "end_date", nullable = false)
     private LocalDateTime endDate;
 
-    @Column(name = "generated_date")
+    @Column(name = "generated_date", nullable = false)
     private LocalDateTime generatedDate;
 
-    public FairyTale(){}
+    public Book() {
+    }
 
-    public FairyTale(Integer fairyTaleId, Integer userId, String content, LocalDateTime startDate, LocalDateTime endDate, LocalDateTime generatedDate) {
-        this.fairyTaleId = fairyTaleId;
+    public Book(Integer bookId, Integer userId, String title, String coverPath, LocalDateTime startDate, LocalDateTime endDate, LocalDateTime generatedDate) {
+        this.bookId = bookId;
         this.userId = userId;
-        this.content = content;
+        this.title = title;
+        this.coverPath = coverPath;
         this.startDate = startDate;
         this.endDate = endDate;
         this.generatedDate = generatedDate;
     }
 
-    public Integer getFairyTaleId() {
-        return fairyTaleId;
+    // Getters and setters
+
+    public Integer getBookId() {
+        return bookId;
     }
 
-    public void setFairyTaleId(Integer fairyTaleId) {
-        this.fairyTaleId = fairyTaleId;
+    public void setBookId(Integer bookId) {
+        this.bookId = bookId;
     }
 
     public Integer getUserId() {
@@ -53,12 +60,20 @@ public class FairyTale {
         this.userId = userId;
     }
 
-    public String getContent() {
-        return content;
+    public String getTitle() {
+        return title;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getCoverPath() {
+        return coverPath;
+    }
+
+    public void setCoverPath(String coverPath) {
+        this.coverPath = coverPath;
     }
 
     public LocalDateTime getStartDate() {
@@ -87,10 +102,11 @@ public class FairyTale {
 
     @Override
     public String toString() {
-        return "FairyTale{" +
-                "fairyTaleId=" + fairyTaleId +
+        return "Book{" +
+                "bookId=" + bookId +
                 ", userId=" + userId +
-                ", content='" + content + '\'' +
+                ", title='" + title + '\'' +
+                ", coverPath='" + coverPath + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", generatedDate=" + generatedDate +

@@ -1,0 +1,44 @@
+### Variables
+@baseUrl = http://localhost:8080/api/books
+@contentType = application/json
+
+### Get all Books
+GET {{baseUrl}}
+
+### Get Book by ID
+GET {{baseUrl}}/1
+
+### Create new Book
+POST {{baseUrl}}
+Content-Type: {{contentType}}
+
+{
+  "userId": 1,
+  "title": "거북이의 모험",
+  "coverPath": "/covers/rabbit_adventure.jpg",
+  "startDate": "2024-03-01T00:00:00",
+  "endDate": "2024-03-07T23:59:59",
+  "generatedDate": "2024-03-01T09:00:00"
+}
+
+### Update Book
+PUT {{baseUrl}}/11
+Content-Type: {{contentType}}
+
+{
+  "userId": 1,
+  "title": "라이언의 신나는 모험",
+  "coverPath": "/covers/rabbit_adventure_updated.jpg",
+  "startDate": "2024-03-01T00:00:00",
+  "endDate": "2024-03-07T23:59:59",
+  "generatedDate": "2024-03-01T09:00:00"
+}
+
+### Delete Book
+DELETE {{baseUrl}}/8
+
+### Get Books by Date Range
+GET {{baseUrl}}/date-range?startDate=2024-03-01T00:00:00&endDate=2024-03-31T23:59:59
+
+### Get Books by Date
+GET {{baseUrl}}/date/2024-03-01
