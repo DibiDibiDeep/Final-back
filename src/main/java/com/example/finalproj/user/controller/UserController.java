@@ -12,6 +12,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+
     @Autowired
     private UserService userService;
 
@@ -52,14 +53,14 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    // 테스트용 코드
-    @PostMapping("/test-create")
-    public ResponseEntity<?> createTestUser(@RequestBody User userDetails) {
-        try {
-            Map<String, Object> response = userService.createTestUser(userDetails);
-            return ResponseEntity.status((int) response.get("code")).body(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+//    // 테스트용 코드
+//    @PostMapping("/test-create")
+//    public ResponseEntity<?> createTestUser(@RequestBody User userDetails) {
+//        try {
+//            Map<String, Object> response = userService.createTestUser(userDetails);
+//            return ResponseEntity.status((int) response.get("code")).body(response);
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
 }

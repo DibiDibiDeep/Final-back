@@ -33,23 +33,33 @@ public class UserService {
     }
 
     public Map<String, Object> authenticateGoogleUser(String token) throws Exception {
-        GoogleIdToken.Payload payload = verifyGoogleToken(token);
-
-        String email = payload.getEmail();
-        User user = userRepository.findByEmail(email);
+        try {
+            GoogleIdToken.Payload payload = verifyGoogleToken(token);
+            String email = payload.getEmail();
+            List<User> users = userRepository.findByEmail(email);
 
         Map<String, Object> response = new HashMap<>();
-        if (user == null) {
-            user = new User(email, (String) payload.get("name"));
-            user = userRepository.save(user);
-            response.put("user", user);
-            response.put("code", 201);
-        }
+        User user;
+
+            if (!users.isEmpty()) {
+                user = users.get(0);  // Get the first user if exists
+                response.put("code", 200);
+            } else {
+                user = new User(email, (String) payload.get("name"));
+                user = userRepository.save(user);
+                response.put("code", 201);
+            }
+
         String jwtToken = jwtTokenProvider.generateToken(user.getUserId());
         response.put("user", user);
         response.put("token", jwtToken);
-        response.put("code", response.containsKey("code") ? 201 : 200);
         return response;
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("code", 400);
+            errorResponse.put("message", "Authentication failed: " + e.getMessage());
+            return errorResponse;
+        }
     }
 
     public User updateUser(Integer userId, User userDetails) {
@@ -80,20 +90,20 @@ public class UserService {
     }
 
     // 테스트용 코드
-    public Map<String, Object> createTestUser(User userDetails) {
-        User user = userRepository.findByEmail(userDetails.getEmail());
-
-        Map<String, Object> response = new HashMap<>();
-        if (user == null) {
-            user = new User(userDetails.getEmail(), userDetails.getName());
-            user = userRepository.save(user);
-            response.put("code", 201);
-        } else {
-            response.put("code", 200);
-        }
-        String jwtToken = jwtTokenProvider.generateToken(user.getUserId());
-        response.put("user", user);
-        response.put("token", jwtToken);
-        return response;
-    }
+//    public Map<String, Object> createTestUser(User userDetails) {
+//        User user = userRepository.findByEmail(userDetails.getEmail());
+//
+//        Map<String, Object> response = new HashMap<>();
+//        if (user == null) {
+//            user = new User(userDetails.getEmail(), userDetails.getName());
+//            user = userRepository.save(user);
+//            response.put("code", 201);
+//        } else {
+//            response.put("code", 200);
+//        }
+//        String jwtToken = jwtTokenProvider.generateToken(user.getUserId());
+//        response.put("user", user);
+//        response.put("token", jwtToken);
+//        return response;
+//    }
 }
