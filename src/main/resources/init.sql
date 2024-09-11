@@ -163,3 +163,4 @@ INSERT INTO `Page` (`book_id`, `page_num`, `text`, `illust_prompt`, `image_path`
                                                                                       (2, 2, '온 가족이 박수를 치며 축하했답니다.', '박수치는 가족들과 웃는 아기, 축하 분위기', '/images/book2_page2.jpg'),
                                                                                       (3, 1, '박몽글이가 처음으로 "엄마"라고 말했어요.', '아기가 말하는 모습, 놀란 표정의 엄마', '/images/book3_page1.jpg'),
                                                                                       (3, 2, '엄마의 눈에서 기쁨의 눈물이 흘렀답니다.', '눈물 흘리는 엄마와 웃는 아기, 감동적인 분위기', '/images/book1.jpg');
+
