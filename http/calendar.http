@@ -3,7 +3,7 @@ GET http://localhost:8080/api/calendars/all
 
 
 ### Get calendar by ID
-GET http://localhost:8080/api/calendars/1
+GET http://localhost:8080/api/calendars/3
 
 ### Get calendars by user ID
 GET http://localhost:8080/api/calendars/user/1

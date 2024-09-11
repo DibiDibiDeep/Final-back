@@ -10,14 +10,14 @@ spring:
       dialect: org.hibernate.dialect.MySQLDialect
     show-sql: false  # 프로덕션 환경에서는 false로 설정
     properties:
-      hibernate:
-        format_sql: false  # 프로덕션 환경에서는 false로 설정
+       hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+
   config:
     import: optional:file:.env[.properties]
 
 aws:
   accessKeyId: ${AWS_ACCESS_KEY_ID}
-  secretKey: ${AWS_SECRET_KEY}
+  secretKey: ${AWS_SECRET_ACCESS_KEY}
   region: ${AWS_REGION}
   s3:
     bucket: ${AWS_S3_BUCKET}
