@@ -9,10 +9,8 @@ import java.time.LocalDateTime;
 public class BabyPhoto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "baby_photo_id")
     private Integer babyPhotoId;
-
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
 
     @Column(name = "baby_id", nullable = false)
     private Integer babyId;
@@ -23,9 +21,8 @@ public class BabyPhoto {
     @Column(name = "upload_date", nullable = false)
     private LocalDateTime uploadDate;
 
-    public BabyPhoto(Integer babyPhotoId, Integer userId, Integer babyId, String filePath, LocalDateTime uploadDate) {
+    public BabyPhoto(Integer babyPhotoId, Integer babyId, String filePath, LocalDateTime uploadDate) {
         this.babyPhotoId = babyPhotoId;
-        this.userId = userId;
         this.babyId = babyId;
         this.filePath = filePath;
         this.uploadDate = uploadDate;
@@ -34,20 +31,14 @@ public class BabyPhoto {
     public BabyPhoto() {
     }
 
+    // Getter and Setter methods
+
     public Integer getBabyPhotoId() {
         return babyPhotoId;
     }
 
     public void setBabyPhotoId(Integer babyPhotoId) {
         this.babyPhotoId = babyPhotoId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public Integer getBabyId() {
@@ -78,7 +69,6 @@ public class BabyPhoto {
     public String toString() {
         return "BabyPhoto{" +
                 "babyPhotoId=" + babyPhotoId +
-                ", userId=" + userId +
                 ", babyId=" + babyId +
                 ", filePath='" + filePath + '\'' +
                 ", uploadDate=" + uploadDate +

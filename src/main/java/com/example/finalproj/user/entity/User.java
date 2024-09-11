@@ -1,6 +1,8 @@
 package com.example.finalproj.user.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "`User`")
@@ -16,20 +18,20 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    @Column(name = "created_at")
-    private String createdAt;
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
-    public User() {
-    }
+    // Default constructor
+    public User() {}
 
-    public User(Integer userId, String email, String name, String createdAt) {
-        this.userId = userId;
+    // Constructor with fields
+    public User(String email, String name) {
         this.email = email;
         this.name = name;
-        this.createdAt = createdAt;
     }
 
-    // Getters and setters
+    // Getters and Setters
     public Integer getUserId() {
         return userId;
     }
@@ -54,21 +56,18 @@ public class User {
         this.name = name;
     }
 
-    public String getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
+    // toString method
     @Override
     public String toString() {
         return "User{" +
                 "userId=" + userId +
                 ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
-                ", createdAt='" + createdAt + '\'' +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

@@ -36,7 +36,6 @@ public class BabyService {
             updatedBaby.setBirth(babyDetails.getBirth());
             updatedBaby.setGender(babyDetails.getGender());
             updatedBaby.setUserId(babyDetails.getUserId());
-            updatedBaby.setBabyPhotoId(babyDetails.getBabyPhotoId());
             return babyRepository.save(updatedBaby);
         }
         return null;

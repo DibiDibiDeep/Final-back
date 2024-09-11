@@ -37,10 +37,6 @@ public class BabyPhotoService {
         return babyPhotoRepository.findById(id);
     }
 
-    public List<BabyPhoto> getBabyPhotosByUserId(Integer userId) {
-        return babyPhotoRepository.findByUserId(userId);
-    }
-
     public List<BabyPhoto> getBabyPhotosByBabyId(Integer babyId) {
         return babyPhotoRepository.findByBabyId(babyId);
     }
@@ -49,11 +45,10 @@ public class BabyPhotoService {
         return babyPhotoRepository.findByUploadDate(uploadDate);
     }
 
-    public BabyPhoto createBabyPhoto(MultipartFile file, Integer userId, Integer babyId) throws IOException {
+    public BabyPhoto createBabyPhoto(MultipartFile file, Integer babyId) throws IOException {
         String filePath = uploadFileToS3(file);
 
         BabyPhoto babyPhoto = new BabyPhoto();
-        babyPhoto.setUserId(userId);
         babyPhoto.setBabyId(babyId);
         babyPhoto.setFilePath(filePath);
         babyPhoto.setUploadDate(LocalDateTime.now());

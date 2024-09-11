@@ -13,10 +13,9 @@ Content-Type: application/json
 
 {
   "babyName": "김대민",
-  "birth": "2023-01-08",
+  "birth": "2023-01-08T10:30:00",
   "gender": "male",
-  "userId": 1,
-  "babyPhotoId": 1
+  "userId": 1
 }
 
 ### Update Baby
@@ -25,10 +24,9 @@ Content-Type: application/json
 
 {
   "babyName": "이예찬",
-  "birth": "2023-01-08",
+  "birth": "2023-01-08T10:30:00",
   "gender": "male",
-  "userId": 1,
-  "babyPhotoId": 1
+  "userId": 1
 }
 
 ### Delete Baby

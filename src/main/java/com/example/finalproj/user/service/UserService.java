@@ -40,30 +40,26 @@ public class UserService {
 
         Map<String, Object> response = new HashMap<>();
         if (user == null) {
-            user = new User();
-            user.setEmail(email);
-            user.setName((String) payload.get("name"));
+            user = new User(email, (String) payload.get("name"));
             user = userRepository.save(user);
             response.put("user", user);
             response.put("code", 201);
-        } else {
-            String jwtToken = jwtTokenProvider.generateToken(user.getUserId());
-            response.put("user", user);
-            response.put("token", jwtToken);
-            response.put("code", 200);
         }
+        String jwtToken = jwtTokenProvider.generateToken(user.getUserId());
+        response.put("user", user);
+        response.put("token", jwtToken);
+        response.put("code", response.containsKey("code") ? 201 : 200);
         return response;
     }
 
     public User updateUser(Integer userId, User userDetails) {
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            User updatedUser = user.get();
-            updatedUser.setName(userDetails.getName());
-            updatedUser.setEmail(userDetails.getEmail());
-            return userRepository.save(updatedUser);
-        }
-        return null;
+        return userRepository.findById(userId)
+                .map(user -> {
+                    user.setName(userDetails.getName());
+                    user.setEmail(userDetails.getEmail());
+                    return userRepository.save(user);
+                })
+                .orElse(null);
     }
 
     public void deleteUser(Integer userId) {
@@ -81,5 +77,23 @@ public class UserService {
         } else {
             throw new Exception("Invalid ID token.");
         }
+    }
+
+    // 테스트용 코드
+    public Map<String, Object> createTestUser(User userDetails) {
+        User user = userRepository.findByEmail(userDetails.getEmail());
+
+        Map<String, Object> response = new HashMap<>();
+        if (user == null) {
+            user = new User(userDetails.getEmail(), userDetails.getName());
+            user = userRepository.save(user);
+            response.put("code", 201);
+        } else {
+            response.put("code", 200);
+        }
+        String jwtToken = jwtTokenProvider.generateToken(user.getUserId());
+        response.put("user", user);
+        response.put("token", jwtToken);
+        return response;
     }
 }

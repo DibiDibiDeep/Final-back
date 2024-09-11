@@ -1,7 +1,7 @@
 package com.example.finalproj.baby.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Baby")
@@ -11,32 +11,28 @@ public class Baby {
     @Column(name = "baby_id")
     private Integer babyId;
 
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
+
     @Column(name = "baby_name", nullable = false)
     private String babyName;
 
     @Column(nullable = false)
-    private LocalDate birth;
+    private LocalDateTime birth;
 
     @Column(nullable = false, length = 10)
     private String gender;
-
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
-
-    @Column(name = "baby_photo_id")
-    private Integer babyPhotoId;
 
     // 기본 생성자
     public Baby() {}
 
     // 모든 필드를 포함한 생성자
-    public Baby(Integer babyId, String babyName, LocalDate birth, String gender, Integer userId, Integer babyPhotoId) {
+    public Baby(Integer babyId, Integer userId, String babyName, LocalDateTime birth, String gender) {
         this.babyId = babyId;
+        this.userId = userId;
         this.babyName = babyName;
         this.birth = birth;
         this.gender = gender;
-        this.userId = userId;
-        this.babyPhotoId = babyPhotoId;
     }
 
     // Getter와 Setter 메서드
@@ -48,6 +44,14 @@ public class Baby {
         this.babyId = babyId;
     }
 
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
     public String getBabyName() {
         return babyName;
     }
@@ -56,11 +60,11 @@ public class Baby {
         this.babyName = babyName;
     }
 
-    public LocalDate getBirth() {
+    public LocalDateTime getBirth() {
         return birth;
     }
 
-    public void setBirth(LocalDate birth) {
+    public void setBirth(LocalDateTime birth) {
         this.birth = birth;
     }
 
@@ -72,31 +76,14 @@ public class Baby {
         this.gender = gender;
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Integer getBabyPhotoId() {
-        return babyPhotoId;
-    }
-
-    public void setBabyPhotoId(Integer babyPhotoId) {
-        this.babyPhotoId = babyPhotoId;
-    }
-
     @Override
     public String toString() {
         return "Baby{" +
                 "babyId=" + babyId +
+                ", userId=" + userId +
                 ", babyName='" + babyName + '\'' +
                 ", birth=" + birth +
                 ", gender='" + gender + '\'' +
-                ", userId=" + userId +
-                ", babyPhotoId=" + babyPhotoId +
                 '}';
     }
 }

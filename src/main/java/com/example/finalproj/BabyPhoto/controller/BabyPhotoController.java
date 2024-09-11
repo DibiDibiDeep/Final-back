@@ -30,11 +30,6 @@ public class BabyPhotoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<BabyPhoto>> getBabyPhotosByUserId(@PathVariable Integer userId) {
-        return ResponseEntity.ok(babyPhotoService.getBabyPhotosByUserId(userId));
-    }
-
     @GetMapping("/baby/{babyId}")
     public ResponseEntity<List<BabyPhoto>> getBabyPhotosByBabyId(@PathVariable Integer babyId) {
         return ResponseEntity.ok(babyPhotoService.getBabyPhotosByBabyId(babyId));
@@ -48,9 +43,8 @@ public class BabyPhotoController {
     @PostMapping
     public ResponseEntity<BabyPhoto> createBabyPhoto(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("userId") Integer userId,
             @RequestParam("babyId") Integer babyId) throws IOException {
-        return ResponseEntity.ok(babyPhotoService.createBabyPhoto(file, userId, babyId));
+        return ResponseEntity.ok(babyPhotoService.createBabyPhoto(file, babyId));
     }
 
     @DeleteMapping("/{id}")

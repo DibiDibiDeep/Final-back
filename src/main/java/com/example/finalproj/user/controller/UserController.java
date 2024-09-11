@@ -19,7 +19,7 @@ public class UserController {
     public ResponseEntity<?> authenticateUser(@RequestBody Map<String, String> tokenMap) {
         try {
             Map<String, Object> response = userService.authenticateGoogleUser(tokenMap.get("token"));
-            return ResponseEntity.ok(response);
+            return ResponseEntity.status((int) response.get("code")).body(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -50,5 +50,16 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
         userService.deleteUser(userId);
         return ResponseEntity.ok().build();
+    }
+
+    // 테스트용 코드
+    @PostMapping("/test-create")
+    public ResponseEntity<?> createTestUser(@RequestBody User userDetails) {
+        try {
+            Map<String, Object> response = userService.createTestUser(userDetails);
+            return ResponseEntity.status((int) response.get("code")).body(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
