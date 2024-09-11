@@ -6,7 +6,7 @@ spring:
     driver-class-name: ${DRIVER_NAME}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
       dialect: org.hibernate.dialect.MySQLDialect
     show-sql: false  # 프로덕션 환경에서는 false로 설정
     properties:
