@@ -1,11 +1,13 @@
 package com.example.finalproj.user.controller;
 
+import com.example.finalproj.baby.service.BabyService;
 import com.example.finalproj.user.entity.User;
 import com.example.finalproj.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,11 +18,26 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private BabyService babyService;
+
     @PostMapping("/google")
     public ResponseEntity<?> authenticateUser(@RequestBody Map<String, String> tokenMap) {
         try {
             Map<String, Object> response = userService.authenticateGoogleUser(tokenMap.get("token"));
-            return ResponseEntity.status((int) response.get("code")).body(response);
+            User user = (User) response.get("user");
+
+            if (user == null) {
+                return ResponseEntity.badRequest().body("User authentication failed");
+            }
+
+            boolean hasBaby = babyService.userHasBaby(user.getUserId());
+
+            Map<String, Object> finalResponse = new HashMap<>(response);
+            finalResponse.put("user", user);  // Ensure user object is included
+            finalResponse.put("hasBaby", hasBaby);
+
+            return ResponseEntity.ok(finalResponse);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

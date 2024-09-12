@@ -27,7 +27,8 @@ public class BabyController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Baby>> getBabyByUserId(@PathVariable Integer userId) {
-        return ResponseEntity.ok(babyService.getBabyByUserId(userId));
+        List<Baby> babies = babyService.getBabyByUserId(userId);
+        return ResponseEntity.ok(babies);
     }
 
     @PostMapping

@@ -54,4 +54,9 @@ public class MemoService {
         return memoRepository.findByDate(date);
     }
 
+    public List<Memo> getMemosByUserAndDate(Integer userId, LocalDate date) {
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(23, 59, 59);
+        return memoRepository.findByUserIdAndDateBetween(userId, startOfDay, endOfDay);
+    }
 }

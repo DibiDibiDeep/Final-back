@@ -4,6 +4,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.finalproj.CalendarPhoto.entity.CalendarPhoto;
 import com.example.finalproj.CalendarPhoto.repository.CalendarPhotoRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,13 +14,17 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class CalendarPhotoService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CalendarPhotoService.class);
 
     @Autowired
     private CalendarPhotoRepository calendarPhotoRepository;
@@ -46,7 +52,10 @@ public class CalendarPhotoService {
     }
 
     public List<CalendarPhoto> getCalendarPhotosByDate(LocalDateTime date) {
-        return calendarPhotoRepository.findByDate(date);
+        LocalDate localDate = date.toLocalDate();
+        LocalDateTime startOfDay = localDate.atStartOfDay();
+        LocalDateTime endOfDay = localDate.atTime(LocalTime.MAX);
+        return calendarPhotoRepository.findByDateBetween(startOfDay, endOfDay);
     }
 
     public List<CalendarPhoto> getCalendarPhotosByYearAndMonth(int year, int month) {
@@ -54,7 +63,13 @@ public class CalendarPhotoService {
     }
 
     public CalendarPhoto createCalendarPhoto(MultipartFile file, Integer userId, Integer babyId, LocalDateTime date) throws IOException {
-        String filePath = uploadFileToS3(file);
+        String filePath;
+        try {
+            filePath = uploadFileToS3(file);
+        } catch (IOException e) {
+            logger.error("Failed to upload file to S3", e);
+            throw new IOException("Failed to upload file to S3", e);
+        }
 
         CalendarPhoto calendarPhoto = new CalendarPhoto();
         calendarPhoto.setUserId(userId);
@@ -62,22 +77,30 @@ public class CalendarPhotoService {
         calendarPhoto.setFilePath(filePath);
         calendarPhoto.setDate(date);
 
+        logger.info("Saving new calendar photo: {}", calendarPhoto);
         return calendarPhotoRepository.save(calendarPhoto);
     }
+
 
     private String uploadFileToS3(MultipartFile multipartFile) throws IOException {
         File file = convertMultiPartToFile(multipartFile);
         String fileName = generateFileName(multipartFile);
-        s3Client.putObject(new PutObjectRequest(bucketName, fileName, file));
-        file.delete();
-        return s3Client.getUrl(bucketName, fileName).toString();
+        try {
+            logger.info("Uploading file to S3: {}", fileName);
+            s3Client.putObject(new PutObjectRequest(bucketName, fileName, file));
+            String fileUrl = s3Client.getUrl(bucketName, fileName).toString();
+            logger.info("File uploaded successfully. URL: {}", fileUrl);
+            return fileUrl;
+        } finally {
+            file.delete();
+        }
     }
 
     private File convertMultiPartToFile(MultipartFile file) throws IOException {
         File convFile = new File(file.getOriginalFilename());
-        FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(file.getBytes());
-        fos.close();
+        try (FileOutputStream fos = new FileOutputStream(convFile)) {
+            fos.write(file.getBytes());
+        }
         return convFile;
     }
 
