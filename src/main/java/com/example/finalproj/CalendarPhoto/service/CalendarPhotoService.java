@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.finalproj.CalendarPhoto.entity.CalendarPhoto;
 import com.example.finalproj.CalendarPhoto.repository.CalendarPhotoRepository;
+import com.example.finalproj.ml.service.MLService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class CalendarPhotoService {
 
     @Autowired
     private AmazonS3 s3Client;
+
+    @Autowired
+    private MLService mlService;
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
@@ -77,8 +81,15 @@ public class CalendarPhotoService {
         calendarPhoto.setFilePath(filePath);
         calendarPhoto.setDate(date);
 
+        try {
+            mlService.sendImageToMLService(filePath, userId, babyId);
+        } catch (Exception e) {
+            System.err.println("Failed to send image to ML service: " + e.getMessage());
+        }
+
         logger.info("Saving new calendar photo: {}", calendarPhoto);
         return calendarPhotoRepository.save(calendarPhoto);
+
     }
 
 
