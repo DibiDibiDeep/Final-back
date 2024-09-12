@@ -51,7 +51,7 @@ public class CalendarService {
             updatedCalendar.setBabyId(calendarDetails.getBabyId());
             updatedCalendar.setCalendarPhotoId(calendarDetails.getCalendarPhotoId());
             updatedCalendar.setTodayId(calendarDetails.getTodayId());
-            updatedCalendar.setFairyTaleId(calendarDetails.getFairyTaleId());
+            updatedCalendar.setBookId(calendarDetails.getBookId());
             updatedCalendar.setTitle(calendarDetails.getTitle());
             updatedCalendar.setStartTime(calendarDetails.getStartTime());
             updatedCalendar.setEndTime(calendarDetails.getEndTime());

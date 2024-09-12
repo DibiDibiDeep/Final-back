@@ -15,8 +15,8 @@ public class TodaySum {
     @Column(name = "user_id")
     private Integer userId;
 
-    @Column(name = "fairy_tale_id")
-    private Integer fairyTaleId;
+    @Column(name = "book_id")
+    private Integer bookId;
 
     private String content;
 
@@ -34,10 +34,10 @@ public class TodaySum {
 
     public TodaySum(){}
 
-    public TodaySum(Integer todayId, Integer userId, Integer fairyTaleId, String content, LocalDateTime startDate, LocalDateTime endDate, LocalDateTime generatedDate, LocalDateTime revisionDate) {
+    public TodaySum(Integer todayId, Integer userId, Integer bookId, String content, LocalDateTime startDate, LocalDateTime endDate, LocalDateTime generatedDate, LocalDateTime revisionDate) {
         this.todayId = todayId;
         this.userId = userId;
-        this.fairyTaleId = fairyTaleId;
+        this.bookId = bookId;
         this.content = content;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -61,12 +61,12 @@ public class TodaySum {
         this.userId = userId;
     }
 
-    public Integer getFairyTaleId() {
-        return fairyTaleId;
+    public Integer getBookId() {
+        return bookId;
     }
 
-    public void setFairyTaleId(Integer fairyTaleId) {
-        this.fairyTaleId = fairyTaleId;
+    public void setBookId(Integer fairyTaleId) {
+        this.bookId = bookId;
     }
 
     public String getContent() {
@@ -114,7 +114,7 @@ public class TodaySum {
         return "TodaySum{" +
                 "todayId=" + todayId +
                 ", userId=" + userId +
-                ", fairyTaleId=" + fairyTaleId +
+                ", bookId=" + bookId +
                 ", content='" + content + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
