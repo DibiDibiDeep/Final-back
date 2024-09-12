@@ -21,7 +21,8 @@ spring:
 
 ml:
   service:
-    url: http://localhost:8000
+    # url: http://${ML_HOST:-localhost}:${ML_PORT:-8000}
+    url: http://ml:8000
 
 aws:
   accessKeyId: ${AWS_ACCESS_KEY_ID}
