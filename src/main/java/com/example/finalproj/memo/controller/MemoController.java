@@ -63,4 +63,12 @@ public class MemoController {
         List<Memo> memos = memoService.getMemosByDate(date);
         return ResponseEntity.ok(memos);
     }
+
+    @GetMapping("/user/{userId}/date/{date}")
+    public ResponseEntity<List<Memo>> getMemosByUserAndDate(
+            @PathVariable Integer userId,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        List<Memo> memos = memoService.getMemosByUserAndDate(userId, date);
+        return ResponseEntity.ok(memos);
+    }
 }

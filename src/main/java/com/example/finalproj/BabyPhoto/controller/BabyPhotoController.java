@@ -41,10 +41,19 @@ public class BabyPhotoController {
     }
 
     @PostMapping
-    public ResponseEntity<BabyPhoto> createBabyPhoto(
+    public ResponseEntity<?> createBabyPhoto(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("babyId") Integer babyId) throws IOException {
-        return ResponseEntity.ok(babyPhotoService.createBabyPhoto(file, babyId));
+            @RequestParam("babyId") Integer babyId) {
+        try {
+            String contentType = file.getContentType();
+            if (!"image/jpeg".equals(contentType) && !"image/png".equals(contentType)) {
+                return ResponseEntity.badRequest().body("Only JPG and PNG files are allowed.");
+            }
+            BabyPhoto babyPhoto = babyPhotoService.createBabyPhoto(file, babyId);
+            return ResponseEntity.ok(babyPhoto);
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().body("Failed to upload file: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
