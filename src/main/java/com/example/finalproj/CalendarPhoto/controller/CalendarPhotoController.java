@@ -3,11 +3,13 @@ package com.example.finalproj.CalendarPhoto.controller;
 import com.example.finalproj.CalendarPhoto.entity.CalendarPhoto;
 import com.example.finalproj.CalendarPhoto.service.CalendarPhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -41,8 +43,9 @@ public class CalendarPhotoController {
     }
 
     @GetMapping("/date/{date}")
-    public ResponseEntity<List<CalendarPhoto>> getCalendarPhotosByTakenAt(@PathVariable LocalDateTime date) {
-        return ResponseEntity.ok(calendarPhotoService.getCalendarPhotosByDate(date));
+    public ResponseEntity<List<CalendarPhoto>> getCalendarPhotosByTakenAt(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return ResponseEntity.ok(calendarPhotoService.getCalendarPhotosByDate(date.atStartOfDay()));
     }
 
     @GetMapping("/year/{year}/month/{month}")
@@ -54,12 +57,19 @@ public class CalendarPhotoController {
     }
 
     @PostMapping
-    public ResponseEntity<CalendarPhoto> createCalendarPhoto(
+    public ResponseEntity<?> createCalendarPhoto(
             @RequestParam("file") MultipartFile file,
             @RequestParam("userId") Integer userId,
             @RequestParam("babyId") Integer babyId,
-            @RequestParam("date") LocalDateTime date) throws IOException {
-        return ResponseEntity.ok(calendarPhotoService.createCalendarPhoto(file, userId, babyId, date));
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date) {
+        try {
+            CalendarPhoto photo = calendarPhotoService.createCalendarPhoto(file, userId, babyId, date);
+            return ResponseEntity.ok(photo);
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().body("Error uploading file: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("An unexpected error occurred: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")

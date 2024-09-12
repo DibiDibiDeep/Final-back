@@ -44,4 +44,8 @@ public class BabyService {
     public void deleteBaby(Integer babyId) {
         babyRepository.deleteById(babyId);
     }
+
+    public boolean userHasBaby(Integer userId) {
+        return babyRepository.existsByUserId(userId);
+    }
 }

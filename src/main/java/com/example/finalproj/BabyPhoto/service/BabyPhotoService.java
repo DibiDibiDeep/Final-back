@@ -1,6 +1,7 @@
 package com.example.finalproj.BabyPhoto.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.finalproj.BabyPhoto.entity.BabyPhoto;
 import com.example.finalproj.BabyPhoto.repository.BabyPhotoRepository;
@@ -12,6 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -46,11 +50,11 @@ public class BabyPhotoService {
     }
 
     public BabyPhoto createBabyPhoto(MultipartFile file, Integer babyId) throws IOException {
-        String filePath = uploadFileToS3(file);
+        String fileUrl = uploadFileToS3(file);
 
         BabyPhoto babyPhoto = new BabyPhoto();
         babyPhoto.setBabyId(babyId);
-        babyPhoto.setFilePath(filePath);
+        babyPhoto.setFilePath(fileUrl);
         babyPhoto.setUploadDate(LocalDateTime.now());
 
         return babyPhotoRepository.save(babyPhoto);

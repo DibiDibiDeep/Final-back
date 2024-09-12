@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface BabyRepository extends JpaRepository<Baby, Integer> {
     List<Baby> findByUserId(Integer userId);
+    boolean existsByUserId(Integer userId);
 }

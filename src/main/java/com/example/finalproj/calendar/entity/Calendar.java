@@ -90,7 +90,10 @@ public class Calendar {
         this.todayId = todayId;
     }
 
-    public Integer getBookId() { return bookId; }
+
+    public Integer getBookId() {
+        return bookId;
+    }
 
     public void setBookId(Integer bookId) {
         this.bookId = bookId;
