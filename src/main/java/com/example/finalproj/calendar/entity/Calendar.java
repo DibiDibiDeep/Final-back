@@ -22,8 +22,8 @@ public class Calendar {
     @Column(name = "today_id")
     private Integer todayId;
 
-    @Column(name = "fairy_tale_id")
-    private Integer fairyTaleId;
+    @Column(name = "book_id")
+    private Integer bookId;
 
     private String title;
 
@@ -35,13 +35,13 @@ public class Calendar {
 
     private String location;
 
-    public Calendar(Integer calendarId, Integer userId, Integer babyId, Integer calendarPhotoId, Integer todayId, Integer fairyTaleId, String title, LocalDateTime startTime, LocalDateTime endTime, String location) {
+    public Calendar(Integer calendarId, Integer userId, Integer babyId, Integer calendarPhotoId, Integer todayId, Integer bookId, String title, LocalDateTime startTime, LocalDateTime endTime, String location) {
         this.calendarId = calendarId;
         this.userId = userId;
         this.babyId = babyId;
         this.calendarPhotoId = calendarPhotoId;
         this.todayId = todayId;
-        this.fairyTaleId = fairyTaleId;
+        this.bookId = bookId;
         this.title = title;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -90,12 +90,12 @@ public class Calendar {
         this.todayId = todayId;
     }
 
-    public Integer getFairyTaleId() {
-        return fairyTaleId;
+    public Integer getBookId() {
+        return bookId;
     }
 
-    public void setFairyTaleId(Integer fairyTaleId) {
-        this.fairyTaleId = fairyTaleId;
+    public void setBookId(Integer bookId) {
+        this.bookId = bookId;
     }
 
     public String getTitle() {
@@ -138,7 +138,7 @@ public class Calendar {
                 ", babyId=" + babyId +
                 ", calendarPhotoId=" + calendarPhotoId +
                 ", todayId=" + todayId +
-                ", fairyTaleId=" + fairyTaleId +
+                ", bookId=" + bookId +
                 ", title='" + title + '\'' +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +

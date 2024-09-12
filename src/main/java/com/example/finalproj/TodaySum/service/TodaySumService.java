@@ -36,7 +36,7 @@ public class TodaySumService {
         if (todaySum.isPresent()) {
             TodaySum existingTodaySum = todaySum.get();
             existingTodaySum.setUserId(todaySumDetails.getUserId());
-            existingTodaySum.setFairyTaleId(todaySumDetails.getFairyTaleId());
+            existingTodaySum.setBookId(todaySumDetails.getBookId());
             existingTodaySum.setContent(todaySumDetails.getContent());
             existingTodaySum.setStartDate(todaySumDetails.getStartDate());
             existingTodaySum.setEndDate(todaySumDetails.getEndDate());
