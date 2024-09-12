@@ -38,7 +38,7 @@ public class MemoService {
             Memo existingMemo = memo.get();
             existingMemo.setUserId(memoDetails.getUserId());
             existingMemo.setTodayId(memoDetails.getTodayId());
-            existingMemo.setFairyTaleId(memoDetails.getFairyTaleId());
+            existingMemo.setBookId(memoDetails.getBookId());
             existingMemo.setDate(memoDetails.getDate());
             existingMemo.setContent(memoDetails.getContent());
             return memoRepository.save(existingMemo);
@@ -53,4 +53,5 @@ public class MemoService {
     public List<Memo> getMemosByDate(LocalDate date) {
         return memoRepository.findByDate(date);
     }
+
 }

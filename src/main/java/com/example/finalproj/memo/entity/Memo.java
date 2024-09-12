@@ -17,8 +17,8 @@ public class Memo {
     @Column(name = "today_id")
     private Integer todayId;
 
-    @Column(name = "fairy_tale_id")
-    private Integer fairyTaleId;
+    @Column(name = "book_id")
+    private Integer bookId;
 
     @Column(name = "date")
     private LocalDateTime date;
@@ -30,11 +30,11 @@ public class Memo {
 
     }
 
-    public Memo(Integer memoId, Integer userId, Integer todayId, Integer fairyTaleId, LocalDateTime date, String content) {
+    public Memo(Integer memoId, Integer userId, Integer todayId, Integer bookId, LocalDateTime date, String content) {
         this.memoId = memoId;
         this.userId = userId;
         this.todayId = todayId;
-        this.fairyTaleId = fairyTaleId;
+        this.bookId = bookId;
         this.date = date;
         this.content = content;
     }
@@ -63,12 +63,12 @@ public class Memo {
         this.todayId = todayId;
     }
 
-    public Integer getFairyTaleId() {
-        return fairyTaleId;
+    public Integer getBookId() {
+        return bookId;
     }
 
-    public void setFairyTaleId(Integer fairyTaleId) {
-        this.fairyTaleId = fairyTaleId;
+    public void setBookId(Integer bookId) {
+        this.bookId = bookId;
     }
 
     public LocalDateTime getDate() {
@@ -93,7 +93,7 @@ public class Memo {
                 "memoId=" + memoId +
                 ", userId=" + userId +
                 ", todayId=" + todayId +
-                ", fairyTaleId=" + fairyTaleId +
+                ", bookId=" + bookId +
                 ", date=" + date +
                 ", content='" + content + '\'' +
                 '}';

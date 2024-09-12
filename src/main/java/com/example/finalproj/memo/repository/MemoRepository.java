@@ -16,4 +16,5 @@ public interface MemoRepository extends JpaRepository<Memo, Integer> {
 
     @Query("SELECT m FROM Memo m WHERE m.date BETWEEN :startDate AND :endDate")
     List<Memo> findByDateBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
 }
