@@ -10,7 +10,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "http://13.209.213.152:3000", "http://frontend:3000") //TODO: ip주소 도메인으로 변경 필요
+                .allowedOrigins("http://localhost:3000", ${NEXT_PUBLIC_FRONTEND_API_URL}, "http://frontend:3000") //TODO: 배포시 ip주소 도메인으로 변경 필요
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);
