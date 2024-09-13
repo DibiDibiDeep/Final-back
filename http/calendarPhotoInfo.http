@@ -1,0 +1,150 @@
+### Save and Process Inference Result
+POST http://localhost:8080/api/calendar-photo-inf/1
+Content-Type: application/json
+
+{
+  "year": null,
+  "month": "08",
+  "events": [
+    {
+      "date": "06",
+      "activities": [
+        {
+          "name": "물놀이",
+          "time": null,
+          "infomation": "(4세)"
+        },
+        {
+          "name": "열린어린이집 바다반 활동보조",
+          "time": null,
+          "infomation": ""
+        },
+        {
+          "name": "빨간망토 인형극 공연 관람",
+          "time": "[비대면]",
+          "infomation": "(3세~5세)"
+        }
+      ]
+    },
+    {
+      "date": "07",
+      "activities": [
+        {
+          "name": "소방대피훈련",
+          "time": null,
+          "infomation": ""
+        }
+      ]
+    },
+    {
+      "date": "08",
+      "activities": [
+        {
+          "name": "지역사회연계활동 - 마트",
+          "time": null,
+          "infomation": "(4세, 5세)"
+        },
+        {
+          "name": "열린어린이집 바다반 활동보조",
+          "time": null,
+          "infomation": ""
+        }
+      ]
+    },
+    {
+      "date": "13",
+      "activities": [
+        {
+          "name": "물놀이",
+          "time": null,
+          "infomation": "(1세)"
+        },
+        {
+          "name": "열린어린이집 달님반 활동보조",
+          "time": null,
+          "infomation": ""
+        }
+      ]
+    },
+    {
+      "date": "15",
+      "activities": [
+        {
+          "name": "광복절",
+          "time": null,
+          "infomation": "[휴원]"
+        }
+      ]
+    },
+    {
+      "date": "16",
+      "activities": [
+        {
+          "name": "지역사회연계활동 - 마트",
+          "time": null,
+          "infomation": "(3세)"
+        },
+        {
+          "name": "열린어린이집 무지개반 활동보조",
+          "time": null,
+          "infomation": ""
+        }
+      ]
+    },
+    {
+      "date": "21",
+      "activities": [
+        {
+          "name": "탈인형극",
+          "time": null,
+          "infomation": "- 바보온달과 평강공주 [주최: 아토피 천식안심학교] (0세~5세)"
+        }
+      ]
+    },
+    {
+      "date": "22",
+      "activities": [
+        {
+          "name": "비상대응훈련",
+          "time": null,
+          "infomation": "(태풍)"
+        }
+      ]
+    },
+    {
+      "date": "23",
+      "activities": [
+        {
+          "name": "하늘반 여름캠프",
+          "time": null,
+          "infomation": "(5세)"
+        }
+      ]
+    },
+    {
+      "date": "27",
+      "activities": [
+        {
+          "name": "인형극 관람",
+          "time": null,
+          "infomation": "'안전극 : 랑이 담배 피해야 돼요 [약물오남용/중독]' (1세~5세)"
+        }
+      ]
+    },
+    {
+      "date": "30",
+      "activities": [
+        {
+          "name": "어린이 방dfsdf문교육",
+          "time": null,
+          "infomation": "[주최: 중랑구 어린이 사회복지급식관리지원센터] (0세~2세) - 식사예절 및 올바른 식습관 '설탕의 달콤한 보다 건강한 단 맛이 좋아요'"
+        }
+      ]
+    }
+  ],
+  "user_id": "1",
+  "baby_id": "1"
+}
+
+### Get All Calendar Photo Inferences
+GET http://localhost:8080/api/calendar-photo-inf

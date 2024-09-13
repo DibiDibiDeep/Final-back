@@ -17,4 +17,6 @@ public interface CalendarRepository extends JpaRepository<Calendar, Integer> {
 
     @Query("SELECT c FROM Calendar c WHERE c.startTime BETWEEN :startDate AND :endDate")
     List<Calendar> findByStartTimeBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+    boolean existsByUserIdAndStartTimeAndTitle(int userId, LocalDateTime startTime, String title);
 }

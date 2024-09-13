@@ -13,7 +13,7 @@ public class Calendar {
     @Column(name = "user_id")
     private Integer userId;
 
-    @Column(name = "baby_id")
+    @Column(name = "baby_id", nullable = true)
     private Integer babyId;
 
     @Column(name = "calendar_photo_id")
