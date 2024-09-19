@@ -5,19 +5,21 @@ import com.example.finalproj.Page.service.PageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/pages")
 public class PageController {
-
     @Autowired
     private PageService pageService;
 
     @PostMapping
-    public ResponseEntity<Page> createPage(@RequestBody Page page) {
-        return ResponseEntity.ok(pageService.createPage(page));
+    public ResponseEntity<Page> createPage(@RequestPart("page") Page page,
+                                           @RequestPart("image") MultipartFile image) throws IOException {
+        return ResponseEntity.ok(pageService.createPage(page, image));
     }
 
     @GetMapping("/{id}")
@@ -27,22 +29,10 @@ public class PageController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping
-    public ResponseEntity<List<Page>> getAllPages() {
-        return ResponseEntity.ok(pageService.getAllPages());
-    }
-
     @GetMapping("/book/{bookId}")
     public ResponseEntity<List<Page>> getPagesByBookId(@PathVariable Integer bookId) {
         List<Page> pages = pageService.getPagesByBookId(bookId);
         return ResponseEntity.ok(pages);
-    }
-
-    @GetMapping("/book/{bookId}/page/{pageNum}")
-    public ResponseEntity<Page> getPageByBookIdAndPageNum(@PathVariable Integer bookId, @PathVariable Integer pageNum) {
-        return pageService.getPageByBookIdAndPageNum(bookId, pageNum)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")

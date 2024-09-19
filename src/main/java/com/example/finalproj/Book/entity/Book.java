@@ -1,39 +1,33 @@
 package com.example.finalproj.Book.entity;
 
+import com.example.finalproj.Page.entity.Page;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Book")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "book_id")
     private Integer bookId;
 
-    @Column(name = "user_id", nullable = false)
     private Integer userId;
-
-    @Column(name = "title", nullable = false)
     private String title;
-
-    @Column(name = "cover_path", nullable = false)
     private String coverPath;
-
-    @Column(name = "start_date", nullable = false)
     private LocalDateTime startDate;
-
-    @Column(name = "end_date", nullable = false)
     private LocalDateTime endDate;
-
-    @Column(name = "generated_date", nullable = false)
     private LocalDateTime generatedDate;
 
-    public Book() {
-    }
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Page> pages = new ArrayList<>();
 
-    public Book(Integer bookId, Integer userId, String title, String coverPath, LocalDateTime startDate, LocalDateTime endDate, LocalDateTime generatedDate) {
-        this.bookId = bookId;
+    public Book() {}
+
+    public Book(Integer userId, String title, String coverPath, LocalDateTime startDate, LocalDateTime endDate, LocalDateTime generatedDate) {
         this.userId = userId;
         this.title = title;
         this.coverPath = coverPath;
@@ -41,8 +35,6 @@ public class Book {
         this.endDate = endDate;
         this.generatedDate = generatedDate;
     }
-
-    // Getters and setters
 
     public Integer getBookId() {
         return bookId;
@@ -100,16 +92,21 @@ public class Book {
         this.generatedDate = generatedDate;
     }
 
-    @Override
-    public String toString() {
-        return "Book{" +
-                "bookId=" + bookId +
-                ", userId=" + userId +
-                ", title='" + title + '\'' +
-                ", coverPath='" + coverPath + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", generatedDate=" + generatedDate +
-                '}';
+    public List<Page> getPages() {
+        return pages;
+    }
+
+    public void setPages(List<Page> pages) {
+        this.pages = pages;
+    }
+
+    public void addPage(Page page) {
+        pages.add(page);
+        page.setBook(this);
+    }
+
+    public void removePage(Page page) {
+        pages.remove(page);
+        page.setBook(null);
     }
 }

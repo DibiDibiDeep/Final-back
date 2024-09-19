@@ -10,16 +10,25 @@ GET {{baseUrl}}/1
 
 ### Create new Book
 POST {{baseUrl}}
-Content-Type: {{contentType}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="book"
+Content-Type: application/json
 
 {
   "userId": 1,
-  "title": "토끼의 모험",
-  "coverPath": "/covers/rabbit_adventure.jpg",
+  "title": "바밤바의 모험",
   "startDate": "2024-03-01T00:00:00",
   "endDate": "2024-03-07T23:59:59",
   "generatedDate": "2024-03-01T09:00:00"
 }
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="coverImage"; filename="바밤바.png"
+Content-Type: image/png
+
+< C:/hyun98/바밤바.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ### Update Book
 PUT {{baseUrl}}/11
@@ -27,8 +36,8 @@ Content-Type: {{contentType}}
 
 {
   "userId": 1,
-  "title": "토끼의 신나는 모험",
-  "coverPath": "/covers/rabbit_adventure_updated.jpg",
+  "title": "바밤바의 신나는 모험",
+  "coverPath": "/covers/babamba_updated.png",
   "startDate": "2024-03-01T00:00:00",
   "endDate": "2024-03-07T23:59:59",
   "generatedDate": "2024-03-01T09:00:00"
@@ -36,9 +45,3 @@ Content-Type: {{contentType}}
 
 ### Delete Book
 DELETE {{baseUrl}}/8
-
-### Get Books by Date Range
-GET {{baseUrl}}/date-range?startDate=2024-03-01T00:00:00&endDate=2024-03-31T23:59:59
-
-### Get Books by Date
-GET {{baseUrl}}/date/2024-03-01
