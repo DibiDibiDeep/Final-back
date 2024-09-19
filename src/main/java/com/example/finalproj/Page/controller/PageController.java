@@ -3,6 +3,7 @@ package com.example.finalproj.Page.controller;
 import com.example.finalproj.Page.entity.Page;
 import com.example.finalproj.Page.service.PageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,14 @@ import java.util.List;
 public class PageController {
     @Autowired
     private PageService pageService;
+
+    @GetMapping
+    public ResponseEntity<org.springframework.data.domain.Page<Page>> getAllPages(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        org.springframework.data.domain.Page<Page> pageResult = pageService.getAllPages(PageRequest.of(page, size));
+        return ResponseEntity.ok(pageResult);
+    }
 
     @PostMapping
     public ResponseEntity<Page> createPage(@RequestPart("page") Page page,
@@ -36,8 +45,10 @@ public class PageController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Page> updatePage(@PathVariable Integer id, @RequestBody Page pageDetails) {
-        Page updatedPage = pageService.updatePage(id, pageDetails);
+    public ResponseEntity<Page> updatePage(@PathVariable Integer id,
+                                           @RequestPart("page") Page pageDetails,
+                                           @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
+        Page updatedPage = pageService.updatePage(id, pageDetails, image);
         if (updatedPage == null) {
             return ResponseEntity.notFound().build();
         }
