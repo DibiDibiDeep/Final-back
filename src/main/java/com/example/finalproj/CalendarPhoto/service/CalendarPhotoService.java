@@ -66,14 +66,13 @@ public class CalendarPhotoService {
         return calendarPhotoRepository.findByYearAndMonth(year, month);
     }
 
+    public CalendarPhotoService(CalendarPhotoRepository calendarPhotoRepository, MLService mlService) {
+        this.calendarPhotoRepository = calendarPhotoRepository;
+        this.mlService = mlService;
+    }
+
     public CalendarPhoto createCalendarPhoto(MultipartFile file, Integer userId, Integer babyId, LocalDateTime date) throws IOException {
-        String filePath;
-        try {
-            filePath = uploadFileToS3(file);
-        } catch (IOException e) {
-            logger.error("Failed to upload file to S3", e);
-            throw new IOException("Failed to upload file to S3", e);
-        }
+        String filePath = uploadFileToS3(file); // S3 업로드 로직 구현 필요
 
         CalendarPhoto calendarPhoto = new CalendarPhoto();
         calendarPhoto.setUserId(userId);
@@ -81,16 +80,14 @@ public class CalendarPhotoService {
         calendarPhoto.setFilePath(filePath);
         calendarPhoto.setDate(date);
 
-        try {
-            mlService.sendImageToMLService(filePath, userId, babyId);
-        } catch (Exception e) {
-            System.err.println("Failed to send image to ML service: " + e.getMessage());
-        }
+        CalendarPhoto savedCalendarPhoto = calendarPhotoRepository.save(calendarPhoto);
 
-        logger.info("Saving new calendar photo: {}", calendarPhoto);
-        return calendarPhotoRepository.save(calendarPhoto);
+        // ML 서비스로 이미지 전송 (비동기적으로 처리)
+        mlService.sendImageToMLService(filePath, userId, babyId, savedCalendarPhoto.getCalendarPhotoId());
 
+        return savedCalendarPhoto;
     }
+
 
 
     private String uploadFileToS3(MultipartFile multipartFile) throws IOException {

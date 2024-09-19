@@ -2,6 +2,7 @@ package com.example.finalproj.CalendarPhoto.controller;
 
 import com.example.finalproj.CalendarPhoto.entity.CalendarPhoto;
 import com.example.finalproj.CalendarPhoto.service.CalendarPhotoService;
+import com.example.finalproj.ml.service.MLService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,11 @@ import java.util.List;
 @RequestMapping("/api/calendar-photos")
 public class CalendarPhotoController {
 
-    @Autowired
-    private CalendarPhotoService calendarPhotoService;
+    private final CalendarPhotoService calendarPhotoService;
+
+    public CalendarPhotoController(CalendarPhotoService calendarPhotoService) {
+        this.calendarPhotoService = calendarPhotoService;
+    }
 
     @GetMapping
     public ResponseEntity<List<CalendarPhoto>> getAllCalendarPhotos() {
@@ -56,6 +60,7 @@ public class CalendarPhotoController {
         return ResponseEntity.ok(photos);
     }
 
+
     @PostMapping
     public ResponseEntity<?> createCalendarPhoto(
             @RequestParam("file") MultipartFile file,
@@ -71,7 +76,6 @@ public class CalendarPhotoController {
             return ResponseEntity.internalServerError().body("An unexpected error occurred: " + e.getMessage());
         }
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCalendarPhoto(@PathVariable Integer id) {
         calendarPhotoService.deleteCalendarPhoto(id);
