@@ -38,17 +38,34 @@ public class CalendarPhotoInfService {
         calendarPhotoInf.setInferenceResult(inferenceResult);
         calendarPhotoInf.setInferenceDate(LocalDateTime.now());
 
+        // 자료형 오류 수정 09/19 15:39
         try {
             Map<String, Object> resultMap = objectMapper.readValue(inferenceResult, Map.class);
-            calendarPhotoInf.setUserId(Integer.parseInt((String) resultMap.get("user_id")));
-            calendarPhotoInf.setBabyId(Integer.parseInt((String) resultMap.get("baby_id")));
-
-            // Save the inference result
+            
+            Object userIdObj = resultMap.get("user_id");
+            if (userIdObj instanceof Integer) {
+                calendarPhotoInf.setUserId((Integer) userIdObj);
+            } else if (userIdObj instanceof String) {
+                calendarPhotoInf.setUserId(Integer.parseInt((String) userIdObj));
+            } else {
+                throw new IllegalArgumentException("Invalid user_id type");
+            }
+            
+            Object babyIdObj = resultMap.get("baby_id");
+            if (babyIdObj instanceof Integer) {
+                calendarPhotoInf.setBabyId((Integer) babyIdObj);
+            } else if (babyIdObj instanceof String) {
+                calendarPhotoInf.setBabyId(Integer.parseInt((String) babyIdObj));
+            } else {
+                throw new IllegalArgumentException("Invalid baby_id type");
+            }
+        
+            // 추론 결과 저장
             calendarPhotoInf = calendarPhotoInfRepository.save(calendarPhotoInf);
-
-            // Automatically process the inference result
+        
+            // 추론 결과를 자동으로 처리
             processCalendarEntries(calendarPhotoInf, resultMap);
-
+        
         } catch (Exception e) {
             throw new IllegalArgumentException("Error processing inference result", e);
         }
