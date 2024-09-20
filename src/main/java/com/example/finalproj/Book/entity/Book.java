@@ -21,12 +21,15 @@ public class Book {
     private LocalDateTime endDate;
     private LocalDateTime generatedDate;
 
+    // Page 엔티티와의 일대다 관계 설정
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Page> pages = new ArrayList<>();
 
+    // 기본 생성자
     public Book() {}
 
+    // 모든 필드를 포함한 생성자
     public Book(Integer userId, String title, String coverPath, LocalDateTime startDate, LocalDateTime endDate, LocalDateTime generatedDate) {
         this.userId = userId;
         this.title = title;
@@ -36,6 +39,7 @@ public class Book {
         this.generatedDate = generatedDate;
     }
 
+    // Getter와 Setter 메서드
     public Integer getBookId() {
         return bookId;
     }
@@ -100,11 +104,13 @@ public class Book {
         this.pages = pages;
     }
 
+    // 페이지 추가 메서드
     public void addPage(Page page) {
         pages.add(page);
         page.setBook(this);
     }
 
+    // 페이지 제거 메서드
     public void removePage(Page page) {
         pages.remove(page);
         page.setBook(null);

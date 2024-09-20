@@ -16,11 +16,13 @@ public class MLService {
     private final RestTemplate restTemplate;
     private final ApplicationEventPublisher eventPublisher;
 
+    // 생성자
     public MLService(RestTemplate restTemplate, ApplicationEventPublisher eventPublisher) {
         this.restTemplate = restTemplate;
         this.eventPublisher = eventPublisher;
     }
 
+    // 이미지를 ML 서비스로 전송
     public void sendImageToMLService(String imagePath, Integer userId, Integer babyId, Integer calendarPhotoId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -36,6 +38,7 @@ public class MLService {
         }
     }
 
+    // 책 정보를 ML 서비스로 전송
     public void sendBookToMLService(Book book) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

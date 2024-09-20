@@ -26,10 +26,12 @@ public class PageService {
     @Value("${aws.s3.bucket}")
     private String bucketName;
 
+    // 모든 페이지 조회 (페이징 적용)
     public org.springframework.data.domain.Page<Page> getAllPages(Pageable pageable) {
         return pageRepository.findAll(pageable);
     }
 
+    // 새 페이지 생성
     public Page createPage(Page page, MultipartFile image) throws IOException {
         if (image != null && !image.isEmpty()) {
             String imagePath = uploadFileToS3(image, "books/pages");
@@ -38,14 +40,17 @@ public class PageService {
         return pageRepository.save(page);
     }
 
+    // ID로 페이지 조회
     public Optional<Page> getPageById(Integer id) {
         return pageRepository.findById(id);
     }
 
+    // 책 ID로 페이지 조회
     public List<Page> getPagesByBookId(Integer bookId) {
         return pageRepository.findByBookBookIdOrderByPageNum(bookId);
     }
 
+    // 페이지 수정
     public Page updatePage(Integer id, Page pageDetails, MultipartFile image) throws IOException {
         Optional<Page> pageOptional = pageRepository.findById(id);
         if (pageOptional.isPresent()) {
@@ -64,10 +69,12 @@ public class PageService {
         return null;
     }
 
+    // 페이지 삭제
     public void deletePage(Integer id) {
         pageRepository.deleteById(id);
     }
 
+    // S3에 파일 업로드
     private String uploadFileToS3(MultipartFile file, String directory) throws IOException {
         String fileExtension = getFileExtension(file.getOriginalFilename());
         String fileName = directory + "/" + UUID.randomUUID() + fileExtension;
@@ -81,6 +88,7 @@ public class PageService {
         return s3Client.getUrl(bucketName, fileName).toString();
     }
 
+    // 파일 확장자 추출
     private String getFileExtension(String filename) {
         return Optional.ofNullable(filename)
                 .filter(f -> f.contains("."))

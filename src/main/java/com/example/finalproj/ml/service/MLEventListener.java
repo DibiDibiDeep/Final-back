@@ -15,12 +15,13 @@ public class MLEventListener {
     private final RestTemplate restTemplate;
     private final String appUrl;
 
-
+    // 생성자
     public MLEventListener(RestTemplate restTemplate, @Value("${app.url:http://localhost:8080}") String appUrl) {
         this.restTemplate = restTemplate;
         this.appUrl = appUrl;
     }
 
+    // ML 처리 완료 이벤트 핸들러
     @EventListener
     public void handleMLProcessingCompletedEvent(MLProcessingCompletedEvent event) {
         String mlResponse = event.getMlResponse();
@@ -39,4 +40,3 @@ public class MLEventListener {
         }
     }
 }
-
