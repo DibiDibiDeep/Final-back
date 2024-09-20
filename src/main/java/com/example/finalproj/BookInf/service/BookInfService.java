@@ -34,7 +34,7 @@ public class BookInfService {
             bookInf.setUserId(Integer.parseInt((String) resultMap.get("user_id")));
             // 필요한 경우 추론 결과에서 추가 정보 처리
         } catch (Exception e) {
-            throw new IllegalArgumentException("추론 결과 처리 중 오류 발생", e);
+            throw new IllegalArgumentException("Error processing inference result", e);
         }
 
         return bookInfRepository.save(bookInf);

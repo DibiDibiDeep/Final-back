@@ -52,12 +52,12 @@ public class BabyPhotoController {
         try {
             String contentType = file.getContentType();
             if (!"image/jpeg".equals(contentType) && !"image/png".equals(contentType)) {
-                return ResponseEntity.badRequest().body("JPG와 PNG 파일만 허용됩니다.");
+                return ResponseEntity.badRequest().body("Only JPG and PNG files are allowed.");
             }
             BabyPhoto babyPhoto = babyPhotoService.createBabyPhoto(file, babyId);
             return ResponseEntity.ok(babyPhoto);
         } catch (IOException e) {
-            return ResponseEntity.internalServerError().body("파일 업로드 실패: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Failed to upload file: " + e.getMessage());
         }
     }
 

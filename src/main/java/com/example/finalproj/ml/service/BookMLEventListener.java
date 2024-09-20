@@ -20,9 +20,9 @@ public class BookMLEventListener {
         Integer bookId = event.getBookId();
         try {
             bookService.updateBookWithMLResponse(bookId, mlResponse);
-            System.out.println("ML 응답으로 책 정보가 업데이트되었습니다. 책 ID: " + bookId);
+            System.out.println("Book updated with ML response for book ID: " + bookId);
         } catch (Exception e) {
-            System.err.println("ML 응답으로 책 정보 업데이트 중 오류 발생: " + e.getMessage());
+            System.err.println("Error updating book with ML response: " + e.getMessage());
         }
     }
 }
