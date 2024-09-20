@@ -10,21 +10,35 @@ GET {{baseUrl}}/1
 
 ### Create new Page
 POST {{baseUrl}}
-Content-Type: {{contentType}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="page"
+Content-Type: application/json
 
 {
   "book": {
-    "bookId": 11
+    "bookId": 9
   },
-  "illustPrompt": "작은 토끼가 숲속에 앉아있는 모습",
-  "imagePath": "/images/page1.jpg",
   "pageNum": 1,
-  "text": "옛날 옛적에 작은 토끼가 살았습니다..."
+  "text": "옛날 옛적에 작은 토끼가 살았습니다...하지만 그래",
+  "illustPrompt": "작은 토끼가 숲속에 앉아있는 모습"
 }
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="page1.jpg"
+Content-Type: image/png
+
+< C:/hyun98/바밤바.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ### Update Page
 PUT {{baseUrl}}/5
-Content-Type: {{contentType}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="page"
+Content-Type: application/json
 
 {
   "book": {
@@ -32,15 +46,18 @@ Content-Type: {{contentType}}
   },
   "pageNum": 1,
   "text": "옛날 옛적에 귀여운 작은 토끼가 숲속에 살았습니다...근데 거기서",
-  "illustPrompt": "귀여운 작은 토끼가 숲속에서 뛰어노는 모습",
-  "imagePath": "/images/page1_updated.jpg"
+  "illustPrompt": "귀여운 작은 토끼가 숲속에서 뛰어노는 모습"
 }
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="page1_updated.jpg"
+Content-Type: image/jpeg
+
+< ./path/to/your/image/page1_updated.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ### Delete Page
 DELETE {{baseUrl}}/1
 
 ### Get Pages by Book ID
 GET {{baseUrl}}/book/1
-
-### Get Pages by Page Number
-GET {{baseUrl}}/book/1/page/1
