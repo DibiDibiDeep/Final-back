@@ -16,12 +16,14 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
+    // 새 책 생성
     @PostMapping
     public ResponseEntity<Book> createBook(@RequestPart("book") Book book,
                                            @RequestPart("coverImage") MultipartFile coverImage) throws IOException {
         return ResponseEntity.ok(bookService.createBook(book, coverImage));
     }
 
+    // ID로 책 조회
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable Integer id) {
         return bookService.getBookById(id)
@@ -29,11 +31,13 @@ public class BookController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // 모든 책 조회
     @GetMapping
     public ResponseEntity<List<Book>> getAllBooks() {
         return ResponseEntity.ok(bookService.getAllBooks());
     }
 
+    // 책 정보 업데이트
     @PutMapping("/{id}")
     public ResponseEntity<Book> updateBook(@PathVariable Integer id, @RequestBody Book bookDetails) {
         Book updatedBook = bookService.updateBook(id, bookDetails);
@@ -43,6 +47,7 @@ public class BookController {
         return ResponseEntity.ok(updatedBook);
     }
 
+    // 책 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable Integer id) {
         bookService.deleteBook(id);

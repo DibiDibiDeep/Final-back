@@ -8,10 +8,12 @@ import org.springframework.stereotype.Component;
 public class BookMLEventListener {
     private final BookService bookService;
 
+    // 생성자
     public BookMLEventListener(BookService bookService) {
         this.bookService = bookService;
     }
 
+    // 책 ML 처리 완료 이벤트 핸들러
     @EventListener
     public void handleBookMLProcessingCompletedEvent(BookMLProcessingCompletedEvent event) {
         String mlResponse = event.getMlResponse();

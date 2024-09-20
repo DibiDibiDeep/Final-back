@@ -29,6 +29,7 @@ public class BookService {
     @Value("${aws.s3.bucket}")
     private String bucketName;
 
+    // 새 책 생성
     public Book createBook(Book book, MultipartFile coverImage) throws IOException {
         if (coverImage != null && !coverImage.isEmpty()) {
             String coverPath = uploadFileToS3(coverImage, "books/covers");
@@ -42,14 +43,17 @@ public class BookService {
         return savedBook;
     }
 
+    // ID로 책 조회
     public Optional<Book> getBookById(Integer id) {
         return bookRepository.findByIdWithPages(id);
     }
 
+    // 모든 책 조회
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
 
+    // 책 정보 업데이트
     public Book updateBook(Integer id, Book bookDetails) {
         Optional<Book> book = bookRepository.findById(id);
         if (book.isPresent()) {
@@ -63,10 +67,12 @@ public class BookService {
         return null;
     }
 
+    // 책 삭제
     public void deleteBook(Integer id) {
         bookRepository.deleteById(id);
     }
 
+    // S3에 파일 업로드
     private String uploadFileToS3(MultipartFile file, String directory) throws IOException {
         String fileExtension = getFileExtension(file.getOriginalFilename());
         String fileName = directory + "/" + UUID.randomUUID() + fileExtension;
@@ -80,6 +86,7 @@ public class BookService {
         return s3Client.getUrl(bucketName, fileName).toString();
     }
 
+    // 파일 확장자 추출
     private String getFileExtension(String filename) {
         return Optional.ofNullable(filename)
                 .filter(f -> f.contains("."))
@@ -87,6 +94,7 @@ public class BookService {
                 .orElse("");
     }
 
+    // ML 응답으로 책 정보 업데이트
     public void updateBookWithMLResponse(Integer bookId, String mlResponse) {
         Optional<Book> bookOptional = bookRepository.findById(bookId);
         if (bookOptional.isPresent()) {

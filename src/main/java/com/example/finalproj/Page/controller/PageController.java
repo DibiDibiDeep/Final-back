@@ -17,6 +17,7 @@ public class PageController {
     @Autowired
     private PageService pageService;
 
+    // 모든 페이지 조회 (페이징 적용)
     @GetMapping
     public ResponseEntity<org.springframework.data.domain.Page<Page>> getAllPages(
             @RequestParam(defaultValue = "0") int page,
@@ -25,12 +26,14 @@ public class PageController {
         return ResponseEntity.ok(pageResult);
     }
 
+    // 새 페이지 생성
     @PostMapping
     public ResponseEntity<Page> createPage(@RequestPart("page") Page page,
                                            @RequestPart("image") MultipartFile image) throws IOException {
         return ResponseEntity.ok(pageService.createPage(page, image));
     }
 
+    // ID로 페이지 조회
     @GetMapping("/{id}")
     public ResponseEntity<Page> getPageById(@PathVariable Integer id) {
         return pageService.getPageById(id)
@@ -38,12 +41,14 @@ public class PageController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // 책 ID로 페이지 조회
     @GetMapping("/book/{bookId}")
     public ResponseEntity<List<Page>> getPagesByBookId(@PathVariable Integer bookId) {
         List<Page> pages = pageService.getPagesByBookId(bookId);
         return ResponseEntity.ok(pages);
     }
 
+    // 페이지 수정
     @PutMapping("/{id}")
     public ResponseEntity<Page> updatePage(@PathVariable Integer id,
                                            @RequestPart("page") Page pageDetails,
@@ -55,6 +60,7 @@ public class PageController {
         return ResponseEntity.ok(updatedPage);
     }
 
+    // 페이지 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePage(@PathVariable Integer id) {
         pageService.deletePage(id);

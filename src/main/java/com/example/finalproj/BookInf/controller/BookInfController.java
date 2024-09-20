@@ -14,6 +14,7 @@ public class BookInfController {
     @Autowired
     private BookInfService bookInfService;
 
+    // 추론 결과 저장 및 처리
     @PostMapping("/{bookId}")
     public ResponseEntity<BookInf> saveAndProcessInferenceResult(
             @PathVariable Integer bookId,
@@ -22,12 +23,14 @@ public class BookInfController {
         return ResponseEntity.ok(processedResult);
     }
 
+    // 모든 BookInf 조회
     @GetMapping
     public ResponseEntity<List<BookInf>> getAllBookInfs() {
         List<BookInf> bookInfs = bookInfService.getAllBookInfs();
         return ResponseEntity.ok(bookInfs);
     }
 
+    // 책 ID로 BookInf 조회
     @GetMapping("/{bookId}")
     public ResponseEntity<BookInf> getBookInfByBookId(@PathVariable Integer bookId) {
         return bookInfService.getBookInfByBookId(bookId)

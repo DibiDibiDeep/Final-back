@@ -8,5 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface BookInfRepository extends JpaRepository<BookInf, Integer> {
+    // 책 ID로 BookInf 조회
     Optional<BookInf> findByBookId(Integer bookId);
 }

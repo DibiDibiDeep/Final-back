@@ -18,8 +18,10 @@ public class BookInf {
     private LocalDateTime inferenceDate;
     private Integer userId;
 
+    // 기본 생성자
     public BookInf() {}
 
+    // 모든 필드를 포함한 생성자
     public BookInf(Integer bookId, String inferenceResult, LocalDateTime inferenceDate, Integer userId) {
         this.bookId = bookId;
         this.inferenceResult = inferenceResult;
@@ -27,6 +29,7 @@ public class BookInf {
         this.userId = userId;
     }
 
+    // Getter와 Setter 메서드
     public Integer getBookInfId() {
         return bookInfId;
     }
