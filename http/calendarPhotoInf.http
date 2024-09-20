@@ -9,76 +9,76 @@ POST http://localhost:8080/api/calendar-photo-inf/1
 Content-Type: application/json
 
 {
+  "month": "04",
   "year": null,
-  "month": "05",
   "events": [
     {
-      "date": "09",
+      "date": "05",
       "activities": [
         {
-          "name": "숲에서 놀고 배우고 자라기",
+          "name": "식목일 행사",
           "start_time": null,
           "end_time": null,
-          "location": "선우공원",
-          "target": "열매반",
-          "information": "숲에서 놀고 배우고 자라기 활동",
-          "notes": "체육복/운동화 착용"
-        }
-      ]
-    },
-    {
-      "date": "10",
-      "activities": [
-        {
-          "name": "흙놀이",
-          "start_time": null,
-          "end_time": null,
-          "location": "두드림교회 4층",
+          "location": "원내",
           "target": "전체",
-          "information": "흙놀이 활동",
-          "notes": "체육복 착용"
-        }
-      ]
-    },
-    {
-      "date": "11",
-      "activities": [
-        {
-          "name": "5월달 생일축하",
-          "start_time": null,
-          "end_time": null,
-          "location": "두드림교회 3층",
-          "target": "열매반",
-          "information": "5월 생일을 축하하는 행사",
+          "information": "식목일 행사",
           "notes": null
         },
         {
-          "name": "지문 등 사전등록 현장 방문",
-          "start_time": "10:00:00",
-          "end_time": null,
+          "name": "지진대피훈련",
+          "start_time": "09:50:00",
+          "end_time": "10:00:00",
           "location": "원내",
-          "target": "신청 아동",
-          "information": "아동 실종 예방을 위한 지문 등록",
-          "notes": "신청 아동은 결석하지 않도록 해 주세요."
+          "target": "전체",
+          "information": "지진대피훈련",
+          "notes": "9시30분 등원시간을 지켜주세요."
         }
       ]
     },
     {
-      "date": "13",
+      "date": "06",
       "activities": [
         {
-          "name": "봄소풍",
-          "start_time": "09:30:00",
+          "name": "동지 후 105일째 되는 날",
+          "start_time": null,
           "end_time": null,
-          "location": "용산가족공원",
-          "target": "꽃잎, 열매반",
-          "information": "봄소풍 행사",
-          "notes": "09:30 출발"
+          "location": "원내",
+          "target": "전체",
+          "information": "동지 후 105일째 되는 날",
+          "notes": null
+        }
+      ]
+    },
+    {
+      "date": "19",
+      "activities": [
+        {
+          "name": "생일잔치",
+          "start_time": "10:00:00",
+          "end_time": "11:00:00",
+          "location": "원내",
+          "target": "전체",
+          "information": "내가 태어났어요!(생일잔치)",
+          "notes": "많이 축하해주세요."
+        }
+      ]
+    },
+    {
+      "date": "26",
+      "activities": [
+        {
+          "name": "정기 소방안전교육 및 대피훈련",
+          "start_time": "09:50:00",
+          "end_time": "10:00:00",
+          "location": "원내",
+          "target": "전체",
+          "information": "정기 소방안전교육 및 대피훈련",
+          "notes": null
         }
       ]
     }
   ],
-  "etc": "코로나19의 상황에 따라 행사 일정은 변경될 수 있습니다. 여름철 복장 및 전염병 안내도 참고해 주세요.",
-  "user_id": 0,
-  "baby_id": 0
+  "etc": "4월 10일부터 학부모 개별상담이 진행됩니다. 상담 날짜와 시간은 반별로 담임선생님과 의논하여 조율합니다.\n\n특별활동비 안내:\n체육: 만2~5세(풀잎/들꽃/푸른하늘) 13,000원\n음악: 만2~5세(풀잎/들꽃/푸른하늘) 14,000원\n영어: 만3~5세(들꽃/푸른하늘) 38,700원\n\n야간연장 및 토요보육은 사전 신청이 필요합니다.",
+  "user_id": 5,
+  "baby_id": 5
 }
