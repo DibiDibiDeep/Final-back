@@ -25,10 +25,10 @@ Content-Type: application/json
 }
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="coverImage"; filename="ml_test_cover.png"
+Content-Disposition: form-data; name="coverImage"; filename="ㅇ.png"
 Content-Type: image/png
 
-< C:/hyun98/ml_test_cover.png
+< C:\Users\Owner\Desktop\ㅇ.png
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ### Get BookInf by Book ID (Replace {bookId} with the ID from the previous response)
