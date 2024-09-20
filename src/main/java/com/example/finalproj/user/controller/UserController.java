@@ -21,6 +21,7 @@ public class UserController {
     @Autowired
     private BabyService babyService;
 
+    // Google 사용자 인증
     @PostMapping("/google")
     public ResponseEntity<?> authenticateUser(@RequestBody Map<String, String> tokenMap) {
         try {
@@ -31,10 +32,12 @@ public class UserController {
                 return ResponseEntity.badRequest().body("User authentication failed");
             }
 
+            // 사용자가 아기를 가지고 있는지 확인
             boolean hasBaby = babyService.userHasBaby(user.getUserId());
 
+            // 최종 응답 객체 생성
             Map<String, Object> finalResponse = new HashMap<>(response);
-            finalResponse.put("user", user);  // Ensure user object is included
+            finalResponse.put("user", user);  // 사용자 객체 포함
             finalResponse.put("hasBaby", hasBaby);
 
             return ResponseEntity.ok(finalResponse);
@@ -43,6 +46,7 @@ public class UserController {
         }
     }
 
+    // 사용자 ID로 사용자 조회
     @GetMapping("/{userId}")
     public ResponseEntity<User> getUserById(@PathVariable Integer userId) {
         return userService.getUserById(userId)
@@ -50,11 +54,13 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // 모든 사용자 조회
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    // 사용자 정보 업데이트
     @PutMapping("/{userId}")
     public ResponseEntity<User> updateUser(@PathVariable Integer userId, @RequestBody User userDetails) {
         User updatedUser = userService.updateUser(userId, userDetails);
@@ -64,20 +70,10 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
+    // 사용자 삭제
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
         userService.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
-
-//    // 테스트용 코드
-//    @PostMapping("/test-create")
-//    public ResponseEntity<?> createTestUser(@RequestBody User userDetails) {
-//        try {
-//            Map<String, Object> response = userService.createTestUser(userDetails);
-//            return ResponseEntity.status((int) response.get("code")).body(response);
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
 }
