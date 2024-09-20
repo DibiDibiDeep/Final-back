@@ -31,6 +31,7 @@ public class CalendarPhotoInfService {
     @Autowired
     private ObjectMapper objectMapper;
 
+    // 추론 결과를 저장하고 처리하는 메소드
     @Transactional
     public CalendarPhotoInf saveAndProcessInferenceResult(Integer calendarPhotoId, String inferenceResult) {
         CalendarPhotoInf calendarPhotoInf = new CalendarPhotoInf();
@@ -38,10 +39,11 @@ public class CalendarPhotoInfService {
         calendarPhotoInf.setInferenceResult(inferenceResult);
         calendarPhotoInf.setInferenceDate(LocalDateTime.now());
 
-        // 자료형 오류 수정 09/19 15:39
+        // 자료형 오류 수정
         try {
             Map<String, Object> resultMap = objectMapper.readValue(inferenceResult, Map.class);
-            
+
+            // user_id 처리
             Object userIdObj = resultMap.get("user_id");
             if (userIdObj instanceof Integer) {
                 calendarPhotoInf.setUserId((Integer) userIdObj);
@@ -50,7 +52,8 @@ public class CalendarPhotoInfService {
             } else {
                 throw new IllegalArgumentException("Invalid user_id type");
             }
-            
+
+            // baby_id 처리
             Object babyIdObj = resultMap.get("baby_id");
             if (babyIdObj instanceof Integer) {
                 calendarPhotoInf.setBabyId((Integer) babyIdObj);
@@ -59,13 +62,13 @@ public class CalendarPhotoInfService {
             } else {
                 throw new IllegalArgumentException("Invalid baby_id type");
             }
-        
+
             // 추론 결과 저장
             calendarPhotoInf = calendarPhotoInfRepository.save(calendarPhotoInf);
-        
+
             // 추론 결과를 자동으로 처리
             processCalendarEntries(calendarPhotoInf, resultMap);
-        
+
         } catch (Exception e) {
             throw new IllegalArgumentException("Error processing inference result", e);
         }
@@ -73,6 +76,7 @@ public class CalendarPhotoInfService {
         return calendarPhotoInf;
     }
 
+    // 캘린더 항목을 처리하는 메소드
     private void processCalendarEntries(CalendarPhotoInf calendarPhotoInf, Map<String, Object> resultMap) {
         // year가 null인 경우 현재 년도를 사용
         String year = (String) resultMap.get("year");
@@ -94,6 +98,7 @@ public class CalendarPhotoInfService {
         }
     }
 
+    // 활동으로부터 Calendar 객체를 생성하는 메소드
     private Calendar createCalendarFromActivity(CalendarPhotoInf calendarPhotoInf, String year, String month, String date, Map<String, Object> activity) {
         Calendar calendar = new Calendar();
         calendar.setUserId(calendarPhotoInf.getUserId());
@@ -122,6 +127,7 @@ public class CalendarPhotoInfService {
         return calendar;
     }
 
+    // 중복된 캘린더가 없으면 저장하는 메소드
     private void saveCalendarIfNotExists(Calendar calendar) {
         if (!calendarRepository.existsByUserIdAndStartTimeAndTitle(
                 calendar.getUserId(), calendar.getStartTime(), calendar.getTitle())) {
@@ -129,6 +135,7 @@ public class CalendarPhotoInfService {
         }
     }
 
+    // 모든 CalendarPhotoInf 레코드를 조회하는 메소드
     public List<CalendarPhotoInf> getAllCalendarPhotoInfs() {
         return calendarPhotoInfRepository.findAllCalendarPhotoInfs();
     }

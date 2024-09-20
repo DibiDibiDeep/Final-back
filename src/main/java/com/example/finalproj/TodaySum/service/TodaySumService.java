@@ -19,18 +19,22 @@ public class TodaySumService {
         this.todaySumRepository = todaySumRepository;
     }
 
+    // 모든 TodaySum 레코드를 조회
     public List<TodaySum> getAllTodaySums() {
         return todaySumRepository.findAll();
     }
 
+    // ID로 TodaySum 레코드 조회
     public Optional<TodaySum> getTodaySumById(Integer id) {
         return todaySumRepository.findById(id);
     }
 
+    // TodaySum 레코드 생성
     public TodaySum createTodaySum(TodaySum todaySum) {
         return todaySumRepository.save(todaySum);
     }
 
+    // TodaySum 레코드 업데이트
     public TodaySum updateTodaySum(Integer id, TodaySum todaySumDetails) {
         Optional<TodaySum> todaySum = todaySumRepository.findById(id);
         if (todaySum.isPresent()) {
@@ -44,13 +48,15 @@ public class TodaySumService {
             existingTodaySum.setRevisionDate(todaySumDetails.getRevisionDate());
             return todaySumRepository.save(existingTodaySum);
         }
-        return null;
+        return null; // 레코드가 존재하지 않을 경우 null 반환
     }
 
+    // TodaySum 레코드 삭제
     public void deleteTodaySum(Integer id) {
         todaySumRepository.deleteById(id);
     }
 
+    // 날짜 범위에 해당하는 TodaySum 레코드 조회
     public List<TodaySum> getTodaySumsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
         return todaySumRepository.findByDateRange(startDate, endDate);
     }

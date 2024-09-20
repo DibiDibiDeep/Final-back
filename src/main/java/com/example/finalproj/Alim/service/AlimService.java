@@ -15,26 +15,32 @@ public class AlimService {
     @Autowired
     private AlimRepository alimRepository;
 
+    // 주어진 날짜로 Alim 목록을 조회
     public List<Alim> getAlimsByDate(LocalDate date) {
         return alimRepository.findByDate(date);
     }
 
+    // 새로운 Alim 생성
     public Alim createAlim(Alim alim) {
         return alimRepository.save(alim);
     }
 
-    public Optional<Alim> getAlimById(Integer id) {
-        return alimRepository.findById(id);
+    // 주어진 사용자 ID로 Alim을 조회
+    public Optional<Alim> getAlimById(Integer userid) {
+        return alimRepository.findById(userid);
     }
 
+    // 모든 Alim을 조회
     public List<Alim> getAllAlims() {
         return alimRepository.findAll();
     }
 
+    // 사용자 ID와 날짜 범위로 Alim 목록을 조회
     public List<Alim> getAlimsByUserIdAndDateRange(Integer userId, LocalDateTime start, LocalDateTime end) {
         return alimRepository.findByUserIdAndDateBetween(userId, start, end);
     }
 
+    // Alim 수정
     public Alim updateAlim(Integer id, Alim alimDetails) {
         Optional<Alim> alim = alimRepository.findById(id);
         if (alim.isPresent()) {
@@ -48,6 +54,7 @@ public class AlimService {
         return null;
     }
 
+    // Alim 삭제
     public void deleteAlim(Integer id) {
         alimRepository.deleteById(id);
     }

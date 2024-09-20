@@ -17,12 +17,14 @@ public class CalendarController {
     @Autowired
     private CalendarService calendarService;
 
-
+    // 모든 Calendar 레코드를 조회
     @GetMapping("/all")
     public ResponseEntity<List<Calendar>> getAllCalendars() {
         List<Calendar> calendars = calendarService.getAllCalendars();
         return ResponseEntity.ok(calendars);
     }
+
+    // 특정 ID로 Calendar 레코드를 조회
     @GetMapping("/{calendarId}")
     public ResponseEntity<Calendar> getCalendarById(@PathVariable Integer calendarId) {
         Calendar calendar = calendarService.getCalendarById(calendarId);
@@ -32,16 +34,19 @@ public class CalendarController {
         return ResponseEntity.ok(calendar);
     }
 
+    // 특정 사용자 ID로 Calendar 목록을 조회
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Calendar>> getCalendarsByUserId(@PathVariable Integer userId) {
         return ResponseEntity.ok(calendarService.getCalendarsByUserId(userId));
     }
 
+    // 특정 아기 ID로 Calendar 목록을 조회
     @GetMapping("/baby/{babyId}")
     public ResponseEntity<List<Calendar>> getCalendarsByBabyId(@PathVariable Integer babyId) {
         return ResponseEntity.ok(calendarService.getCalendarsByBabyId(babyId));
     }
 
+    // 특정 날짜로 Calendar 목록을 조회
     @GetMapping
     public ResponseEntity<List<Calendar>> getCalendarsByDate(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
@@ -49,6 +54,7 @@ public class CalendarController {
         return ResponseEntity.ok(calendars);
     }
 
+    // 특정 날짜 범위로 Calendar 목록을 조회
     @GetMapping("/date-range")
     public List<Calendar> getCalendarsByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
@@ -56,12 +62,13 @@ public class CalendarController {
         return calendarService.getCalendarsByDateRange(startDate, endDate);
     }
 
+    // 새로운 Calendar 레코드를 생성
     @PostMapping
     public ResponseEntity<Calendar> createCalendar(@RequestBody Calendar calendar) {
         return ResponseEntity.ok(calendarService.createCalendar(calendar));
     }
 
-
+    // 특정 ID로 Calendar 레코드를 수정
     @PutMapping("/{calendarId}")
     public ResponseEntity<Calendar> updateCalendar(@PathVariable Integer calendarId, @RequestBody Calendar calendarDetails) {
         Calendar updatedCalendar = calendarService.updateCalendar(calendarId, calendarDetails);
@@ -71,10 +78,10 @@ public class CalendarController {
         return ResponseEntity.ok(updatedCalendar);
     }
 
+    // 특정 ID로 Calendar 레코드를 삭제
     @DeleteMapping("/{calendarId}")
     public ResponseEntity<Void> deleteCalendar(@PathVariable Integer calendarId) {
         calendarService.deleteCalendar(calendarId);
-
         return ResponseEntity.ok().build();
     }
 }

@@ -18,29 +18,35 @@ public class AlimController {
     @Autowired
     private AlimService alimService;
 
+    // 새로운 Alim 생성
     @PostMapping
     public ResponseEntity<Alim> createAlim(@RequestBody Alim alim) {
         return ResponseEntity.ok(alimService.createAlim(alim));
     }
 
+    // userID로 Alim 조회
     @GetMapping("/{id}")
-    public ResponseEntity<Alim> getAlimById(@PathVariable Integer id) {
-        return alimService.getAlimById(id)
+    public ResponseEntity<Alim> getAlimById(@PathVariable Integer userid) {
+        return alimService.getAlimById(userid)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // 모든 Alim 조회
     @GetMapping
     public ResponseEntity<List<Alim>> getAllAlims() {
         return ResponseEntity.ok(alimService.getAllAlims());
     }
 
+    // 특정 날짜의 Alim 조회
     @GetMapping("/date/{date}")
     public ResponseEntity<List<Alim>> getAlimsByDate(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         List<Alim> alims = alimService.getAlimsByDate(date);
         return ResponseEntity.ok(alims);
     }
+
+    // 특정 사용자의 특정 기간 Alim 조회
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Alim>> getAlimsByUserIdAndDateRange(
             @PathVariable Integer userId,
@@ -49,7 +55,7 @@ public class AlimController {
         return ResponseEntity.ok(alimService.getAlimsByUserIdAndDateRange(userId, start, end));
     }
 
-
+    // Alim 업데이트
     @PutMapping("/{id}")
     public ResponseEntity<Alim> updateAlim(@PathVariable Integer id, @RequestBody Alim alimDetails) {
         Alim updatedAlim = alimService.updateAlim(id, alimDetails);
@@ -59,6 +65,7 @@ public class AlimController {
         return ResponseEntity.ok(updatedAlim);
     }
 
+    // Alim 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAlim(@PathVariable Integer id) {
         alimService.deleteAlim(id);
