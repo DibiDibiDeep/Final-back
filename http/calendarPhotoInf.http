@@ -1,0 +1,84 @@
+# 모든 CalendarPhotoInf 레코드 조회
+GET http://localhost:8080/api/calendar-photo-inf
+Accept: application/json
+
+###
+
+# 추론 결과 저장 및 처리
+POST http://localhost:8080/api/calendar-photo-inf/1
+Content-Type: application/json
+
+{
+  "year": null,
+  "month": "05",
+  "events": [
+    {
+      "date": "09",
+      "activities": [
+        {
+          "name": "숲에서 놀고 배우고 자라기",
+          "start_time": null,
+          "end_time": null,
+          "location": "선우공원",
+          "target": "열매반",
+          "information": "숲에서 놀고 배우고 자라기 활동",
+          "notes": "체육복/운동화 착용"
+        }
+      ]
+    },
+    {
+      "date": "10",
+      "activities": [
+        {
+          "name": "흙놀이",
+          "start_time": null,
+          "end_time": null,
+          "location": "두드림교회 4층",
+          "target": "전체",
+          "information": "흙놀이 활동",
+          "notes": "체육복 착용"
+        }
+      ]
+    },
+    {
+      "date": "11",
+      "activities": [
+        {
+          "name": "5월달 생일축하",
+          "start_time": null,
+          "end_time": null,
+          "location": "두드림교회 3층",
+          "target": "열매반",
+          "information": "5월 생일을 축하하는 행사",
+          "notes": null
+        },
+        {
+          "name": "지문 등 사전등록 현장 방문",
+          "start_time": "10:00:00",
+          "end_time": null,
+          "location": "원내",
+          "target": "신청 아동",
+          "information": "아동 실종 예방을 위한 지문 등록",
+          "notes": "신청 아동은 결석하지 않도록 해 주세요."
+        }
+      ]
+    },
+    {
+      "date": "13",
+      "activities": [
+        {
+          "name": "봄소풍",
+          "start_time": "09:30:00",
+          "end_time": null,
+          "location": "용산가족공원",
+          "target": "꽃잎, 열매반",
+          "information": "봄소풍 행사",
+          "notes": "09:30 출발"
+        }
+      ]
+    }
+  ],
+  "etc": "코로나19의 상황에 따라 행사 일정은 변경될 수 있습니다. 여름철 복장 및 전염병 안내도 참고해 주세요.",
+  "user_id": 0,
+  "baby_id": 0
+}
