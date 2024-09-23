@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class BookMLService {
-    @Value("${ml_dev.service.url}")
+    @Value("${ml.service.url}")
     private String mlServiceUrl;
     private final RestTemplate restTemplate;
     private final ApplicationEventPublisher eventPublisher;
