@@ -75,4 +75,5 @@ public class CalendarService {
     public void deleteCalendar(Integer calendarId) {
         calendarRepository.deleteById(calendarId);
     }
+
 }

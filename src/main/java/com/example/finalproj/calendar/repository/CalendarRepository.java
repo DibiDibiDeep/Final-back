@@ -25,5 +25,6 @@ public interface CalendarRepository extends JpaRepository<Calendar, Integer> {
     List<Calendar> findByStartTimeBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     // 특정 사용자 ID와 시작 시간, 제목이 존재하는지 확인
-    boolean existsByUserIdAndStartTimeAndTitle(int userId, LocalDateTime startTime, String title);
+    boolean existsByUserIdAndBabyIdAndStartTimeAndTitle(Integer userId, Integer babyId, LocalDateTime startTime, String title);
+
 }
