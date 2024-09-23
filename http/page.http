@@ -21,7 +21,7 @@ Content-Type: application/json
     "bookId": 13
   },
   "pageNum": 1,
-  "text": "옛날 옛적에 작은 토끼가 살았습니다...하지만 그래",
+  "text": "옛날 옛적에 작은 토끼가 살았습니다...하지만 그래dfdf",
   "illustPrompt": "작은 토끼가 숲속에 앉아있는 모습"
 }
 

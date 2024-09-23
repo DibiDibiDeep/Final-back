@@ -4,7 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.example.finalproj.Book.entity.Book;
 import com.example.finalproj.Book.repository.BookRepository;
-import com.example.finalproj.ml.service.MLService;
+import com.example.finalproj.ml.BookML.BookMLService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class BookService {
     private AmazonS3 s3Client;
 
     @Autowired
-    private MLService mlService;
+    private BookMLService bookMlService;
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
@@ -38,7 +38,7 @@ public class BookService {
         Book savedBook = bookRepository.save(book);
 
         // ML 서비스로 책 정보 전송
-        mlService.sendBookToMLService(savedBook);
+        bookMlService.sendBookToMLService(savedBook);
 
         return savedBook;
     }

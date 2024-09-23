@@ -1,13 +1,13 @@
-package com.example.finalproj.ml.service;
+package com.example.finalproj.ml.CalendarML;
 
 import org.springframework.context.ApplicationEvent;
 
-public class MLProcessingCompletedEvent extends ApplicationEvent {
+public class CalendarMLProcessingCompletedEvent extends ApplicationEvent {
     private final String mlResponse;
     private final Integer calendarPhotoId;
 
     // 생성자
-    public MLProcessingCompletedEvent(Object source, String mlResponse, Integer calendarPhotoId) {
+    public CalendarMLProcessingCompletedEvent(Object source, String mlResponse, Integer calendarPhotoId) {
         super(source);
         this.mlResponse = mlResponse;
         this.calendarPhotoId = calendarPhotoId;
