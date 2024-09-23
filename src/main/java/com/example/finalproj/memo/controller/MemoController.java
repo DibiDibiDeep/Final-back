@@ -18,11 +18,13 @@ public class MemoController {
     @Autowired
     private MemoService memoService;
 
+    // 새 메모 생성
     @PostMapping
     public ResponseEntity<Memo> createMemo(@RequestBody Memo memo) {
         return ResponseEntity.ok(memoService.createMemo(memo));
     }
 
+    // ID로 메모 조회
     @GetMapping("/{id}")
     public ResponseEntity<Memo> getMemoById(@PathVariable Integer id) {
         return memoService.getMemoById(id)
@@ -30,11 +32,13 @@ public class MemoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // 모든 메모 조회
     @GetMapping
     public ResponseEntity<List<Memo>> getAllMemos() {
         return ResponseEntity.ok(memoService.getAllMemos());
     }
 
+    // 날짜 범위로 메모 조회
     @GetMapping("/date-range")
     public List<Memo> getMemosByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
@@ -42,6 +46,7 @@ public class MemoController {
         return memoService.getMemosByDateRange(startDate, endDate);
     }
 
+    // 메모 수정
     @PutMapping("/{id}")
     public ResponseEntity<Memo> updateMemo(@PathVariable Integer id, @RequestBody Memo memoDetails) {
         Memo updatedMemo = memoService.updateMemo(id, memoDetails);
@@ -51,12 +56,14 @@ public class MemoController {
         return ResponseEntity.ok(updatedMemo);
     }
 
+    // 메모 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMemo(@PathVariable Integer id) {
         memoService.deleteMemo(id);
         return ResponseEntity.ok().build();
     }
 
+    // 특정 날짜의 메모 조회
     @GetMapping("/date/{date}")
     public ResponseEntity<List<Memo>> getMemosByDate(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
@@ -64,6 +71,7 @@ public class MemoController {
         return ResponseEntity.ok(memos);
     }
 
+    // 특정 사용자의 특정 날짜 메모 조회
     @GetMapping("/user/{userId}/date/{date}")
     public ResponseEntity<List<Memo>> getMemosByUserAndDate(
             @PathVariable Integer userId,

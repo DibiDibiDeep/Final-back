@@ -1,0 +1,14 @@
+### Get all BookInfs
+GET http://localhost:8080/api/book-inf
+
+### Get BookInf by Book ID
+GET http://localhost:8080/api/book-inf/9
+
+### Save and process inference result
+POST http://localhost:8080/api/book-inf/9
+Content-Type: application/json
+
+{
+  "user_id": "1",
+  "some_other_data": "value"
+}

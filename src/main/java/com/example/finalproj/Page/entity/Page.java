@@ -24,8 +24,10 @@ public class Page {
     private String illustPrompt;
     private String imagePath;
 
+    // 기본 생성자
     public Page() {}
 
+    // 모든 필드를 포함한 생성자
     public Page(Book book, Integer pageNum, String text, String illustPrompt, String imagePath) {
         this.book = book;
         this.pageNum = pageNum;
@@ -34,6 +36,7 @@ public class Page {
         this.imagePath = imagePath;
     }
 
+    // Getter와 Setter 메서드
     public Integer getPageId() {
         return pageId;
     }

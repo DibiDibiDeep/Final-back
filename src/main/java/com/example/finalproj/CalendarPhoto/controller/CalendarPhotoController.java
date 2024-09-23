@@ -2,7 +2,6 @@ package com.example.finalproj.CalendarPhoto.controller;
 
 import com.example.finalproj.CalendarPhoto.entity.CalendarPhoto;
 import com.example.finalproj.CalendarPhoto.service.CalendarPhotoService;
-import com.example.finalproj.ml.service.MLService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +23,13 @@ public class CalendarPhotoController {
         this.calendarPhotoService = calendarPhotoService;
     }
 
+    // 모든 CalendarPhoto 목록을 조회
     @GetMapping
     public ResponseEntity<List<CalendarPhoto>> getAllCalendarPhotos() {
         return ResponseEntity.ok(calendarPhotoService.getAllCalendarPhotos());
     }
 
+    // 특정 ID로 CalendarPhoto 조회
     @GetMapping("/{id}")
     public ResponseEntity<CalendarPhoto> getCalendarPhotoById(@PathVariable Integer id) {
         return calendarPhotoService.getCalendarPhotoById(id)
@@ -36,22 +37,26 @@ public class CalendarPhotoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // 특정 사용자 ID로 CalendarPhoto 목록을 조회
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<CalendarPhoto>> getCalendarPhotosByUserId(@PathVariable Integer userId) {
         return ResponseEntity.ok(calendarPhotoService.getCalendarPhotosByUserId(userId));
     }
 
+    // 특정 아기 ID로 CalendarPhoto 목록을 조회
     @GetMapping("/baby/{babyId}")
     public ResponseEntity<List<CalendarPhoto>> getCalendarPhotosByBabyId(@PathVariable Integer babyId) {
         return ResponseEntity.ok(calendarPhotoService.getCalendarPhotosByBabyId(babyId));
     }
 
+    // 특정 날짜로 촬영된 CalendarPhoto 목록을 조회
     @GetMapping("/date/{date}")
     public ResponseEntity<List<CalendarPhoto>> getCalendarPhotosByTakenAt(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return ResponseEntity.ok(calendarPhotoService.getCalendarPhotosByDate(date.atStartOfDay()));
     }
 
+    // 특정 연도와 월로 CalendarPhoto 목록을 조회
     @GetMapping("/year/{year}/month/{month}")
     public ResponseEntity<List<CalendarPhoto>> getCalendarPhotosByYearAndMonth(
             @PathVariable int year,
@@ -60,7 +65,7 @@ public class CalendarPhotoController {
         return ResponseEntity.ok(photos);
     }
 
-
+    // 새로운 CalendarPhoto 생성
     @PostMapping
     public ResponseEntity<?> createCalendarPhoto(
             @RequestParam("file") MultipartFile file,
@@ -71,11 +76,13 @@ public class CalendarPhotoController {
             CalendarPhoto photo = calendarPhotoService.createCalendarPhoto(file, userId, babyId, date);
             return ResponseEntity.ok(photo);
         } catch (IOException e) {
-            return ResponseEntity.badRequest().body("Error uploading file: " + e.getMessage());
+            return ResponseEntity.badRequest().body("파일 업로드 중 오류 발생: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("An unexpected error occurred: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("예기치 않은 오류 발생: " + e.getMessage());
         }
     }
+
+    // 특정 ID로 CalendarPhoto 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCalendarPhoto(@PathVariable Integer id) {
         calendarPhotoService.deleteCalendarPhoto(id);

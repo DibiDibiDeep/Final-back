@@ -19,23 +19,27 @@ public class AlimInfService {
         this.alimInfRepository = alimInfRepository;
     }
 
+    // 모든 AlimInf 레코드를 조회
     public List<AlimInf> getAllAlimInfs() {
         return alimInfRepository.findAll();
     }
 
+    // ID로 특정 AlimInf 레코드를 조회
     public Optional<AlimInf> getAlimInfById(Integer id) {
         return alimInfRepository.findById(id);
     }
 
+    // 새로운 AlimInf 레코드를 생성
     public AlimInf createAlimInf(AlimInf alimInf) {
         return alimInfRepository.save(alimInf);
     }
 
+    // ID로 특정 AlimInf 레코드를 수정
     public AlimInf updateAlimInf(Integer id, AlimInf alimInfDetails) {
         Optional<AlimInf> alimInf = alimInfRepository.findById(id);
         if (alimInf.isPresent()) {
             AlimInf existingAlimInf = alimInf.get();
-            // Update fields
+            // 필드를 업데이트
             existingAlimInf.setAlimId(alimInfDetails.getAlimId());
             existingAlimInf.setUserId(alimInfDetails.getUserId());
             existingAlimInf.setBabyId(alimInfDetails.getBabyId());
@@ -54,10 +58,12 @@ public class AlimInfService {
         return null;
     }
 
+    // 특정 AlimInf 레코드를 삭제
     public void deleteAlimInf(Integer id) {
         alimInfRepository.deleteById(id);
     }
 
+    // 특정 날짜 범위 내의 AlimInf 레코드를 조회
     public List<AlimInf> getAlimInfsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
         return alimInfRepository.findByDateBetween(startDate, endDate);
     }

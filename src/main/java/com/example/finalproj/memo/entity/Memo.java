@@ -26,10 +26,11 @@ public class Memo {
     @Column(name = "content")
     private String content;
 
+    // 기본 생성자
     public Memo() {
-
     }
 
+    // 모든 필드를 포함한 생성자
     public Memo(Integer memoId, Integer userId, Integer todayId, Integer bookId, LocalDateTime date, String content) {
         this.memoId = memoId;
         this.userId = userId;
@@ -39,6 +40,7 @@ public class Memo {
         this.content = content;
     }
 
+    // Getter와 Setter 메서드
     public Integer getMemoId() {
         return memoId;
     }
@@ -87,6 +89,7 @@ public class Memo {
         this.content = content;
     }
 
+    // toString 메서드 오버라이드
     @Override
     public String toString() {
         return "Memo{" +

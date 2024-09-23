@@ -10,8 +10,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface AlimRepository extends JpaRepository<Alim, Integer> {
+
+    // 주어진 날짜에 해당하는 Alim 레코드를 조회
     @Query("SELECT a FROM Alim a WHERE DATE(a.date) = :date")
     List<Alim> findByDate(@Param("date") LocalDate date);
 
+    // 주어진 사용자 ID와 날짜 범위 내의 Alim 레코드를 조회
     List<Alim> findByUserIdAndDateBetween(Integer userId, LocalDateTime start, LocalDateTime end);
 }

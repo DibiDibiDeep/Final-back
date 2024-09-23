@@ -1,6 +1,5 @@
 //package com.example.finalproj.config;
 //
-//import com.example.finalproj.security.JwtAuthenticationFilter;
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;
 //import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,21 +13,16 @@
 //public class SecurityConfig {
 //
 //    @Bean
-//    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-//        return new JwtAuthenticationFilter();
-//    }
-//
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//    public SecurityFilterChain FilterChain(HttpSecurity http) throws Exception {
 //        http
-//                .cors().and().csrf().disable()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
+////                .cors().and().csrf().disable()
+////                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+////                .and()
 //                .authorizeHttpRequests(authorize -> authorize
 //                        .requestMatchers("/api/users/google").permitAll()
 //                        .anyRequest().authenticated()
-//                )
-//                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+//                );
+////                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 //
 //        return http.build();
 //    }

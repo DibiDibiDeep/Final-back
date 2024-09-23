@@ -21,11 +21,13 @@ public class AlimInfController {
         this.alimInfService = alimInfService;
     }
 
+    // 모든 AlimInf 레코드를 조회
     @GetMapping
     public List<AlimInf> getAllAlimInfs() {
         return alimInfService.getAllAlimInfs();
     }
 
+    // ID로 특정 AlimInf 레코드를 조회
     @GetMapping("/{id}")
     public ResponseEntity<AlimInf> getAlimInfById(@PathVariable Integer id) {
         return alimInfService.getAlimInfById(id)
@@ -33,11 +35,13 @@ public class AlimInfController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // 새로운 AlimInf 레코드를 생성
     @PostMapping
     public AlimInf createAlimInf(@RequestBody AlimInf alimInf) {
         return alimInfService.createAlimInf(alimInf);
     }
 
+    // ID로 특정 AlimInf 레코드를 수정
     @PutMapping("/{id}")
     public ResponseEntity<AlimInf> updateAlimInf(@PathVariable Integer id, @RequestBody AlimInf alimInfDetails) {
         AlimInf updatedAlimInf = alimInfService.updateAlimInf(id, alimInfDetails);
@@ -47,12 +51,14 @@ public class AlimInfController {
         return ResponseEntity.ok(updatedAlimInf);
     }
 
+    // ID로 특정 AlimInf 레코드를 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAlimInf(@PathVariable Integer id) {
         alimInfService.deleteAlimInf(id);
         return ResponseEntity.noContent().build();
     }
 
+    // 특정 날짜 범위 내의 AlimInf 레코드들을 조회
     @GetMapping("/date-range")
     public List<AlimInf> getAlimInfsByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,

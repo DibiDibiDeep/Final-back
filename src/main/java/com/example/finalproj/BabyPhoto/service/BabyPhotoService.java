@@ -24,31 +24,39 @@ import java.util.UUID;
 @Service
 public class BabyPhotoService {
 
+    // BabyPhotoRepository 주입
     @Autowired
     private BabyPhotoRepository babyPhotoRepository;
 
+    // AmazonS3 클라이언트 주입
     @Autowired
     private AmazonS3 s3Client;
 
+    // S3 버킷 이름 주입
     @Value("${aws.s3.bucket}")
     private String bucketName;
 
+    // 모든 아기 사진 조회
     public List<BabyPhoto> getAllBabyPhotos() {
         return babyPhotoRepository.findAll();
     }
 
+    // ID로 특정 아기 사진 조회
     public Optional<BabyPhoto> getBabyPhotoById(Integer id) {
         return babyPhotoRepository.findById(id);
     }
 
+    // 아기 ID로 해당 아기의 모든 사진 조회
     public List<BabyPhoto> getBabyPhotosByBabyId(Integer babyId) {
         return babyPhotoRepository.findByBabyId(babyId);
     }
 
+    // 업로드 날짜로 아기 사진 조회
     public List<BabyPhoto> getBabyPhotosByUploadDate(LocalDateTime uploadDate) {
         return babyPhotoRepository.findByUploadDate(uploadDate);
     }
 
+    // 새로운 아기 사진 생성 및 S3에 업로드
     public BabyPhoto createBabyPhoto(MultipartFile file, Integer babyId) throws IOException {
         String fileUrl = uploadFileToS3(file);
 
@@ -60,6 +68,7 @@ public class BabyPhotoService {
         return babyPhotoRepository.save(babyPhoto);
     }
 
+    // 파일을 S3에 업로드하고 URL 반환
     private String uploadFileToS3(MultipartFile multipartFile) throws IOException {
         File file = convertMultiPartToFile(multipartFile);
         String fileName = generateFileName(multipartFile);
@@ -68,6 +77,7 @@ public class BabyPhotoService {
         return s3Client.getUrl(bucketName, fileName).toString();
     }
 
+    // MultipartFile을 File로 변환
     private File convertMultiPartToFile(MultipartFile file) throws IOException {
         File convFile = new File(file.getOriginalFilename());
         FileOutputStream fos = new FileOutputStream(convFile);
@@ -76,10 +86,12 @@ public class BabyPhotoService {
         return convFile;
     }
 
+    // 유니크한 파일 이름 생성
     private String generateFileName(MultipartFile multiPart) {
         return UUID.randomUUID().toString() + "-" + multiPart.getOriginalFilename().replace(" ", "_");
     }
 
+    // 아기 사진 삭제
     public void deleteBabyPhoto(Integer id) {
         babyPhotoRepository.deleteById(id);
     }

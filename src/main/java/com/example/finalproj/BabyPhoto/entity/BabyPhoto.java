@@ -21,6 +21,7 @@ public class BabyPhoto {
     @Column(name = "upload_date", nullable = false)
     private LocalDateTime uploadDate;
 
+    // 모든 필드를 포함한 생성자
     public BabyPhoto(Integer babyPhotoId, Integer babyId, String filePath, LocalDateTime uploadDate) {
         this.babyPhotoId = babyPhotoId;
         this.babyId = babyId;
@@ -28,11 +29,11 @@ public class BabyPhoto {
         this.uploadDate = uploadDate;
     }
 
+    // 기본 생성자
     public BabyPhoto() {
     }
 
-    // Getter and Setter methods
-
+    // Getter와 Setter 메서드
     public Integer getBabyPhotoId() {
         return babyPhotoId;
     }
@@ -65,6 +66,7 @@ public class BabyPhoto {
         this.uploadDate = uploadDate;
     }
 
+    // toString 메서드 오버라이드
     @Override
     public String toString() {
         return "BabyPhoto{" +

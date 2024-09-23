@@ -28,6 +28,7 @@ public class UserController {
         this.babyService = babyService;
     }
 
+    // Google 사용자 인증
     @PostMapping("/google")
     public ResponseEntity<?> authenticateUser(@RequestBody Map<String, String> tokenMap) {
         logger.info("Attempting to authenticate Google user");
@@ -45,10 +46,13 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User authentication failed");
             }
 
+            // 사용자가 아기를 가지고 있는지 확인
             boolean hasBaby = babyService.userHasBaby(user.getUserId());
-            
+
+
+            // 최종 응답 객체 생성
             Map<String, Object> finalResponse = new HashMap<>(response);
-            finalResponse.put("user", user);
+            finalResponse.put("user", user);  // 사용자 객체 포함
             finalResponse.put("hasBaby", hasBaby);
             
             logger.info("User successfully authenticated: {}", user.getUserId());
@@ -60,6 +64,7 @@ public class UserController {
         }
     }
 
+    // 사용자 ID로 사용자 조회
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserById(@PathVariable Integer userId) {
         logger.info("Fetching user with ID: {}", userId);
@@ -80,6 +85,7 @@ public class UserController {
         }
     }
 
+    // 모든 사용자 조회
     @GetMapping
     public ResponseEntity<?> getAllUsers() {
         logger.info("Fetching all users");
@@ -94,6 +100,7 @@ public class UserController {
         }
     }
 
+    // 사용자 정보 업데이트
     @PutMapping("/{userId}")
     public ResponseEntity<?> updateUser(@PathVariable Integer userId, @RequestBody User userDetails) {
         logger.info("Updating user with ID: {}", userId);
@@ -112,6 +119,7 @@ public class UserController {
         }
     }
 
+    // 사용자 삭제
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable Integer userId) {
         logger.info("Deleting user with ID: {}", userId);

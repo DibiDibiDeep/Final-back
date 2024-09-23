@@ -15,6 +15,7 @@ public class CalendarPhotoInfController {
     @Autowired
     private CalendarPhotoInfService calendarPhotoInfService;
 
+    // 추론 결과를 저장하고 처리
     @PostMapping("/{calendarPhotoId}")
     public ResponseEntity<CalendarPhotoInf> saveAndProcessInferenceResult(
             @PathVariable Integer calendarPhotoId,
@@ -23,6 +24,7 @@ public class CalendarPhotoInfController {
         return ResponseEntity.ok(processedResult);
     }
 
+    // 모든 CalendarPhotoInf 레코드 조회
     @GetMapping
     public ResponseEntity<List<CalendarPhotoInf>> getAllCalendarPhotoInfs() {
         List<CalendarPhotoInf> calendarPhotoInfs = calendarPhotoInfService.getAllCalendarPhotoInfs();

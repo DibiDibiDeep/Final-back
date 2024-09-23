@@ -1,4 +1,4 @@
-package com.example.finalproj.ml.service;
+package com.example.finalproj.ml.CalendarML;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
@@ -10,19 +10,20 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class MLEventListener {
+public class CalendarMLEventListener {
 
     private final RestTemplate restTemplate;
     private final String appUrl;
 
-
-    public MLEventListener(RestTemplate restTemplate, @Value("${app.url:http://localhost:8080}") String appUrl) {
+    // 생성자
+    public CalendarMLEventListener(RestTemplate restTemplate, @Value("${app.url:http://localhost:8080}") String appUrl) {
         this.restTemplate = restTemplate;
         this.appUrl = appUrl;
     }
 
+    // ML 처리 완료 이벤트 핸들러
     @EventListener
-    public void handleMLProcessingCompletedEvent(MLProcessingCompletedEvent event) {
+    public void handleMLProcessingCompletedEvent(CalendarMLProcessingCompletedEvent event) {
         String mlResponse = event.getMlResponse();
         Integer calendarPhotoId = event.getCalendarPhotoId();
 
@@ -39,4 +40,3 @@ public class MLEventListener {
         }
     }
 }
-

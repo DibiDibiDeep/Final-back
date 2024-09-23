@@ -24,36 +24,40 @@ public class UserService {
     @Value("${google.client.id}")
     private String CLIENT_ID;
 
+    // 모든 사용자 조회
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
+    // 사용자 ID로 사용자 조회
     public Optional<User> getUserById(Integer userId) {
         return userRepository.findById(userId);
     }
 
+    // Google 사용자 인증
     public Map<String, Object> authenticateGoogleUser(String token) throws Exception {
         try {
             GoogleIdToken.Payload payload = verifyGoogleToken(token);
             String email = payload.getEmail();
             List<User> users = userRepository.findByEmail(email);
 
-        Map<String, Object> response = new HashMap<>();
-        User user;
+            Map<String, Object> response = new HashMap<>();
+            User user;
 
+            // 기존 사용자 확인 및 처리
             if (!users.isEmpty()) {
-                user = users.get(0);  // Get the first user if exists
+                user = users.get(0);  // 기존 사용자
                 response.put("code", 200);
             } else {
-                user = new User(email, (String) payload.get("name"));
+                user = new User(email, (String) payload.get("name"));  // 새 사용자 생성
                 user = userRepository.save(user);
                 response.put("code", 201);
             }
 
-        String jwtToken = jwtTokenProvider.generateToken(user.getUserId());
-        response.put("user", user);
-        response.put("token", jwtToken);
-        return response;
+            String jwtToken = jwtTokenProvider.generateToken(user.getUserId());
+            response.put("user", user);
+            response.put("token", jwtToken);
+            return response;
         } catch (Exception e) {
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("code", 400);
@@ -62,6 +66,7 @@ public class UserService {
         }
     }
 
+    // 사용자 정보 업데이트
     public User updateUser(Integer userId, User userDetails) {
         return userRepository.findById(userId)
                 .map(user -> {
@@ -72,10 +77,12 @@ public class UserService {
                 .orElse(null);
     }
 
+    // 사용자 삭제
     public void deleteUser(Integer userId) {
         userRepository.deleteById(userId);
     }
 
+    // Google ID 토큰 검증
     private GoogleIdToken.Payload verifyGoogleToken(String token) throws Exception {
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
                 .setAudience(Collections.singletonList(CLIENT_ID))
@@ -88,22 +95,4 @@ public class UserService {
             throw new Exception("Invalid ID token.");
         }
     }
-
-    // 테스트용 코드
-//    public Map<String, Object> createTestUser(User userDetails) {
-//        User user = userRepository.findByEmail(userDetails.getEmail());
-//
-//        Map<String, Object> response = new HashMap<>();
-//        if (user == null) {
-//            user = new User(userDetails.getEmail(), userDetails.getName());
-//            user = userRepository.save(user);
-//            response.put("code", 201);
-//        } else {
-//            response.put("code", 200);
-//        }
-//        String jwtToken = jwtTokenProvider.generateToken(user.getUserId());
-//        response.put("user", user);
-//        response.put("token", jwtToken);
-//        return response;
-//    }
 }

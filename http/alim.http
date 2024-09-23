@@ -7,7 +7,7 @@ GET {{host}}/api/alims
 Accept: {{contentType}}
 
 ### Get alim by ID
-GET {{host}}/api/alims/1
+GET {{host}}/api/alims/2
 Accept: {{contentType}}
 
 ### Get alims by date

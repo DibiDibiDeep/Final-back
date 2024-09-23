@@ -11,12 +11,15 @@ import java.util.List;
 
 public interface MemoRepository extends JpaRepository<Memo, Integer> {
 
+    // 특정 날짜의 메모 조회
     @Query("SELECT m FROM Memo m WHERE DATE(m.date) = :date")
     List<Memo> findByDate(@Param("date") LocalDate date);
 
+    // 날짜 범위 내의 메모 조회
     @Query("SELECT m FROM Memo m WHERE m.date BETWEEN :startDate AND :endDate")
     List<Memo> findByDateBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
+    // 특정 사용자의 날짜 범위 내 메모 조회
     @Query("SELECT m FROM Memo m WHERE m.userId = :userId AND m.date BETWEEN :startDate AND :endDate")
     List<Memo> findByUserIdAndDateBetween(
             @Param("userId") Integer userId,

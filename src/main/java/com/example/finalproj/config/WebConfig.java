@@ -19,5 +19,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 // 자격 증명은 비활성화합니다 (allowedOrigins("*")와 함께 사용할 수 없음).
                 .allowCredentials(false);
+
     }
 }

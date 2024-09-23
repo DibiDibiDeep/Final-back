@@ -76,6 +76,7 @@ public class Baby {
         this.gender = gender;
     }
 
+    // toString 메서드 오버라이드
     @Override
     public String toString() {
         return "Baby{" +
