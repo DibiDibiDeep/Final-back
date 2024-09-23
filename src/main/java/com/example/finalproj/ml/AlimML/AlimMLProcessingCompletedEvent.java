@@ -1,4 +1,4 @@
-package com.example.finalproj.ml.service;
+package com.example.finalproj.ml.AlimML;
 
 import org.springframework.context.ApplicationEvent;
 

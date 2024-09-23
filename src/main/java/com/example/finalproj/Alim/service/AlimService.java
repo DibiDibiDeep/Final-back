@@ -2,7 +2,7 @@ package com.example.finalproj.Alim.service;
 
 import com.example.finalproj.Alim.entity.Alim;
 import com.example.finalproj.Alim.repository.AlimRepository;
-import com.example.finalproj.ml.service.MLService;
+import com.example.finalproj.ml.AlimML.AlimMLService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +14,12 @@ import java.util.Optional;
 @Service
 public class AlimService {
     private final AlimRepository alimRepository;
-    private final MLService mlService;
+    private final AlimMLService alimMlService;
 
     @Autowired
-    public AlimService(AlimRepository alimRepository, MLService mlService) {
+    public AlimService(AlimRepository alimRepository, AlimMLService mlService) {
         this.alimRepository = alimRepository;
-        this.mlService = mlService;
+        this.alimMlService = mlService;
     }
 
     // 주어진 날짜로 Alim 목록을 조회
@@ -30,7 +30,7 @@ public class AlimService {
     // 새로운 Alim 생성 및 ML 처리
     public Alim createAlim(Alim alim) {
         Alim savedAlim = alimRepository.save(alim);
-        mlService.processAlim(savedAlim);
+        alimMlService.processAlim(savedAlim);
         return savedAlim;
     }
 

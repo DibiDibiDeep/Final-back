@@ -4,7 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.finalproj.CalendarPhoto.entity.CalendarPhoto;
 import com.example.finalproj.CalendarPhoto.repository.CalendarPhotoRepository;
-import com.example.finalproj.ml.service.MLService;
+import com.example.finalproj.ml.CalendarML.CalendarMLService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class CalendarPhotoService {
     private AmazonS3 s3Client;
 
     @Autowired
-    private MLService mlService;
+    private CalendarMLService calendarMLService;
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
@@ -85,7 +85,7 @@ public class CalendarPhotoService {
         CalendarPhoto savedCalendarPhoto = calendarPhotoRepository.save(calendarPhoto);
 
         // ML 서비스로 이미지 전송 (비동기 처리)
-        mlService.sendImageToMLService(filePath, userId, babyId, savedCalendarPhoto.getCalendarPhotoId());
+        calendarMLService.sendImageToMLService(filePath, userId, babyId, savedCalendarPhoto.getCalendarPhotoId());
 
         return savedCalendarPhoto;
     }
