@@ -26,6 +26,13 @@ ml:
   app:
     url: http://localhost:8080
 
+ml_dev:
+  service:
+    # url: http://${ML_HOST:-localhost}:${ML_PORT:-8000}
+    url: http://192.168.0.227:8000
+  app:
+    url: http://localhost:8080
+
 aws:
   accessKeyId: ${AWS_ACCESS_KEY_ID}
   secretKey: ${AWS_SECRET_KEY}

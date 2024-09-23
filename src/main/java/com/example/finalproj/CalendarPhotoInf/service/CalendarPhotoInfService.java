@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -114,15 +115,48 @@ public class CalendarPhotoInfService {
         String paddedDate = String.format("%02d", Integer.parseInt(date));
 
         LocalDate eventDate = LocalDate.parse(year + "-" + paddedMonth + "-" + paddedDate, DateTimeFormatter.ISO_DATE);
-        calendar.setStartTime(eventDate.atStartOfDay());
-        calendar.setEndTime(eventDate.atTime(23, 59, 59));
+
+        // start_time과 end_time 처리
+        String startTimeStr = (String) activity.get("start_time");
+        String endTimeStr = (String) activity.get("end_time");
+
+        LocalDateTime startDateTime;
+        LocalDateTime endDateTime;
+
+        if (startTimeStr != null && !startTimeStr.isEmpty()) {
+            LocalTime startTime = LocalTime.parse(startTimeStr);
+            startDateTime = LocalDateTime.of(eventDate, startTime);
+        } else {
+            startDateTime = eventDate.atStartOfDay();
+        }
+
+        if (endTimeStr != null && !endTimeStr.isEmpty()) {
+            LocalTime endTime = LocalTime.parse(endTimeStr);
+            endDateTime = LocalDateTime.of(eventDate, endTime);
+        } else {
+            endDateTime = eventDate.atTime(LocalTime.MAX);
+        }
+
+        calendar.setStartTime(startDateTime);
+        calendar.setEndTime(endDateTime);
 
         String name = (String) activity.get("name");
-        String information = (String) activity.get("infomation");  // "infomation" 오타 주의
-        calendar.setTitle(name + (information != null && !information.isEmpty() ? " " + information : ""));
+        String information = (String) activity.get("information");
+        String note = (String) activity.get("notes");
 
-        String time = (String) activity.get("time");
-        calendar.setLocation(time != null ? time : "");
+        // title, information, note 내용을 모두 포함하여 title 설정
+        StringBuilder titleBuilder = new StringBuilder(name);
+        if (information != null && !information.isEmpty()) {
+            titleBuilder.append(" ").append(information);
+        }
+        if (note != null && !note.isEmpty()) {
+            titleBuilder.append(" ").append(note);
+        }
+        calendar.setTitle(titleBuilder.toString());
+
+        // location 설정
+        String location = (String) activity.get("location");
+        calendar.setLocation(location != null ? location : "");
 
         return calendar;
     }
