@@ -40,6 +40,7 @@ logging:
   level:
     root: WARN
     com.example.finalproj: INFO
+    com.example.finalproj.user: DEBUG
     org.springframework.web: WARN
     org.hibernate.SQL: WARN
 
