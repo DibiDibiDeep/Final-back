@@ -1,40 +1,45 @@
 package com.example.finalproj.ml.BookML;
 
-import com.example.finalproj.Book.entity.Book;
+import com.example.finalproj.AlimInf.entity.AlimInf;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class BookMLService {
-    @Value("${ml_dev.service.url}")
+    @Value("${ml.service.url}")
     private String mlServiceUrl;
-    private final RestTemplate restTemplate;
-    private final ApplicationEventPublisher eventPublisher;
 
-    // 생성자
-    public BookMLService(RestTemplate restTemplate, ApplicationEventPublisher eventPublisher) {
+    private final RestTemplate restTemplate;
+
+    public BookMLService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        this.eventPublisher = eventPublisher;
     }
 
-    // 책 정보를 ML 서비스로 전송
-    public void sendBookToMLService(Book book) {
+    public String sendAlimInfToMLService(AlimInf alimInf) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        String requestBody = String.format("{\"book_id\": %d, \"user_id\": %d, \"title\": \"%s\", \"cover_path\": \"%s\"}",
-                book.getBookId(), book.getUserId(), book.getTitle(), book.getCoverPath());
-        HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
-        try {
-            String mlResponse = restTemplate.postForObject(mlServiceUrl + "/process_book", request, String.class);
-            System.out.println("ML Service response for book: " + mlResponse);
-            eventPublisher.publishEvent(new BookMLProcessingCompletedEvent(this, mlResponse, book.getBookId()));
-        } catch (Exception e) {
-            System.err.println("Error in ML service process for book: " + e.getMessage());
-        }
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("user_id", alimInf.getUserId());
+        requestBody.put("baby_id", alimInf.getBabyId());
+        requestBody.put("name", alimInf.getName());
+        requestBody.put("emotion", alimInf.getEmotion());
+        requestBody.put("health", alimInf.getHealth());
+        requestBody.put("nutrition", alimInf.getNutrition());
+        requestBody.put("activities", alimInf.getActivities());
+        requestBody.put("special", alimInf.getSpecial());
+        requestBody.put("keywords", alimInf.getKeywords());
+        requestBody.put("diary", alimInf.getDiary());
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
+
+        return restTemplate.postForObject(mlServiceUrl + "/process_book", request, String.class);
     }
 }

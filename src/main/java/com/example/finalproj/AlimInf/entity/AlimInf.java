@@ -1,6 +1,10 @@
 package com.example.finalproj.AlimInf.entity;
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Entity
 @Table(name = "Alim_inf")
@@ -133,6 +137,17 @@ public class AlimInf {
 
     public void setActivities(String activities) {
         this.activities = activities;
+    }
+
+    public List<String> getActivitiesList() {
+        if (activities == null || activities.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return Arrays.asList(activities.split(","));
+    }
+
+    public void setActivitiesList(List<String> activitiesList) {
+        this.activities = String.join(",", activitiesList);
     }
 
     public String getSpecial() {
