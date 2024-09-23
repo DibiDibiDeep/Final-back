@@ -16,7 +16,7 @@ public class CalendarMLEventListener {
     private final String appUrl;
 
     // 생성자
-    public CalendarMLEventListener(RestTemplate restTemplate, @Value("${app.url:http://localhost:8080}") String appUrl) {
+    public CalendarMLEventListener(RestTemplate restTemplate, @Value("${ml.app.url}") String appUrl) {
         this.restTemplate = restTemplate;
         this.appUrl = appUrl;
     }

@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -99,6 +100,7 @@ public class CalendarPhotoInfService {
         }
     }
 
+
     // 활동으로부터 Calendar 객체를 생성하는 메소드
     private Calendar createCalendarFromActivity(CalendarPhotoInf calendarPhotoInf, String year, String month, String date, Map<String, Object> activity) {
         Calendar calendar = new Calendar();
@@ -134,25 +136,28 @@ public class CalendarPhotoInfService {
             LocalTime endTime = LocalTime.parse(endTimeStr);
             endDateTime = LocalDateTime.of(eventDate, endTime);
         } else {
-            endDateTime = eventDate.atTime(LocalTime.MAX);
+            endDateTime = eventDate.atTime(23, 59,59);
         }
 
         calendar.setStartTime(startDateTime);
         calendar.setEndTime(endDateTime);
 
         String name = (String) activity.get("name");
-        String information = (String) activity.get("information");
-        String note = (String) activity.get("notes");
+        calendar.setTitle(name);
 
-        // title, information, note 내용을 모두 포함하여 title 설정
-        StringBuilder titleBuilder = new StringBuilder(name);
-        if (information != null && !information.isEmpty()) {
-            titleBuilder.append(" ").append(information);
+        String information = (String) activity.get("information");
+        if (information != null && !information.isEmpty()){
+            calendar.setInformation(information);
+        } else {
+            calendar.setInformation("내용 없음");
         }
-        if (note != null && !note.isEmpty()) {
-            titleBuilder.append(" ").append(note);
+
+        String notes = (String) activity.get("notes");
+        if (notes != null && !notes.isEmpty()){
+            calendar.setNotes(notes);
+        } else {
+            calendar.setNotes("내용 없음");
         }
-        calendar.setTitle(titleBuilder.toString());
 
         // location 설정
         String location = (String) activity.get("location");
@@ -163,8 +168,8 @@ public class CalendarPhotoInfService {
 
     // 중복된 캘린더가 없으면 저장하는 메소드
     private void saveCalendarIfNotExists(Calendar calendar) {
-        if (!calendarRepository.existsByUserIdAndStartTimeAndTitle(
-                calendar.getUserId(), calendar.getStartTime(), calendar.getTitle())) {
+        if (!calendarRepository.existsByUserIdAndBabyIdAndStartTimeAndTitle(
+                calendar.getUserId(), calendar.getBabyId(), calendar.getStartTime(), calendar.getTitle())) {
             calendarRepository.save(calendar);
         }
     }

@@ -1,7 +1,6 @@
 ###Get calendar all
 GET http://localhost:8080/api/calendars/all
 
-
 ### Get calendar by ID
 GET http://localhost:8080/api/calendars/3
 
@@ -42,4 +41,4 @@ Content-Type: application/json
 }
 
 ### Delete a calendar
-DELETE http://localhost:8080/api/calendars/1
+DELETE http://localhost:8080/api/calendars/4
