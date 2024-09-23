@@ -21,17 +21,10 @@ spring:
 
 ml:
   service:
-    # url: http://${ML_HOST:-localhost}:${ML_PORT:-8000}
-    url: http://ml:8000
+    url: ${ML_SERVICE_URL:http://ml:8000}
   app:
-    url: http://localhost:8080
+    url: ${ML_APP_URL:http://localhost:8080}
 
-ml_dev:
-  service:
-    # url: http://${ML_HOST:-localhost}:${ML_PORT:-8000}
-    url: http://192.168.0.227:8000
-  app:
-    url: http://localhost:8080
 
 aws:
   accessKeyId: ${AWS_ACCESS_KEY_ID}
