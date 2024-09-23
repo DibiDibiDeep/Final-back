@@ -124,7 +124,7 @@ INSERT INTO Calendar_Photo (user_id, baby_id, file_path, date) VALUES
 CREATE TABLE IF NOT EXISTS Calendar (
                                         calendar_id INT NOT NULL auto_increment,
                                         user_id INT NOT NULL,
-                                        baby_id INT NULL,
+                                        baby_id INT NOT NULL,
                                         calendar_photo_id INT NULL,
                                         today_id INT NULL,
                                         book_id INT NULL,

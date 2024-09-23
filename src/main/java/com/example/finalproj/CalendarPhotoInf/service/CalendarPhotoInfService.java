@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -98,6 +100,7 @@ public class CalendarPhotoInfService {
         }
     }
 
+
     // 활동으로부터 Calendar 객체를 생성하는 메소드
     private Calendar createCalendarFromActivity(CalendarPhotoInf calendarPhotoInf, String year, String month, String date, Map<String, Object> activity) {
         Calendar calendar = new Calendar();
@@ -114,23 +117,59 @@ public class CalendarPhotoInfService {
         String paddedDate = String.format("%02d", Integer.parseInt(date));
 
         LocalDate eventDate = LocalDate.parse(year + "-" + paddedMonth + "-" + paddedDate, DateTimeFormatter.ISO_DATE);
-        calendar.setStartTime(eventDate.atStartOfDay());
-        calendar.setEndTime(eventDate.atTime(23, 59, 59));
+
+        // start_time과 end_time 처리
+        String startTimeStr = (String) activity.get("start_time");
+        String endTimeStr = (String) activity.get("end_time");
+
+        LocalDateTime startDateTime;
+        LocalDateTime endDateTime;
+
+        if (startTimeStr != null && !startTimeStr.isEmpty()) {
+            LocalTime startTime = LocalTime.parse(startTimeStr);
+            startDateTime = LocalDateTime.of(eventDate, startTime);
+        } else {
+            startDateTime = eventDate.atStartOfDay();
+        }
+
+        if (endTimeStr != null && !endTimeStr.isEmpty()) {
+            LocalTime endTime = LocalTime.parse(endTimeStr);
+            endDateTime = LocalDateTime.of(eventDate, endTime);
+        } else {
+            endDateTime = eventDate.atTime(23, 59,59);
+        }
+
+        calendar.setStartTime(startDateTime);
+        calendar.setEndTime(endDateTime);
 
         String name = (String) activity.get("name");
-        String information = (String) activity.get("infomation");  // "infomation" 오타 주의
-        calendar.setTitle(name + (information != null && !information.isEmpty() ? " " + information : ""));
+        calendar.setTitle(name);
 
-        String time = (String) activity.get("time");
-        calendar.setLocation(time != null ? time : "");
+        String information = (String) activity.get("information");
+        if (information != null && !information.isEmpty()){
+            calendar.setInformation(information);
+        } else {
+            calendar.setInformation("내용 없음");
+        }
+
+        String notes = (String) activity.get("notes");
+        if (notes != null && !notes.isEmpty()){
+            calendar.setNotes(notes);
+        } else {
+            calendar.setNotes("내용 없음");
+        }
+
+        // location 설정
+        String location = (String) activity.get("location");
+        calendar.setLocation(location != null ? location : "");
 
         return calendar;
     }
 
     // 중복된 캘린더가 없으면 저장하는 메소드
     private void saveCalendarIfNotExists(Calendar calendar) {
-        if (!calendarRepository.existsByUserIdAndStartTimeAndTitle(
-                calendar.getUserId(), calendar.getStartTime(), calendar.getTitle())) {
+        if (!calendarRepository.existsByUserIdAndBabyIdAndStartTimeAndTitle(
+                calendar.getUserId(), calendar.getBabyId(), calendar.getStartTime(), calendar.getTitle())) {
             calendarRepository.save(calendar);
         }
     }

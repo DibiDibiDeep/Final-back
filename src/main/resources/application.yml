@@ -21,10 +21,10 @@ spring:
 
 ml:
   service:
-    # url: http://${ML_HOST:-localhost}:${ML_PORT:-8000}
-    url: http://ml:8000
+    url: ${ML_SERVICE_URL:http://ml:8000}
   app:
-    url: http://localhost:8080
+    url: ${ML_APP_URL:http://localhost:8080}
+
 
 aws:
   accessKeyId: ${AWS_ACCESS_KEY_ID}
@@ -40,6 +40,7 @@ logging:
   level:
     root: WARN
     com.example.finalproj: INFO
+    com.example.finalproj.user: DEBUG
     org.springframework.web: WARN
     org.hibernate.SQL: WARN
 

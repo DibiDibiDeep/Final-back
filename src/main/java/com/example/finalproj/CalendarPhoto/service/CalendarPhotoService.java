@@ -34,7 +34,9 @@ public class CalendarPhotoService {
     private AmazonS3 s3Client;
 
     @Autowired
-    private CalendarMLService calendarMLService;
+
+    private CalendarMLService calendarMlService;
+
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
@@ -85,7 +87,7 @@ public class CalendarPhotoService {
         CalendarPhoto savedCalendarPhoto = calendarPhotoRepository.save(calendarPhoto);
 
         // ML 서비스로 이미지 전송 (비동기 처리)
-        calendarMLService.sendImageToMLService(filePath, userId, babyId, savedCalendarPhoto.getCalendarPhotoId());
+        calendarMlService.sendImageToMLService(filePath, userId, babyId, savedCalendarPhoto.getCalendarPhotoId());
 
         return savedCalendarPhoto;
     }

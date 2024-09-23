@@ -24,7 +24,7 @@ public class BookService {
     private AmazonS3 s3Client;
 
     @Autowired
-    private BookMLService bookMLService;
+    private BookMLService bookMlService;
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
@@ -38,7 +38,7 @@ public class BookService {
         Book savedBook = bookRepository.save(book);
 
         // ML 서비스로 책 정보 전송
-        bookMLService.sendBookToMLService(savedBook);
+        bookMlService.sendBookToMLService(savedBook);
 
         return savedBook;
     }

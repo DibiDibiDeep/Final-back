@@ -35,7 +35,15 @@ public class Calendar {
 
     private String location;
 
-    public Calendar(Integer calendarId, Integer userId, Integer babyId, Integer calendarPhotoId, Integer todayId, Integer bookId, String title, LocalDateTime startTime, LocalDateTime endTime, String location) {
+    private String target;
+
+    private String information;
+
+    private String notes;
+
+    public Calendar() {}
+
+    public Calendar(Integer calendarId, Integer userId, Integer babyId, Integer calendarPhotoId, Integer todayId, Integer bookId, String title, LocalDateTime startTime, LocalDateTime endTime, String location, String target, String information, String notes) {
         this.calendarId = calendarId;
         this.userId = userId;
         this.babyId = babyId;
@@ -46,9 +54,10 @@ public class Calendar {
         this.startTime = startTime;
         this.endTime = endTime;
         this.location = location;
+        this.target = target;
+        this.information = information;
+        this.notes = notes;
     }
-
-    public Calendar() {}
 
     public Integer getCalendarId() {
         return calendarId;
@@ -90,7 +99,6 @@ public class Calendar {
         this.todayId = todayId;
     }
 
-
     public Integer getBookId() {
         return bookId;
     }
@@ -131,6 +139,30 @@ public class Calendar {
         this.location = location;
     }
 
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
+    }
+
+    public String getInformation() {
+        return information;
+    }
+
+    public void setInformation(String information) {
+        this.information = information;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
     @Override
     public String toString() {
         return "Calendar{" +
@@ -144,6 +176,9 @@ public class Calendar {
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", location='" + location + '\'' +
+                ", target='" + target + '\'' +
+                ", information='" + information + '\'' +
+                ", notes='" + notes + '\'' +
                 '}';
     }
 }
