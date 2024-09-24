@@ -46,21 +46,28 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User authentication failed");
             }
 
-            // 사용자가 아기를 가지고 있는지 확인
             boolean hasBaby = babyService.userHasBaby(user.getUserId());
 
-
-            // 최종 응답 객체 생성
             Map<String, Object> finalResponse = new HashMap<>(response);
-            finalResponse.put("user", user);  // 사용자 객체 포함
+            finalResponse.put("user", user);
             finalResponse.put("hasBaby", hasBaby);
-            
+
             logger.info("User successfully authenticated: {}", user.getUserId());
             return ResponseEntity.ok(finalResponse);
         } catch (Exception e) {
             logger.error("Error during Google authentication", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred during authentication: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/{userId}/accept-privacy-policy")
+    public ResponseEntity<?> acceptPrivacyPolicy(@PathVariable Integer userId) {
+        try {
+            User updatedUser = userService.acceptPrivacyPolicy(userId);
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 

@@ -30,4 +30,10 @@ public class CalendarPhotoInfController {
         List<CalendarPhotoInf> calendarPhotoInfs = calendarPhotoInfService.getAllCalendarPhotoInfs();
         return ResponseEntity.ok(calendarPhotoInfs);
     }
+
+    // userId별로 캘린더 조회
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<CalendarPhotoInf>> getCalendarPhotoInfByUserId(@PathVariable Integer userId) {
+        return ResponseEntity.ok(calendarPhotoInfService.getCalendarPhotoInfByUserId(userId));
+    }
 }
