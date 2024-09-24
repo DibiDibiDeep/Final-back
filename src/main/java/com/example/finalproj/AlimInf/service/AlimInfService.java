@@ -105,6 +105,7 @@ public class AlimInfService {
         setFieldFromMap(alimInfData, "social", existingAlimInf, "setSocial", String.class);
         setFieldFromMap(alimInfData, "special", existingAlimInf, "setSpecial", String.class);
         setFieldFromMap(alimInfData, "diary", existingAlimInf, "setDiary", String.class);
+        setFieldFromMap(alimInfData, "role", existingAlimInf, "setRole", String.class);
 
         // Handle activities and keywords
         handleListField(alimInfData, "activities", existingAlimInf, "setActivities");

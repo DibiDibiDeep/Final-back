@@ -44,26 +44,7 @@ public class AlimMLService {
         String requestBody = String.format("{\"user_id\": %d, \"baby_id\": %d, \"content\": \"%s\"}",
                 alim.getUserId(), alim.getBabyId(), alim.getContent());
         HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
-        return restTemplate.postForObject(mlServiceUrl + "/process_alim", request, String.class);
+        return restTemplate.postForObject(mlServiceUrl + "/generate_diary", request, String.class);
     }
 
-    public static AlimInf createAlimInfFromMLResponse(String mlResponse, Integer alimId) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> responseMap = objectMapper.readValue(mlResponse, Map.class);
-
-        AlimInf alimInf = new AlimInf();
-        alimInf.setAlimId(alimId);
-        alimInf.setName((String) responseMap.get("name"));
-        alimInf.setEmotion((String) responseMap.get("emotion"));
-        alimInf.setHealth((String) responseMap.get("health"));
-        alimInf.setNutrition((String) responseMap.get("nutrition"));
-        alimInf.setActivities((String) responseMap.get("activities").toString());
-        alimInf.setSpecial((String) responseMap.get("special"));
-        alimInf.setKeywords((String) responseMap.get("keywords").toString());
-        alimInf.setDiary((String) responseMap.get("diary"));
-        alimInf.setDate(LocalDateTime.now());
-        alimInf.setRole((String) responseMap.get("role"));
-
-        return alimInf;
-    }
 }

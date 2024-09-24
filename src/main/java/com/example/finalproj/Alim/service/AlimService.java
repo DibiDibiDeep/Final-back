@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class AlimService {
@@ -17,9 +18,9 @@ public class AlimService {
     private final AlimMLService alimMlService;
 
     @Autowired
-    public AlimService(AlimRepository alimRepository, AlimMLService mlService) {
+    public AlimService(AlimRepository alimRepository, AlimMLService alimMlService) {
         this.alimRepository = alimRepository;
-        this.alimMlService = mlService;
+        this.alimMlService = alimMlService;
     }
 
     // 주어진 날짜로 Alim 목록을 조회
@@ -30,7 +31,10 @@ public class AlimService {
     // 새로운 Alim 생성 및 ML 처리
     public Alim createAlim(Alim alim) {
         Alim savedAlim = alimRepository.save(alim);
-        alimMlService.processAlim(savedAlim);
+
+        // ML 처리를 비동기적으로 시작
+        CompletableFuture.runAsync(() -> alimMlService.processAlim(savedAlim));
+
         return savedAlim;
     }
 
