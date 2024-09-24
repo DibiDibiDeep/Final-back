@@ -1,4 +1,8 @@
 spring:
+  security:
+    user:
+      name: ${SPRING_SECURITY_ID}
+      password: ${SPRING_SECURITY_PWD}
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}
