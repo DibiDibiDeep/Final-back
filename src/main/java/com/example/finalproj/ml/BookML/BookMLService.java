@@ -40,6 +40,6 @@ public class BookMLService {
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
 
-        return restTemplate.postForObject(mlServiceUrl + "/process_book", request, String.class);
+        return restTemplate.postForObject(mlServiceUrl + "/generate_fairytale", request, String.class);
     }
 }

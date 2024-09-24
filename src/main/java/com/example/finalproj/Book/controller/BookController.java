@@ -49,4 +49,11 @@ public class BookController {
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
     }
+
+    // userId로 책을 조회하는 엔드포인트 추가
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Book>> getBooksByUserId(@PathVariable Integer userId) {
+        List<Book> books = bookService.getBooksByUserId(userId);
+        return ResponseEntity.ok(books);
+    }
 }

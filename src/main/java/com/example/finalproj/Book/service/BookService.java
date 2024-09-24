@@ -122,4 +122,9 @@ public class BookService {
     public void deleteBook(Integer id) {
         bookRepository.deleteById(id);
     }
+
+    // userId로 책을 조회하는 메서드 추가
+    public List<Book> getBooksByUserId(Integer userId) {
+        return bookRepository.findByUserId(userId);
+    }
 }
