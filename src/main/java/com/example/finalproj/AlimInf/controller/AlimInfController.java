@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/alim-inf")
@@ -37,13 +38,14 @@ public class AlimInfController {
 
     // 새로운 AlimInf 레코드를 생성
     @PostMapping
-    public AlimInf createAlimInf(@RequestBody AlimInf alimInf) {
-        return alimInfService.createAlimInf(alimInf);
+    public ResponseEntity<AlimInf> createAlimInf(@RequestBody Map<String, Object> alimInfData) {
+        AlimInf createdAlimInf = alimInfService.createAlimInf(alimInfData);
+        return ResponseEntity.ok(createdAlimInf);
     }
 
     // ID로 특정 AlimInf 레코드를 수정
     @PutMapping("/{id}")
-    public ResponseEntity<AlimInf> updateAlimInf(@PathVariable Integer id, @RequestBody AlimInf alimInfDetails) {
+    public ResponseEntity<AlimInf> updateAlimInf(@PathVariable Integer id, @RequestBody Map<String, Object> alimInfDetails) {
         AlimInf updatedAlimInf = alimInfService.updateAlimInf(id, alimInfDetails);
         if (updatedAlimInf == null) {
             return ResponseEntity.notFound().build();

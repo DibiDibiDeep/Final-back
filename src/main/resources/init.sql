@@ -187,13 +187,16 @@ CREATE TABLE IF NOT EXISTS Alim_inf (
                                         baby_id INT NOT NULL,
                                         today_id INT NULL,
                                         name VARCHAR(255) NULL,
+                                        age int NULL,
+                                        gender VARCHAR(255) NULL,
                                         emotion VARCHAR(255) NULL,
                                         health VARCHAR(255) NULL,
                                         nutrition VARCHAR(255) NULL,
                                         activities VARCHAR(255) NULL,
+                                        social VARCHAR(255) NULL,
                                         special VARCHAR(255) NULL,
                                         keywords VARCHAR(255) NULL,
-                                        diary VARCHAR(255) NULL,
+                                        diary TEXT NULL,
                                         date datetime NOT NULL,
                                         PRIMARY KEY (aliminf_id),
                                         FOREIGN KEY (alim_id) REFERENCES Alim (alim_id),
@@ -202,6 +205,3 @@ CREATE TABLE IF NOT EXISTS Alim_inf (
                                         FOREIGN KEY (today_id) REFERENCES Today_sum (today_id)
 );
 
-INSERT INTO Alim_inf (alim_id, user_id, baby_id, today_id, name, emotion, health, nutrition, activities, special, keywords, diary, date) VALUES
-                                                                                                                                             (1, 1, 1, 1, '김쑥쑥', '행복', '건강', '모유 수유', '혼자 앉기', '첫 혼자 앉기 성공', '발달,성장', '오늘 우리 아기가 드디어 혼자 앉았어요. 정말 감동적인 순간이었습니다.', '2024-05-15 10:10:00'),
-                                                                                                                                             (2, 2, 2, 2, '이튼튼', '신남', '건강', '이유식 시작', '걸음마', '첫 걸음마', '발달,운동', '우리 아기가 오늘 처음으로 걸음마를 뗐어요. 너무 자랑스럽고 행복합니다.','2024-05-15 10:10:00');
