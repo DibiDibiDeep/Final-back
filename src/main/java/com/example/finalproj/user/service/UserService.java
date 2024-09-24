@@ -9,9 +9,12 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
+
 
 @Service
 public class UserService {
@@ -35,35 +38,37 @@ public class UserService {
     }
 
     // Google 사용자 인증
-    public Map<String, Object> authenticateGoogleUser(String token) throws Exception {
+    public Map<String, Object> authenticateGoogleUser(String token) throws AuthenticationServiceException {
         try {
             GoogleIdToken.Payload payload = verifyGoogleToken(token);
             String email = payload.getEmail();
-            List<User> users = userRepository.findByEmail(email);
+            String name = (String) payload.get("name");
 
-            Map<String, Object> response = new HashMap<>();
-            User user;
-
-            // 기존 사용자 확인 및 처리
-            if (!users.isEmpty()) {
-                user = users.get(0);  // 기존 사용자
-                response.put("code", 200);
-            } else {
-                user = new User(email, (String) payload.get("name"));  // 새 사용자 생성
-                user = userRepository.save(user);
-                response.put("code", 201);
-            }
+            User user = userRepository.findByEmail(email)
+                    .orElseGet(() -> {
+                        User newUser = new User(email, name);
+                        return userRepository.save(newUser);
+                    });
 
             String jwtToken = jwtTokenProvider.generateToken(user.getUserId());
+
+            Map<String, Object> response = new HashMap<>();
             response.put("user", user);
             response.put("token", jwtToken);
+            response.put("isNewUser", user.getCreatedAt().isAfter(LocalDateTime.now().minusSeconds(5)));
+
             return response;
         } catch (Exception e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("code", 400);
-            errorResponse.put("message", "Authentication failed: " + e.getMessage());
-            return errorResponse;
+            throw new AuthenticationServiceException("Authentication failed: " + e.getMessage(), e);
         }
+    }
+
+    // 개인정보 처리방침 메서드
+    public User acceptPrivacyPolicy(Integer userId) {
+        return userRepository.findById(userId).map(user -> {
+            user.setPrivacyPolicyAccepted(true);
+            return userRepository.save(user);
+        }).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     // 사용자 정보 업데이트
@@ -92,7 +97,7 @@ public class UserService {
         if (idToken != null) {
             return idToken.getPayload();
         } else {
-            throw new Exception("Invalid ID token.");
+            throw new AuthenticationServiceException("Invalid ID token.");
         }
     }
 }
