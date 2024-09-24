@@ -44,6 +44,9 @@ dependencies {
 
 	// Google HTTP Client Library (needed for OAuth)
 	implementation 'com.google.http-client:google-http-client-gson:1.42.3'
+
+	// JSON 라이브러리 추가
+	implementation 'org.json:json:20210307'
 }
 
 tasks.named('test') {

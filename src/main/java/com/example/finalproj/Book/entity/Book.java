@@ -1,7 +1,6 @@
 package com.example.finalproj.Book.entity;
 
 import com.example.finalproj.Page.entity.Page;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,29 +16,17 @@ public class Book {
     private Integer userId;
     private String title;
     private String coverPath;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
     private LocalDateTime generatedDate;
 
-    // Page 엔티티와의 일대다 관계 설정
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private List<Page> pages = new ArrayList<>();
 
     // 기본 생성자
-    public Book() {}
-
-    // 모든 필드를 포함한 생성자
-    public Book(Integer userId, String title, String coverPath, LocalDateTime startDate, LocalDateTime endDate, LocalDateTime generatedDate) {
-        this.userId = userId;
-        this.title = title;
-        this.coverPath = coverPath;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.generatedDate = generatedDate;
+    public Book() {
+        this.generatedDate = LocalDateTime.now();
     }
 
-    // Getter와 Setter 메서드
+    // bookId의 getter와 setter
     public Integer getBookId() {
         return bookId;
     }
@@ -48,6 +35,7 @@ public class Book {
         this.bookId = bookId;
     }
 
+    // userId의 getter와 setter
     public Integer getUserId() {
         return userId;
     }
@@ -56,6 +44,7 @@ public class Book {
         this.userId = userId;
     }
 
+    // title의 getter와 setter
     public String getTitle() {
         return title;
     }
@@ -64,6 +53,7 @@ public class Book {
         this.title = title;
     }
 
+    // coverPath의 getter와 setter
     public String getCoverPath() {
         return coverPath;
     }
@@ -72,22 +62,7 @@ public class Book {
         this.coverPath = coverPath;
     }
 
-    public LocalDateTime getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDateTime getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
-    }
-
+    // generatedDate의 getter와 setter
     public LocalDateTime getGeneratedDate() {
         return generatedDate;
     }
@@ -96,6 +71,7 @@ public class Book {
         this.generatedDate = generatedDate;
     }
 
+    // pages의 getter와 setter
     public List<Page> getPages() {
         return pages;
     }

@@ -1,7 +1,6 @@
 package com.example.finalproj.Page.entity;
 
 import com.example.finalproj.Book.entity.Book;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -13,7 +12,6 @@ public class Page {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", nullable = false)
-    @JsonBackReference
     private Book book;
 
     private Integer pageNum;
@@ -21,22 +19,15 @@ public class Page {
     @Column(length = 1000)
     private String text;
 
-    private String illustPrompt;
     private String imagePath;
+
+    @Column(length = 1000)
+    private String illustPrompt;
 
     // 기본 생성자
     public Page() {}
 
-    // 모든 필드를 포함한 생성자
-    public Page(Book book, Integer pageNum, String text, String illustPrompt, String imagePath) {
-        this.book = book;
-        this.pageNum = pageNum;
-        this.text = text;
-        this.illustPrompt = illustPrompt;
-        this.imagePath = imagePath;
-    }
-
-    // Getter와 Setter 메서드
+    // getter와 setter 메서드들
     public Integer getPageId() {
         return pageId;
     }
@@ -69,19 +60,19 @@ public class Page {
         this.text = text;
     }
 
-    public String getIllustPrompt() {
-        return illustPrompt;
-    }
-
-    public void setIllustPrompt(String illustPrompt) {
-        this.illustPrompt = illustPrompt;
-    }
-
     public String getImagePath() {
         return imagePath;
     }
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public String getIllustPrompt() {
+        return illustPrompt;
+    }
+
+    public void setIllustPrompt(String illustPrompt) {
+        this.illustPrompt = illustPrompt;
     }
 }
