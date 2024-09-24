@@ -1,6 +1,9 @@
 package com.example.finalproj.AlimInf.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Entity
 @Table(name = "Alim_inf")
@@ -46,9 +49,11 @@ public class AlimInf {
     @Column(name = "date")
     private LocalDateTime date;
 
+    // 기본 생성자
     public AlimInf() {
     }
 
+    // 모든 필드를 포함한 생성자
     public AlimInf(Integer alimInfId, Integer alimId, Integer userId, Integer babyId, Integer todayId, String name, Integer age, String gender, String emotion, String health, String nutrition, String activities, String social, String special, String keywords, String diary, LocalDateTime date) {
         this.alimInfId = alimInfId;
         this.alimId = alimId;
@@ -69,6 +74,8 @@ public class AlimInf {
         this.date = date;
     }
 
+    // Getter와 Setter 메소드들
+
     public Integer getAlimInfId() {
         return alimInfId;
     }
@@ -85,16 +92,18 @@ public class AlimInf {
         this.alimId = alimId;
     }
 
+    // userId에 대한 Getter 메소드 (null 체크 추가)
     public Integer getUserId() {
-        return userId;
+        return userId != null ? userId : 0; // userId가 null이면 0을 반환
     }
 
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
+    // babyId에 대한 Getter 메소드 (null 체크 추가)
     public Integer getBabyId() {
-        return babyId;
+        return babyId != null ? babyId : 0; // babyId가 null이면 0을 반환
     }
 
     public void setBabyId(Integer babyId) {
@@ -165,6 +174,19 @@ public class AlimInf {
         this.activities = activities;
     }
 
+    // 활동 목록을 List<String>으로 반환하는 메소드
+    public List<String> getActivitiesList() {
+        if (activities == null || activities.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return Arrays.asList(activities.split(","));
+    }
+
+    // List<String>을 받아 문자열로 설정하는 메소드
+    public void setActivitiesList(List<String> activitiesList) {
+        this.activities = String.join(",", activitiesList);
+    }
+
     public String getSocial() {
         return social;
     }
@@ -187,6 +209,19 @@ public class AlimInf {
 
     public void setKeywords(String keywords) {
         this.keywords = keywords;
+    }
+
+    // 키워드 목록을 List<String>으로 반환하는 메소드
+    public List<String> getKeywordsList() {
+        if (keywords == null || keywords.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return Arrays.asList(keywords.split(","));
+    }
+
+    // List<String>을 받아 문자열로 설정하는 메소드
+    public void setKeywordsList(List<String> keywordsList) {
+        this.keywords = String.join(",", keywordsList);
     }
 
     public String getDiary() {
