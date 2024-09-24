@@ -178,4 +178,9 @@ public class CalendarPhotoInfService {
     public List<CalendarPhotoInf> getAllCalendarPhotoInfs() {
         return calendarPhotoInfRepository.findAllCalendarPhotoInfs();
     }
+
+    // 특정 사용자 ID로 CalendarPhotoInf를 조회
+    public List<CalendarPhotoInf> getCalendarPhotoInfByUserId(Integer userId) {
+        return calendarPhotoInfRepository.findCalendarPhotoInfByUserId(userId);
+    }
 }

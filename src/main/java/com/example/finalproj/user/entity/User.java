@@ -22,6 +22,9 @@ public class User {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "privacy_policy_accepted")
+    private boolean privacyPolicyAccepted = false;
+
     // Default constructor
     public User() {}
 
@@ -60,6 +63,14 @@ public class User {
         return createdAt;
     }
 
+    public boolean isPrivacyPolicyAccepted() {
+        return privacyPolicyAccepted;
+    }
+
+    public void setPrivacyPolicyAccepted(boolean privacyPolicyAccepted) {
+        this.privacyPolicyAccepted = privacyPolicyAccepted;
+    }
+
     // toString method
     @Override
     public String toString() {
@@ -68,6 +79,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
                 ", createdAt=" + createdAt +
+                ", privacyPolicyAccepted=" + privacyPolicyAccepted +
                 '}';
     }
 }
