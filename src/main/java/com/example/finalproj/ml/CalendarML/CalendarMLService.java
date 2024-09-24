@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class CalendarMLService {
+
     @Value("${ml.service.url}")
     private String mlServiceUrl;
     private final RestTemplate restTemplate;
@@ -36,5 +37,4 @@ public class CalendarMLService {
             System.err.println("Error in ML service process: " + e.getMessage());
         }
     }
-
 }

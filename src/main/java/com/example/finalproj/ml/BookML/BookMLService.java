@@ -13,7 +13,9 @@ import java.util.Map;
 
 @Service
 public class BookMLService {
+
     @Value("${ml.service.url}")
+
     private String mlServiceUrl;
 
     private final RestTemplate restTemplate;

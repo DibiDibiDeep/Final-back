@@ -34,7 +34,9 @@ public class CalendarPhotoService {
     private AmazonS3 s3Client;
 
     @Autowired
+
     private CalendarMLService calendarMlService;
+
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
