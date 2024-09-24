@@ -24,12 +24,23 @@ public class AlimInf {
     private Integer todayId;
 
     private String name;
+    @Column(name = "age", nullable = true)
+    private Integer age;
+    private String gender;
     private String emotion;
     private String health;
     private String nutrition;
+
+    @Column(columnDefinition = "TEXT")
     private String activities;
+
+    private String social;
     private String special;
+
+    @Column(columnDefinition = "TEXT")
     private String keywords;
+
+    @Column(columnDefinition = "TEXT")
     private String diary;
 
     @Column(name = "date")
@@ -38,17 +49,20 @@ public class AlimInf {
     public AlimInf() {
     }
 
-    public AlimInf(Integer alimInfId, Integer alimId, Integer userId, Integer babyId, Integer todayId, String name, String emotion, String health, String nutrition, String activities, String special, String keywords, String diary, LocalDateTime date) {
+    public AlimInf(Integer alimInfId, Integer alimId, Integer userId, Integer babyId, Integer todayId, String name, Integer age, String gender, String emotion, String health, String nutrition, String activities, String social, String special, String keywords, String diary, LocalDateTime date) {
         this.alimInfId = alimInfId;
         this.alimId = alimId;
         this.userId = userId;
         this.babyId = babyId;
         this.todayId = todayId;
         this.name = name;
+        this.age = age;
+        this.gender = gender;
         this.emotion = emotion;
         this.health = health;
         this.nutrition = nutrition;
         this.activities = activities;
+        this.social = social;
         this.special = special;
         this.keywords = keywords;
         this.diary = diary;
@@ -103,6 +117,22 @@ public class AlimInf {
         this.name = name;
     }
 
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     public String getEmotion() {
         return emotion;
     }
@@ -133,6 +163,14 @@ public class AlimInf {
 
     public void setActivities(String activities) {
         this.activities = activities;
+    }
+
+    public String getSocial() {
+        return social;
+    }
+
+    public void setSocial(String social) {
+        this.social = social;
     }
 
     public String getSpecial() {
@@ -176,10 +214,13 @@ public class AlimInf {
                 ", babyId=" + babyId +
                 ", todayId=" + todayId +
                 ", name='" + name + '\'' +
+                ", age=" + age +
+                ", gender='" + gender + '\'' +
                 ", emotion='" + emotion + '\'' +
                 ", health='" + health + '\'' +
                 ", nutrition='" + nutrition + '\'' +
                 ", activities='" + activities + '\'' +
+                ", social='" + social + '\'' +
                 ", special='" + special + '\'' +
                 ", keywords='" + keywords + '\'' +
                 ", diary='" + diary + '\'' +
