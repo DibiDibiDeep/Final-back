@@ -62,6 +62,7 @@ public class AlimMLService {
         alimInf.setKeywords((String) responseMap.get("keywords").toString());
         alimInf.setDiary((String) responseMap.get("diary"));
         alimInf.setDate(LocalDateTime.now());
+        alimInf.setRole((String) responseMap.get("role"));
 
         return alimInf;
     }

@@ -46,10 +46,12 @@ public class AlimInf {
     @Column(name = "date")
     private LocalDateTime date;
 
+    private String role;
+
     public AlimInf() {
     }
 
-    public AlimInf(Integer alimInfId, Integer alimId, Integer userId, Integer babyId, Integer todayId, String name, Integer age, String gender, String emotion, String health, String nutrition, String activities, String social, String special, String keywords, String diary, LocalDateTime date) {
+    public AlimInf(Integer alimInfId, Integer alimId, Integer userId, Integer babyId, Integer todayId, String name, Integer age, String gender, String emotion, String health, String nutrition, String activities, String social, String special, String keywords, String diary, LocalDateTime date, String role) {
         this.alimInfId = alimInfId;
         this.alimId = alimId;
         this.userId = userId;
@@ -67,6 +69,7 @@ public class AlimInf {
         this.keywords = keywords;
         this.diary = diary;
         this.date = date;
+        this.role = role;
     }
 
     public Integer getAlimInfId() {
@@ -205,6 +208,14 @@ public class AlimInf {
         this.date = date;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
         return "AlimInf{" +
@@ -225,6 +236,7 @@ public class AlimInf {
                 ", keywords='" + keywords + '\'' +
                 ", diary='" + diary + '\'' +
                 ", date=" + date +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

@@ -41,6 +41,7 @@ public class AlimInfService {
         setFieldFromMap(alimInfData, "social", alimInf, "setSocial", String.class);
         setFieldFromMap(alimInfData, "special", alimInf, "setSpecial", String.class);
         setFieldFromMap(alimInfData, "diary", alimInf, "setDiary", String.class);
+        setFieldFromMap(alimInfData, "role", alimInf, "setRole", String.class);
         if (alimInfData.containsKey("date") && alimInfData.get("date") != null) {
             String dateStr = alimInfData.get("date").toString();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
