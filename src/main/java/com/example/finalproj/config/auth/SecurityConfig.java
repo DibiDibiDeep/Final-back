@@ -23,7 +23,7 @@ public class SecurityConfig {
                         )
                 )
                 .authorizeHttpRequests((authorizeRequest) -> authorizeRequest
-                        .requestMatchers("/", "/css/**", "images/**", "/js/**", "/login/*", "/logout/*", "/api/auth/**").permitAll()
+                        .requestMatchers("/", "/css/**", "images/**", "/js/**", "/login/*", "/logout/*", "/api/auth/**", "/api/books/**", "/api/**", "api/auth/login", "/api/alim-inf").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(

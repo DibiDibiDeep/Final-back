@@ -116,4 +116,5 @@ public class UserService {
     public boolean isNewUser(Optional<User> user) {
         return user.orElseThrow().isNewUser(); // Adjust logic as necessary
     }
+
 }

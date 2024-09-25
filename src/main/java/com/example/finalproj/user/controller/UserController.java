@@ -83,37 +83,37 @@ public class UserController {
             "&scope=email%20profile";
 
     // Google 사용자 인증
-    @PostMapping("/google")
-    public ResponseEntity<?> authenticateUser(@RequestBody Map<String, String> tokenMap) {
-        logger.info("Attempting to authenticate Google user");
-        try {
-            String token = tokenMap.get("token");
-            if (token == null || token.isEmpty()) {
-                logger.warn("Received empty token for Google authentication");
-                return ResponseEntity.badRequest().body("Token is required");
-            }
-
-            Map<String, Object> response = userService.authenticateGoogleUser(token);
-            User user = (User) response.get("user");
-            if (user == null) {
-                logger.warn("User authentication failed");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User authentication failed");
-            }
-
-            boolean hasBaby = babyService.userHasBaby(user.getUserId());
-
-            Map<String, Object> finalResponse = new HashMap<>(response);
-            finalResponse.put("user", user);
-            finalResponse.put("hasBaby", hasBaby);
-
-            logger.info("User successfully authenticated: {}", user.getUserId());
-            return ResponseEntity.ok(finalResponse);
-        } catch (Exception e) {
-            logger.error("Error during Google authentication", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred during authentication: " + e.getMessage());
-        }
-    }
+//    @PostMapping("/google")
+//    public ResponseEntity<?> authenticateUser(@RequestBody Map<String, String> tokenMap) {
+//        logger.info("Attempting to authenticate Google user");
+//        try {
+//            String token = tokenMap.get("token");
+//            if (token == null || token.isEmpty()) {
+//                logger.warn("Received empty token for Google authentication");
+//                return ResponseEntity.badRequest().body("Token is required");
+//            }
+//
+//            Map<String, Object> response = userService.authenticateGoogleUser(token);
+//            User user = (User) response.get("user");
+//            if (user == null) {
+//                logger.warn("User authentication failed");
+//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User authentication failed");
+//            }
+//
+//            boolean hasBaby = babyService.userHasBaby(user.getUserId());
+//
+//            Map<String, Object> finalResponse = new HashMap<>(response);
+//            finalResponse.put("user", user);
+//            finalResponse.put("hasBaby", hasBaby);
+//
+//            logger.info("User successfully authenticated: {}", user.getUserId());
+//            return ResponseEntity.ok(finalResponse);
+//        } catch (Exception e) {
+//            logger.error("Error during Google authentication", e);
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("An error occurred during authentication: " + e.getMessage());
+//        }
+//    }
 
     // Google 인증 URL 반환
     @GetMapping("/google-url")
