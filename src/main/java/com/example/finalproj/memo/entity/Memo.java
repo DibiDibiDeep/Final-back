@@ -26,18 +26,22 @@ public class Memo {
     @Column(name = "content")
     private String content;
 
+    @Column(name = "send_to_ml")
+    private Boolean sendToML;
+
     // 기본 생성자
     public Memo() {
     }
 
     // 모든 필드를 포함한 생성자
-    public Memo(Integer memoId, Integer userId, Integer todayId, Integer bookId, LocalDateTime date, String content) {
+    public Memo(Integer memoId, Integer userId, Integer todayId, Integer bookId, LocalDateTime date, String content, Boolean sendToML) {
         this.memoId = memoId;
         this.userId = userId;
         this.todayId = todayId;
         this.bookId = bookId;
         this.date = date;
         this.content = content;
+        this.sendToML = sendToML;
     }
 
     // Getter와 Setter 메서드
@@ -89,6 +93,14 @@ public class Memo {
         this.content = content;
     }
 
+    public Boolean getSendToML() {
+        return sendToML;
+    }
+
+    public void setSendToML(Boolean sendToML) {
+        this.sendToML = sendToML;
+    }
+
     // toString 메서드 오버라이드
     @Override
     public String toString() {
@@ -99,6 +111,7 @@ public class Memo {
                 ", bookId=" + bookId +
                 ", date=" + date +
                 ", content='" + content + '\'' +
+                ", sendToML=" + sendToML +
                 '}';
     }
 }

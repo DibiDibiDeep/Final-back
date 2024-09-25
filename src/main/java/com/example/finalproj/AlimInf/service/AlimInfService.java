@@ -2,6 +2,7 @@ package com.example.finalproj.AlimInf.service;
 
 import com.example.finalproj.AlimInf.entity.AlimInf;
 import com.example.finalproj.AlimInf.repository.AlimInfRepository;
+import com.example.finalproj.ml.ChatML.ChatMLService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,12 +18,15 @@ public class AlimInfService {
 
     private final AlimInfRepository alimInfRepository;
     private final ObjectMapper objectMapper;
+    private final ChatMLService chatMLService;
 
     @Autowired
-    public AlimInfService(AlimInfRepository alimInfRepository, ObjectMapper objectMapper) {
+    public AlimInfService(AlimInfRepository alimInfRepository, ObjectMapper objectMapper, ChatMLService chatMLService) {
         this.alimInfRepository = alimInfRepository;
         this.objectMapper = objectMapper;
+        this.chatMLService = chatMLService;
     }
+
 
     public AlimInf createAlimInf(Map<String, Object> alimInfData) {
         AlimInf alimInf = new AlimInf();
@@ -30,9 +34,6 @@ public class AlimInfService {
         alimInf.setAlimId(maxAlimId + 1);
 
         // 엔티티의 나머지 필드들도 필요에 따라 설정
-        alimInf.setDate(LocalDateTime.now());
-
-        // Set fields from map
         setFieldFromMap(alimInfData, "alim_id", alimInf, "setAlimId", Integer.class);
         setFieldFromMap(alimInfData, "user_id", alimInf, "setUserId", Integer.class);
         setFieldFromMap(alimInfData, "baby_id", alimInf, "setBabyId", Integer.class);
@@ -45,20 +46,27 @@ public class AlimInfService {
         setFieldFromMap(alimInfData, "special", alimInf, "setSpecial", String.class);
         setFieldFromMap(alimInfData, "diary", alimInf, "setDiary", String.class);
         setFieldFromMap(alimInfData, "role", alimInf, "setRole", String.class);
+
+        // Handle date
         if (alimInfData.containsKey("date") && alimInfData.get("date") != null) {
             String dateStr = alimInfData.get("date").toString();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
             alimInf.setDate(dateTime);
         } else {
-            LocalDateTime currentDateTime = LocalDateTime.now();
-            alimInf.setDate(currentDateTime);
+            alimInf.setDate(LocalDateTime.now());
         }
+
         // Handle activities and keywords
         handleListField(alimInfData, "activities", alimInf, "setActivities");
         handleListField(alimInfData, "keywords", alimInf, "setKeywords");
 
-        return alimInfRepository.save(alimInf);
+        AlimInf savedAlimInf = alimInfRepository.save(alimInf);
+
+        // ML 서비스로 데이터 전송
+        chatMLService.sendAlimInfToMLService(savedAlimInf);
+
+        return savedAlimInf;
     }
 
     private void setFieldFromMap(Map<String, Object> map, String key, AlimInf alimInf, String setterName, Class<?> type) {
@@ -75,6 +83,7 @@ public class AlimInfService {
             }
         }
     }
+
 
     private void handleListField(Map<String, Object> map, String key, AlimInf alimInf, String setterName) {
         if (map.containsKey(key)) {

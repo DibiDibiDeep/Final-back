@@ -2,6 +2,7 @@ package com.example.finalproj.memo.service;
 
 import com.example.finalproj.memo.entity.Memo;
 import com.example.finalproj.memo.repository.MemoRepository;
+import com.example.finalproj.ml.ChatML.ChatMLService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +17,16 @@ public class MemoService {
     @Autowired
     private MemoRepository memoRepository;
 
+    @Autowired
+    private ChatMLService chatMLService;
+
     // 새 메모 생성
     public Memo createMemo(Memo memo) {
-        return memoRepository.save(memo);
+        Memo savedMemo = memoRepository.save(memo);
+        if (Boolean.TRUE.equals(savedMemo.getSendToML())) {
+            chatMLService.sendMemoToMLService(savedMemo);
+        }
+        return savedMemo;
     }
 
     // ID로 메모 조회
@@ -46,7 +54,12 @@ public class MemoService {
             existingMemo.setBookId(memoDetails.getBookId());
             existingMemo.setDate(memoDetails.getDate());
             existingMemo.setContent(memoDetails.getContent());
-            return memoRepository.save(existingMemo);
+            existingMemo.setSendToML(memoDetails.getSendToML());
+            Memo updatedMemo = memoRepository.save(existingMemo);
+            if (Boolean.TRUE.equals(updatedMemo.getSendToML())) {
+                chatMLService.sendMemoToMLService(updatedMemo);
+            }
+            return updatedMemo;
         }
         return null;
     }
