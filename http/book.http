@@ -14,10 +14,10 @@ Content-Type: application/json
 
 {
   "name": "지수",
-  "age": 3,
+  "age": 5,
   "gender": "female",
-  "emotion": "즐거움과 신남",
-  "health": "활기차고 건강함",
+  "emotion": "화남과 슬픔",
+  "health": "우을하고 병약함",
   "nutrition": "식사에 대한 정보는 제공되지 않음",
   "activities": "아이스크림 가게 역할놀이, 놀이터에서 놀기, 붓으로 그림 그리기",
   "social": "친구들과 함께 즐겁게 놀며 웃음소리를 나누었음",

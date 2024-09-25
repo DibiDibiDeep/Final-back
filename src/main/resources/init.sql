@@ -37,16 +37,14 @@ CREATE TABLE IF NOT EXISTS Book (
                                     user_id INT NOT NULL,
                                     title VARCHAR(255) NOT NULL,
                                     cover_path VARCHAR(255) NOT NULL,
-                                    start_date DATETIME NOT NULL,
-                                    end_date DATETIME NOT NULL,
                                     generated_date DATETIME NOT NULL,
                                     PRIMARY KEY (book_id),
                                     CONSTRAINT fk_book_user FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
 );
 
-INSERT INTO Book (user_id, title, cover_path, start_date, end_date, generated_date) VALUES
-                                                                                        (1, '김쑥쑥의 첫 번째 이야기', '/covers/book1_cover.jpg', '2024-01-01 00:00:00', '2024-01-31 23:59:59', '2024-02-01 10:00:00'),
-                                                                                        (2, '이튼튼의 신나는 모험', '/covers/book2_cover.jpg', '2024-02-01 00:00:00', '2024-02-29 23:59:59', '2024-03-01 10:00:00');
+INSERT INTO Book (user_id, title, cover_path, generated_date) VALUES
+                                                                                        (1, '김쑥쑥의 첫 번째 이야기', '/covers/book1_cover.jpg', '2024-01-01 00:00:00'),
+                                                                                        (2, '이튼튼의 신나는 모험', '/covers/book2_cover.jpg', '2024-02-01 00:00:00');
 
 -- 4. Baby_Photo 테이블 생성 및 더미 데이터 삽입
 CREATE TABLE IF NOT EXISTS Baby_Photo (

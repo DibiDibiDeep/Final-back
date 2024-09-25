@@ -94,7 +94,7 @@ public class BookController {
             // Optional에서 AlimInf 객체를 가져옴
             AlimInf alimInf = optionalAlimInf.get();
 
-            // 가져온 AlimInf 데이터를 이용해 ML 모델에 전송
+            // 가져온 AlimInf 데이터를 이용해 ML 모델에 전송하고 동화 생성
             String fairyTale = bookService.generateFairyTale(alimInf);
 
             // FastAPI inference 결과(JSON) 로그 출력
@@ -109,12 +109,15 @@ public class BookController {
             // 포맷팅된 JSON 로그 출력
             logger.info("포맷팅된 FastAPI Inference 결과:\n{}", prettyJson);
 
-            // 생성된 동화를 JSON 형태로 응답으로 반환
-            return ResponseEntity.ok(jsonObject);
+            // ML 응답을 기반으로 책 생성
+            Book createdBook = bookService.createBookFromMLResponse(fairyTale, alimInf.getUserId());
+
+            // 생성된 책을 응답으로 반환
+            return ResponseEntity.ok(createdBook);
         } catch (Exception e) {
-            logger.error("동화 생성 중 오류 발생", e);
+            logger.error("동화 생성 및 책 생성 중 오류 발생", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("동화 생성 실패: " + e.getMessage());
+                    .body("동화 생성 및 책 생성 실패: " + e.getMessage());
         }
     }
 }
