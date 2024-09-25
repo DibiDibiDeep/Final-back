@@ -3,19 +3,21 @@ package com.example.finalproj.user.controller;
 import com.example.finalproj.baby.service.BabyService;
 import com.example.finalproj.user.entity.User;
 import com.example.finalproj.user.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.util.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/auth")
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -28,38 +30,149 @@ public class UserController {
         this.babyService = babyService;
     }
 
+    @Value("${google.client.id}")
+    private String clientId;
+
+    @Value("${google.client.secret}")
+    private String clientSecret;
+
+    @Value("${google.redirect.uri}")
+    private String redirectUri;
+
+    // OAuth URL 생성 시 포함
+    String authUrl = "https://accounts.google.com/o/oauth2/auth" +
+            "?client_id=" + clientId +
+            "&redirect_uri=" + "http://localhost:3000/api/auth/google/callback" + // 여기에서 redirectUri가 null이면 안 됩니다.
+            "&response_type=code" +
+            "&scope=email%20profile";
+
     // Google 사용자 인증
-//    @PostMapping("/google")
-//    public ResponseEntity<?> authenticateUser(@RequestBody Map<String, String> tokenMap) {
-//        logger.info("Attempting to authenticate Google user");
-//        try {
-//            String token = tokenMap.get("token");
-//            if (token == null || token.isEmpty()) {
-//                logger.warn("Received empty token for Google authentication");
-//                return ResponseEntity.badRequest().body("Token is required");
-//            }
-//
-//            Map<String, Object> response = userService.authenticateGoogleUser(token);
-//            User user = (User) response.get("user");
-//            if (user == null) {
-//                logger.warn("User authentication failed");
-//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User authentication failed");
-//            }
-//
-//            boolean hasBaby = babyService.userHasBaby(user.getUserId());
-//
-//            Map<String, Object> finalResponse = new HashMap<>(response);
-//            finalResponse.put("user", user);
-//            finalResponse.put("hasBaby", hasBaby);
-//
-//            logger.info("User successfully authenticated: {}", user.getUserId());
-//            return ResponseEntity.ok(finalResponse);
-//        } catch (Exception e) {
-//            logger.error("Error during Google authentication", e);
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body("An error occurred during authentication: " + e.getMessage());
-//        }
-//    }
+    @PostMapping("/google")
+    public ResponseEntity<?> authenticateUser(@RequestBody Map<String, String> tokenMap) {
+        logger.info("Attempting to authenticate Google user");
+        try {
+            String token = tokenMap.get("token");
+            if (token == null || token.isEmpty()) {
+                logger.warn("Received empty token for Google authentication");
+                return ResponseEntity.badRequest().body("Token is required");
+            }
+
+            Map<String, Object> response = userService.authenticateGoogleUser(token);
+            User user = (User) response.get("user");
+            if (user == null) {
+                logger.warn("User authentication failed");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User authentication failed");
+            }
+
+            boolean hasBaby = babyService.userHasBaby(user.getUserId());
+
+            Map<String, Object> finalResponse = new HashMap<>(response);
+            finalResponse.put("user", user);
+            finalResponse.put("hasBaby", hasBaby);
+
+            logger.info("User successfully authenticated: {}", user.getUserId());
+            return ResponseEntity.ok(finalResponse);
+        } catch (Exception e) {
+            logger.error("Error during Google authentication", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred during authentication: " + e.getMessage());
+        }
+    }
+
+    // Google 인증 URL 반환
+    @GetMapping("/google-url")
+    public ResponseEntity<Map<String, String>> getGoogleAuthUrl() {
+        String authUrl = "https://accounts.google.com/o/oauth2/auth" +
+                "?client_id=" + clientId +
+                "&redirect_uri=" + redirectUri +
+                "&response_type=code" +
+                "&scope=email%20profile";
+
+        Map<String, String> response = new HashMap<>();
+        response.put("url", authUrl);
+        return ResponseEntity.ok(response);
+    }
+
+
+    // Google Callback 처리
+    @PostMapping("/google-callback")
+    public ResponseEntity<?> handleGoogleCallback(@RequestBody Map<String, String> body) {
+        String code = body.get("code");
+        try {
+            String tokenResponse = exchangeCodeForToken(code);
+            Map<String, Object> userInfo = getUserInfo(tokenResponse);
+            String jwtToken = generateJwtToken(userInfo);
+
+            Map<String, String> response = new HashMap<>();
+            response.put("token", jwtToken);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Error handling Google callback", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error processing Google callback: " + e.getMessage());
+        }
+    }
+
+    private String exchangeCodeForToken(String code) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        String tokenUrl = "https://oauth2.googleapis.com/token";
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("code", code);
+        requestBody.put("client_id", clientId);
+        requestBody.put("client_secret", clientSecret);
+        requestBody.put("redirect_uri", redirectUri);
+        requestBody.put("grant_type", "authorization_code");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/x-www-form-urlencoded");
+
+        HttpEntity<Map<String, String>> entity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(tokenUrl, entity, String.class);
+        return response.getBody();
+    }
+
+    private Map<String, Object> getUserInfo(String tokenResponse) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, String> tokenMap = mapper.readValue(tokenResponse, Map.class);
+            String accessToken = tokenMap.get("access_token");
+
+            RestTemplate restTemplate = new RestTemplate();
+            String userInfoUrl = "https://www.googleapis.com/oauth2/v2/userinfo";
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + accessToken);
+
+            HttpEntity<String> entity = new HttpEntity<>("", headers);
+            ResponseEntity<String> response = restTemplate.exchange(userInfoUrl, HttpMethod.GET, entity, String.class);
+
+            return mapper.readValue(response.getBody(), Map.class); // Map containing user info
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get user info", e);
+        }
+    }
+
+    private String generateJwtToken(Map<String, Object> userInfo) {
+        // Implement JWT generation logic using the userInfo map.
+        // This could include adding claims like user ID, email, roles, etc.
+        // You might want to use a library like JJWT or Spring Security's JWT support.
+
+        // For example:
+        String email = (String) userInfo.get("email");
+        String name = (String) userInfo.get("name");
+
+        // Pseudo code for generating JWT:
+        // return JWT.create()
+        //          .withSubject(email)
+        //          .withClaim("name", name)
+        //          .withExpiresAt(expirationDate)
+        //          .sign(algorithm);
+
+        // For now, return a dummy token for illustration purposes
+        return "jwt_token_" + System.currentTimeMillis();
+    }
 
     @PostMapping("/dev-login")
     public ResponseEntity<?> devLogin() {
