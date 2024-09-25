@@ -9,13 +9,13 @@ GET {{baseUrl}}
 GET {{baseUrl}}/9
 
 ### Create new Book (ML Service Test)
-POST {{baseUrl}}/generate_fairytale
+POST {{baseUrl}}/generate_fairytale/3
 Content-Type: application/json
 
 {
   "name": "지수",
   "age": 3,
-  "gender": "male",
+  "gender": "female",
   "emotion": "즐거움과 신남",
   "health": "활기차고 건강함",
   "nutrition": "식사에 대한 정보는 제공되지 않음",
