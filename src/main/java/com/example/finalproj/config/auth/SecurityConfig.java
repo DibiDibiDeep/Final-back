@@ -23,7 +23,7 @@ public class SecurityConfig {
                         )
                 )
                 .authorizeHttpRequests((authorizeRequest) -> authorizeRequest
-                        .requestMatchers("/", "/css/**", "images/**", "/js/**", "/login/*", "/logout/*", "/api/auth/**", "/api/books/**", "/api/**", "api/auth/login", "/api/alim-inf","/api/alim-inf/**", "/api/books/generate_fairytale","/api/baby-photos/**","/api/baby-photos/baby/", "/api/books/user/**").permitAll()
+                        .requestMatchers("/", "/css/**", "images/**", "/js/**", "/login/*", "/logout/*", "/api/auth/**", "/api/books/**", "/api/**", "api/auth/login", "/api/alim-inf","/api/alim-inf/**", "/api/books/generate_fairytale","/api/baby-photos/**","/api/baby-photos/baby/", "/api/books/user/**", "/api/alim-inf/alim-id/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(

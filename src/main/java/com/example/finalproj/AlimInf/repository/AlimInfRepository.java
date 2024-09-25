@@ -20,5 +20,5 @@ public interface AlimInfRepository extends JpaRepository<AlimInf, Integer> {
     // alimId의 최대 값을 가져오는 쿼리
     @Query("SELECT COALESCE(MAX(a.alimId), 0) FROM AlimInf a")
     Integer findMaxAlimId();
-    
+
 }
