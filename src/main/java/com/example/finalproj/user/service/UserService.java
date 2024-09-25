@@ -1,18 +1,10 @@
 package com.example.finalproj.user.service;
 
-import com.example.finalproj.security.JwtTokenProvider;
 import com.example.finalproj.user.entity.User;
 import com.example.finalproj.user.repository.UserRepository;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -21,11 +13,25 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-
-    @Value("${google.client.id}")
-    private String CLIENT_ID;
+//    @Autowired
+//    private JwtTokenProvider jwtTokenProvider;
+//
+//    @Value("${google.client.id}")
+//    private String CLIENT_ID;
+//
+    public void createDummyUser() {
+        // Check if the user already exists
+        Optional<User> existingUser = findUserByIdAndEmail(3, "mmongeul@gmail.com");
+        if (!existingUser.isPresent()) {
+            User dummyUser = new User();
+            dummyUser.setUserId(3);
+            dummyUser.setEmail("mmongeul@gmail.com");
+            dummyUser.setName("Dummy User");
+            dummyUser.setNewUser(true); // Adjust as necessary
+            // Save the dummy user to the database
+            userRepository.save(dummyUser);
+        }
+    }
 
     // 모든 사용자 조회
     public List<User> getAllUsers() {
@@ -36,40 +42,40 @@ public class UserService {
     public Optional<User> getUserById(Integer userId) {
         return userRepository.findById(userId);
     }
-
-    // Google 사용자 인증
-    public Map<String, Object> authenticateGoogleUser(String token) throws AuthenticationServiceException {
-        try {
-            GoogleIdToken.Payload payload = verifyGoogleToken(token);
-            String email = payload.getEmail();
-            String name = (String) payload.get("name");
-
-            User user = userRepository.findByEmail(email)
-                    .orElseGet(() -> {
-                        User newUser = new User(email, name);
-                        return userRepository.save(newUser);
-                    });
-
-            String jwtToken = jwtTokenProvider.generateToken(user.getUserId());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("user", user);
-            response.put("token", jwtToken);
-            response.put("isNewUser", user.getCreatedAt().isAfter(LocalDateTime.now().minusSeconds(5)));
-
-            return response;
-        } catch (Exception e) {
-            throw new AuthenticationServiceException("Authentication failed: " + e.getMessage(), e);
-        }
-    }
-
-    // 개인정보 처리방침 메서드
-    public User acceptPrivacyPolicy(Integer userId) {
-        return userRepository.findById(userId).map(user -> {
-            user.setPrivacyPolicyAccepted(true);
-            return userRepository.save(user);
-        }).orElseThrow(() -> new RuntimeException("User not found"));
-    }
+//
+//    // Google 사용자 인증
+//    public Map<String, Object> authenticateGoogleUser(String token) throws AuthenticationServiceException {
+//        try {
+//            GoogleIdToken.Payload payload = verifyGoogleToken(token);
+//            String email = payload.getEmail();
+//            String name = (String) payload.get("name");
+//
+//            User user = userRepository.findByEmail(email)
+//                    .orElseGet(() -> {
+//                        User newUser = new User(email, name);
+//                        return userRepository.save(newUser);
+//                    });
+//
+//            String jwtToken = jwtTokenProvider.generateToken(user.getUserId());
+//
+//            Map<String, Object> response = new HashMap<>();
+//            response.put("user", user);
+//            response.put("token", jwtToken);
+//            response.put("isNewUser", user.getCreatedAt().isAfter(LocalDateTime.now().minusSeconds(5)));
+//
+//            return response;
+//        } catch (Exception e) {
+//            throw new AuthenticationServiceException("Authentication failed: " + e.getMessage(), e);
+//        }
+//    }
+//
+//    // 개인정보 처리방침 메서드
+//    public User acceptPrivacyPolicy(Integer userId) {
+//        return userRepository.findById(userId).map(user -> {
+//            user.setPrivacyPolicyAccepted(true);
+//            return userRepository.save(user);
+//        }).orElseThrow(() -> new RuntimeException("User not found"));
+//    }
 
     // 사용자 정보 업데이트
     public User updateUser(Integer userId, User userDetails) {
@@ -87,17 +93,27 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    // Google ID 토큰 검증
-    private GoogleIdToken.Payload verifyGoogleToken(String token) throws Exception {
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
-                .setAudience(Collections.singletonList(CLIENT_ID))
-                .build();
+//    // Google ID 토큰 검증
+//    private GoogleIdToken.Payload verifyGoogleToken(String token) throws Exception {
+//        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
+//                .setAudience(Collections.singletonList(CLIENT_ID))
+//                .build();
+//
+//        GoogleIdToken idToken = verifier.verify(token);
+//        if (idToken != null) {
+//            return idToken.getPayload();
+//        } else {
+//            throw new AuthenticationServiceException("Invalid ID token.");
+//        }
+//    }
 
-        GoogleIdToken idToken = verifier.verify(token);
-        if (idToken != null) {
-            return idToken.getPayload();
-        } else {
-            throw new AuthenticationServiceException("Invalid ID token.");
-        }
+    // Find user by userId and email
+    public Optional<User> findUserByIdAndEmail(Integer userId, String email) {
+        return userRepository.findByUserIdAndEmail(userId, email);
+    }
+
+    // Check if user is new
+    public boolean isNewUser(Optional<User> user) {
+        return user.orElseThrow().isNewUser(); // Adjust logic as necessary
     }
 }
