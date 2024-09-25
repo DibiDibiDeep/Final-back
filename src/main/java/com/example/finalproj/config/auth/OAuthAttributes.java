@@ -10,8 +10,6 @@ public class OAuthAttributes {
     private String name;
     private String email;
 
-    public OAuthAttributes() {}
-
     public OAuthAttributes(Map<String, Object> attributes,
                            String nameAttributeKey, String name,
                            String email) {
