@@ -82,4 +82,9 @@ public class User {
                 ", privacyPolicyAccepted=" + privacyPolicyAccepted +
                 '}';
     }
+
+    public User update(String name) {
+        this.name = name;
+        return this;
+    }
 }

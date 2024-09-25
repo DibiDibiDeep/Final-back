@@ -30,6 +30,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'me.paulschwarz:spring-dotenv:2.5.4'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
 	// JWT 관련 의존성
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
