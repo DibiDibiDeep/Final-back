@@ -29,35 +29,63 @@ public class UserController {
     }
 
     // Google 사용자 인증
-    @PostMapping("/google")
-    public ResponseEntity<?> authenticateUser(@RequestBody Map<String, String> tokenMap) {
-        logger.info("Attempting to authenticate Google user");
+//    @PostMapping("/google")
+//    public ResponseEntity<?> authenticateUser(@RequestBody Map<String, String> tokenMap) {
+//        logger.info("Attempting to authenticate Google user");
+//        try {
+//            String token = tokenMap.get("token");
+//            if (token == null || token.isEmpty()) {
+//                logger.warn("Received empty token for Google authentication");
+//                return ResponseEntity.badRequest().body("Token is required");
+//            }
+//
+//            Map<String, Object> response = userService.authenticateGoogleUser(token);
+//            User user = (User) response.get("user");
+//            if (user == null) {
+//                logger.warn("User authentication failed");
+//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User authentication failed");
+//            }
+//
+//            boolean hasBaby = babyService.userHasBaby(user.getUserId());
+//
+//            Map<String, Object> finalResponse = new HashMap<>(response);
+//            finalResponse.put("user", user);
+//            finalResponse.put("hasBaby", hasBaby);
+//
+//            logger.info("User successfully authenticated: {}", user.getUserId());
+//            return ResponseEntity.ok(finalResponse);
+//        } catch (Exception e) {
+//            logger.error("Error during Google authentication", e);
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("An error occurred during authentication: " + e.getMessage());
+//        }
+//    }
+
+    @PostMapping("/dev-login")
+    public ResponseEntity<?> devLogin() {
+        logger.info("Development login endpoint called");
         try {
-            String token = tokenMap.get("token");
-            if (token == null || token.isEmpty()) {
-                logger.warn("Received empty token for Google authentication");
-                return ResponseEntity.badRequest().body("Token is required");
-            }
+            // 더미 데이터 생성
+            User dummyUser = new User();
+            dummyUser.setUserId(5);
+            dummyUser.setEmail("dummy@example.com");
+            dummyUser.setName("Dummy User");
 
-            Map<String, Object> response = userService.authenticateGoogleUser(token);
-            User user = (User) response.get("user");
-            if (user == null) {
-                logger.warn("User authentication failed");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User authentication failed");
-            }
+            // 더미 액세스 토큰 생성
+            String accessToken = "dummy_access_token_" + System.currentTimeMillis();
 
-            boolean hasBaby = babyService.userHasBaby(user.getUserId());
+            Map<String, Object> response = new HashMap<>();
+            response.put("user", dummyUser);
+            response.put("hasBaby", true);
+            response.put("babyId", 6);
+            response.put("accessToken", accessToken);
 
-            Map<String, Object> finalResponse = new HashMap<>(response);
-            finalResponse.put("user", user);
-            finalResponse.put("hasBaby", hasBaby);
-
-            logger.info("User successfully authenticated: {}", user.getUserId());
-            return ResponseEntity.ok(finalResponse);
+            logger.info("Dummy user created with ID: {}", dummyUser.getUserId());
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            logger.error("Error during Google authentication", e);
+            logger.error("Error in development login", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred during authentication: " + e.getMessage());
+                    .body("An error occurred during development login: " + e.getMessage());
         }
     }
 
