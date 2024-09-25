@@ -33,19 +33,21 @@ public class AlimInfService {
         setFieldFromMap(alimInfData, "baby_id", alimInf, "setBabyId", Integer.class);
         setFieldFromMap(alimInfData, "today_id", alimInf, "setTodayId", Integer.class);
         setFieldFromMap(alimInfData, "name", alimInf, "setName", String.class);
-        setFieldFromMap(alimInfData, "age", alimInf, "setAge", Integer.class);
-        setFieldFromMap(alimInfData, "gender", alimInf, "setGender", String.class);
         setFieldFromMap(alimInfData, "emotion", alimInf, "setEmotion", String.class);
         setFieldFromMap(alimInfData, "health", alimInf, "setHealth", String.class);
         setFieldFromMap(alimInfData, "nutrition", alimInf, "setNutrition", String.class);
         setFieldFromMap(alimInfData, "social", alimInf, "setSocial", String.class);
         setFieldFromMap(alimInfData, "special", alimInf, "setSpecial", String.class);
         setFieldFromMap(alimInfData, "diary", alimInf, "setDiary", String.class);
+        setFieldFromMap(alimInfData, "role", alimInf, "setRole", String.class);
         if (alimInfData.containsKey("date") && alimInfData.get("date") != null) {
             String dateStr = alimInfData.get("date").toString();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
-            alimInf.setDate(dateTime);  // Assuming you have a setter for LocalDateTime
+            alimInf.setDate(dateTime);
+        } else {
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            alimInf.setDate(currentDateTime);
         }
         // Handle activities and keywords
         handleListField(alimInfData, "activities", alimInf, "setActivities");
@@ -96,14 +98,13 @@ public class AlimInfService {
         setFieldFromMap(alimInfData, "baby_id", existingAlimInf, "setBabyId", Integer.class);
         setFieldFromMap(alimInfData, "today_id", existingAlimInf, "setTodayId", Integer.class);
         setFieldFromMap(alimInfData, "name", existingAlimInf, "setName", String.class);
-        setFieldFromMap(alimInfData, "age", existingAlimInf, "setAge", Integer.class);
-        setFieldFromMap(alimInfData, "gender", existingAlimInf, "setGender", String.class);
         setFieldFromMap(alimInfData, "emotion", existingAlimInf, "setEmotion", String.class);
         setFieldFromMap(alimInfData, "health", existingAlimInf, "setHealth", String.class);
         setFieldFromMap(alimInfData, "nutrition", existingAlimInf, "setNutrition", String.class);
         setFieldFromMap(alimInfData, "social", existingAlimInf, "setSocial", String.class);
         setFieldFromMap(alimInfData, "special", existingAlimInf, "setSpecial", String.class);
         setFieldFromMap(alimInfData, "diary", existingAlimInf, "setDiary", String.class);
+        setFieldFromMap(alimInfData, "role", existingAlimInf, "setRole", String.class);
 
         // Handle activities and keywords
         handleListField(alimInfData, "activities", existingAlimInf, "setActivities");

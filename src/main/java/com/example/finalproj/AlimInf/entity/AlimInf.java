@@ -27,9 +27,7 @@ public class AlimInf {
     private Integer todayId;
 
     private String name;
-    @Column(name = "age", nullable = true)
-    private Integer age;
-    private String gender;
+
     private String emotion;
     private String health;
     private String nutrition;
@@ -43,26 +41,26 @@ public class AlimInf {
     @Column(columnDefinition = "TEXT")
     private String keywords;
 
+    @Lob
     @Column(columnDefinition = "TEXT")
     private String diary;
 
     @Column(name = "date")
     private LocalDateTime date;
 
-    // 기본 생성자
+    private String role;
+
     public AlimInf() {
     }
 
-    // 모든 필드를 포함한 생성자
-    public AlimInf(Integer alimInfId, Integer alimId, Integer userId, Integer babyId, Integer todayId, String name, Integer age, String gender, String emotion, String health, String nutrition, String activities, String social, String special, String keywords, String diary, LocalDateTime date) {
+    public AlimInf(Integer alimInfId, Integer alimId, Integer userId, Integer babyId, Integer todayId, String name, String emotion, String health, String nutrition, String activities, String social, String special, String keywords, String diary, LocalDateTime date, String role) {
+
         this.alimInfId = alimInfId;
         this.alimId = alimId;
         this.userId = userId;
         this.babyId = babyId;
         this.todayId = todayId;
         this.name = name;
-        this.age = age;
-        this.gender = gender;
         this.emotion = emotion;
         this.health = health;
         this.nutrition = nutrition;
@@ -72,6 +70,7 @@ public class AlimInf {
         this.keywords = keywords;
         this.diary = diary;
         this.date = date;
+        this.role = role;
     }
 
     // Getter와 Setter 메소드들
@@ -124,22 +123,6 @@ public class AlimInf {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
     }
 
     public String getEmotion() {
@@ -240,6 +223,14 @@ public class AlimInf {
         this.date = date;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
         return "AlimInf{" +
@@ -249,8 +240,6 @@ public class AlimInf {
                 ", babyId=" + babyId +
                 ", todayId=" + todayId +
                 ", name='" + name + '\'' +
-                ", age=" + age +
-                ", gender='" + gender + '\'' +
                 ", emotion='" + emotion + '\'' +
                 ", health='" + health + '\'' +
                 ", nutrition='" + nutrition + '\'' +
@@ -260,6 +249,7 @@ public class AlimInf {
                 ", keywords='" + keywords + '\'' +
                 ", diary='" + diary + '\'' +
                 ", date=" + date +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

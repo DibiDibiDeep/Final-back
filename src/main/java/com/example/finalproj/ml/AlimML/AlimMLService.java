@@ -2,6 +2,7 @@ package com.example.finalproj.ml.AlimML;
 
 import com.example.finalproj.Alim.entity.Alim;
 import com.example.finalproj.AlimInf.entity.AlimInf;
+import com.example.finalproj.ml.CalendarML.CalendarMLProcessingCompletedEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -27,42 +28,19 @@ public class AlimMLService {
         this.eventPublisher = eventPublisher;
     }
 
-    // Alim을 ML 서비스로 전송
-    public void processAlim(Alim alim) {
+    public void sendAlimToMLService(Integer userId, Integer babyId, String content, Integer AlimId) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String requestBody = String.format("{\"user_id\": %d, \"baby_id\": %d, \"report\": \"%s\"}",
+                userId, babyId, content);
+        HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
         try {
-            String mlResponse = sendAlimToMLService(alim);
-            eventPublisher.publishEvent(new AlimMLProcessingCompletedEvent(this, mlResponse, alim.getAlimId()));
-            System.out.println("Alim ML processing completed and event published");
+            String mlResponse = restTemplate.postForObject(mlServiceUrl + "/generate_diary", request, String.class);
+            System.out.println("ML Service response: " + mlResponse);
+            eventPublisher.publishEvent(new AlimMLProcessingCompletedEvent(this, mlResponse, AlimId));
         } catch (Exception e) {
-            System.err.println("Error in ML service process for Alim: " + e.getMessage());
+            System.err.println("Error in ML service process: " + e.getMessage());
         }
     }
 
-    private String sendAlimToMLService(Alim alim) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        String requestBody = String.format("{\"user_id\": %d, \"baby_id\": %d, \"content\": \"%s\"}",
-                alim.getUserId(), alim.getBabyId(), alim.getContent());
-        HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
-        return restTemplate.postForObject(mlServiceUrl + "/process_alim", request, String.class);
-    }
-
-    public static AlimInf createAlimInfFromMLResponse(String mlResponse, Integer alimId) throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> responseMap = objectMapper.readValue(mlResponse, Map.class);
-
-        AlimInf alimInf = new AlimInf();
-        alimInf.setAlimId(alimId);
-        alimInf.setName((String) responseMap.get("name"));
-        alimInf.setEmotion((String) responseMap.get("emotion"));
-        alimInf.setHealth((String) responseMap.get("health"));
-        alimInf.setNutrition((String) responseMap.get("nutrition"));
-        alimInf.setActivities((String) responseMap.get("activities").toString());
-        alimInf.setSpecial((String) responseMap.get("special"));
-        alimInf.setKeywords((String) responseMap.get("keywords").toString());
-        alimInf.setDiary((String) responseMap.get("diary"));
-        alimInf.setDate(LocalDateTime.now());
-
-        return alimInf;
-    }
 }
