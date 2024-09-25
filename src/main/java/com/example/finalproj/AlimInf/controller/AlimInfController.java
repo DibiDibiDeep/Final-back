@@ -67,4 +67,11 @@ public class AlimInfController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
         return alimInfService.getAlimInfsByDateRange(startDate, endDate);
     }
+
+    @GetMapping("/alim-id/{alimId}")
+    public ResponseEntity<AlimInf> getAlimInfByAlimId(@PathVariable Integer alimId) {
+        return alimInfService.getAlimInfByAlimId(alimId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

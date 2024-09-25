@@ -132,4 +132,8 @@ public class AlimInfService {
     public List<AlimInf> getAlimInfsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
         return alimInfRepository.findByDateBetween(startDate, endDate);
     }
+
+    public Optional<AlimInf> getAlimInfByAlimId(Integer alimId) {
+        return alimInfRepository.findByAlimId(alimId);
+    }
 }

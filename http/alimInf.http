@@ -67,3 +67,6 @@ DELETE {{baseUrl}}/1
 
 ### Get AlimInfs by Date Range
 GET {{baseUrl}}/date-range?startDate=2024-03-01T00:00:00&endDate=2024-03-31T23:59:59
+
+###get by alimId
+GET {{baseUrl}}/api/alim-inf/alim-id/1
