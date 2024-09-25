@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -28,6 +29,41 @@ public class UserController {
     public UserController(UserService userService, BabyService babyService) {
         this.userService = userService;
         this.babyService = babyService;
+    }
+    
+    // 자체 로그인
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> loginData) {
+        String userIdString = loginData.get("userId");
+        String userEmail = loginData.get("email");
+
+        logger.info("Attempting to log in user with ID: {} and Email: {}", userIdString, userEmail);
+
+        try {
+            Integer userId = Integer.valueOf(userIdString);
+            Optional<User> optionalUser = userService.findUserByIdAndEmail(userId, userEmail);
+
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                boolean isNewUser = user.isNewUser();
+
+                Map<String, Object> response = new HashMap<>();
+                response.put("redirectUrl", isNewUser ? "/initialSetting" : "/home");
+                response.put("user", user);
+
+                logger.info("User logged in successfully: {}", userId);
+                return ResponseEntity.ok(response);
+            } else {
+                logger.warn("Login failed: User not found for ID: {} and Email: {}", userId, userEmail);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid user ID or email.");
+            }
+        } catch (NumberFormatException e) {
+            logger.warn("Invalid user ID format: {}", userIdString);
+            return ResponseEntity.badRequest().body("User ID must be a valid number.");
+        } catch (Exception e) {
+            logger.error("Error during login attempt", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during login.");
+        }
     }
 
     @Value("${google.client.id}")
@@ -174,43 +210,43 @@ public class UserController {
         return "jwt_token_" + System.currentTimeMillis();
     }
 
-    @PostMapping("/dev-login")
-    public ResponseEntity<?> devLogin() {
-        logger.info("Development login endpoint called");
-        try {
-            // 더미 데이터 생성
-            User dummyUser = new User();
-            dummyUser.setUserId(5);
-            dummyUser.setEmail("dummy@example.com");
-            dummyUser.setName("Dummy User");
+//    @PostMapping("/dev-login")
+//    public ResponseEntity<?> devLogin() {
+//        logger.info("Development login endpoint called");
+//        try {
+//            // 더미 데이터 생성
+//            User dummyUser = new User();
+//            dummyUser.setUserId(5);
+//            dummyUser.setEmail("dummy@example.com");
+//            dummyUser.setName("Dummy User");
+//
+//            // 더미 액세스 토큰 생성
+//            String accessToken = "dummy_access_token_" + System.currentTimeMillis();
+//
+//            Map<String, Object> response = new HashMap<>();
+//            response.put("user", dummyUser);
+//            response.put("hasBaby", true);
+//            response.put("babyId", 6);
+//            response.put("accessToken", accessToken);
+//
+//            logger.info("Dummy user created with ID: {}", dummyUser.getUserId());
+//            return ResponseEntity.ok(response);
+//        } catch (Exception e) {
+//            logger.error("Error in development login", e);
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("An error occurred during development login: " + e.getMessage());
+//        }
+//    }
 
-            // 더미 액세스 토큰 생성
-            String accessToken = "dummy_access_token_" + System.currentTimeMillis();
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("user", dummyUser);
-            response.put("hasBaby", true);
-            response.put("babyId", 6);
-            response.put("accessToken", accessToken);
-
-            logger.info("Dummy user created with ID: {}", dummyUser.getUserId());
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            logger.error("Error in development login", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred during development login: " + e.getMessage());
-        }
-    }
-
-    @PostMapping("/{userId}/accept-privacy-policy")
-    public ResponseEntity<?> acceptPrivacyPolicy(@PathVariable Integer userId) {
-        try {
-            User updatedUser = userService.acceptPrivacyPolicy(userId);
-            return ResponseEntity.ok(updatedUser);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+//    @PostMapping("/{userId}/accept-privacy-policy")
+//    public ResponseEntity<?> acceptPrivacyPolicy(@PathVariable Integer userId) {
+//        try {
+//            User updatedUser = userService.acceptPrivacyPolicy(userId);
+//            return ResponseEntity.ok(updatedUser);
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
     // 사용자 ID로 사용자 조회
     @GetMapping("/{userId}")

@@ -12,7 +12,7 @@ public class User {
     @Column(name = "user_id")
     private Integer userId;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, name = "email")
     private String email;
 
     @Column(nullable = false)
@@ -22,19 +22,19 @@ public class User {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "privacy_policy_accepted")
-    private boolean privacyPolicyAccepted = false;
+    private boolean newUser;
 
     // Default constructor
     public User() {}
 
-    // Constructor with fields
-    public User(String email, String name) {
+    public User(Integer userId, String email, String name, LocalDateTime createdAt, boolean newUser) {
+        this.userId = userId;
         this.email = email;
         this.name = name;
+        this.createdAt = createdAt;
+        this.newUser = newUser;
     }
 
-    // Getters and Setters
     public Integer getUserId() {
         return userId;
     }
@@ -63,15 +63,18 @@ public class User {
         return createdAt;
     }
 
-    public boolean isPrivacyPolicyAccepted() {
-        return privacyPolicyAccepted;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public void setPrivacyPolicyAccepted(boolean privacyPolicyAccepted) {
-        this.privacyPolicyAccepted = privacyPolicyAccepted;
+    public boolean isNewUser() {
+        return newUser;
     }
 
-    // toString method
+    public void setNewUser(boolean newUser) {
+        this.newUser = newUser;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -79,7 +82,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
                 ", createdAt=" + createdAt +
-                ", privacyPolicyAccepted=" + privacyPolicyAccepted +
+                ", newUser=" + newUser +
                 '}';
     }
 
