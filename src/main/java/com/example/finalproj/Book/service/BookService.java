@@ -19,10 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class BookService {
@@ -155,7 +152,12 @@ public class BookService {
 
     // 사용자 ID로 책 조회
     public List<Book> getBooksByUserId(Integer userId) {
-        return bookRepository.findByUserId(userId);
+        List<Book> books = bookRepository.findByUserId(userId);
+        if (books == null) {
+            // Return an empty list instead of null
+            return new ArrayList<>();
+        }
+        return books;
     }
 
     // 동화 생성 메서드

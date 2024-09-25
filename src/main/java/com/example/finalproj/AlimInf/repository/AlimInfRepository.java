@@ -16,4 +16,9 @@ public interface AlimInfRepository extends JpaRepository<AlimInf, Integer> {
     List<AlimInf> findByDateBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     Optional<AlimInf> findByAlimId(Integer alimId);
+
+    // alimId의 최대 값을 가져오는 쿼리
+    @Query("SELECT COALESCE(MAX(a.alimId), 0) FROM AlimInf a")
+    Integer findMaxAlimId();
+    
 }
