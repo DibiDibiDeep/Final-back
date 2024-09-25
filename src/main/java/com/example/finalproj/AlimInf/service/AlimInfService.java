@@ -26,6 +26,11 @@ public class AlimInfService {
 
     public AlimInf createAlimInf(Map<String, Object> alimInfData) {
         AlimInf alimInf = new AlimInf();
+        Integer maxAlimId = alimInfRepository.findMaxAlimId();
+        alimInf.setAlimId(maxAlimId + 1);
+
+        // 엔티티의 나머지 필드들도 필요에 따라 설정
+        alimInf.setDate(LocalDateTime.now());
 
         // Set fields from map
         setFieldFromMap(alimInfData, "alim_id", alimInf, "setAlimId", Integer.class);

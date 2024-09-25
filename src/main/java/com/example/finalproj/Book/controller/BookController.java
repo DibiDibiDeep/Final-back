@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -60,18 +61,28 @@ public class BookController {
     // 사용자 ID로 책 조회 엔드포인트
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Book>> getBooksByUserId(@PathVariable Integer userId) {
-        List<Book> books = bookService.getBooksByUserId(userId);
-        return ResponseEntity.ok(books);
+        try {
+            List<Book> books = bookService.getBooksByUserId(userId);
+            if (books.isEmpty()) {
+                return ResponseEntity.ok(Collections.emptyList()); // 빈 리스트를 반환
+            }
+            return ResponseEntity.ok(books);
+        } catch (Exception e) {
+            // 예외를 잡고 로그 출력
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList()); // 빈 리스트를 JSON 형식으로 반환
+        }
     }
 
     // 동화 생성 엔드포인트
     @PostMapping("/generate_fairytale")
-    public ResponseEntity<?> generateFairyTale(@RequestBody AlimInf alimInf) {
+    public ResponseEntity<String> generateFairyTale(@RequestBody AlimInf alimInf) {
         try {
             String fairyTale = bookService.generateFairyTale(alimInf);
             return ResponseEntity.ok(fairyTale);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("동화 생성 실패: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("{\"error\": \"동화 생성 실패: " + e.getMessage() + "\"}"); // JSON 형식으로 오류 메시지 반환
         }
     }
 }
