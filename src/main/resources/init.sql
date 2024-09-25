@@ -4,7 +4,7 @@ USE MONGEUL;
 
 -- 1. User 테이블 생성 및 더미 데이터 삽입
 CREATE TABLE IF NOT EXISTS User (
-                                    user_id INT NOT NULL auto_increment,
+                                    user_id INT NOT NULL AUTO_INCREMENT,
                                     name VARCHAR(255) NOT NULL,
                                     email VARCHAR(255) NOT NULL,
                                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -24,17 +24,16 @@ CREATE TABLE IF NOT EXISTS Baby (
                                     birth DATETIME NOT NULL,
                                     gender VARCHAR(10) NOT NULL,
                                     PRIMARY KEY (baby_id),
-                                    FOREIGN KEY (user_id) REFERENCES User(user_id)
+                                    CONSTRAINT fk_baby_user FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
 );
 
 INSERT INTO Baby (user_id, baby_name, birth, gender) VALUES
                                                          (1, '김쑥쑥', '2022-05-15 00:00:00', 'M'),
                                                          (2, '이튼튼', '2023-01-10 00:00:00', 'F');
 
-
 -- 3. Book 테이블 생성 및 더미 데이터 삽입
 CREATE TABLE IF NOT EXISTS Book (
-                                    book_id INT NOT NULL auto_increment,
+                                    book_id INT NOT NULL AUTO_INCREMENT,
                                     user_id INT NOT NULL,
                                     title VARCHAR(255) NOT NULL,
                                     cover_path VARCHAR(255) NOT NULL,
@@ -42,7 +41,7 @@ CREATE TABLE IF NOT EXISTS Book (
                                     end_date DATETIME NOT NULL,
                                     generated_date DATETIME NOT NULL,
                                     PRIMARY KEY (book_id),
-                                    FOREIGN KEY (user_id) REFERENCES User(user_id)
+                                    CONSTRAINT fk_book_user FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
 );
 
 INSERT INTO Book (user_id, title, cover_path, start_date, end_date, generated_date) VALUES
@@ -56,24 +55,23 @@ CREATE TABLE IF NOT EXISTS Baby_Photo (
                                           file_path VARCHAR(255) NOT NULL,
                                           upload_date DATETIME NOT NULL,
                                           PRIMARY KEY (baby_photo_id),
-                                          FOREIGN KEY (baby_id) REFERENCES Baby (baby_id)
+                                          CONSTRAINT fk_baby_photo_baby FOREIGN KEY (baby_id) REFERENCES Baby(baby_id) ON DELETE CASCADE
 );
 
 INSERT INTO Baby_Photo (baby_id, file_path, upload_date) VALUES
                                                              (1, '/photos/baby1_photo1.jpg', '2024-09-01 10:00:00'),
                                                              (2, '/photos/baby2_photo1.jpg', '2024-09-05 12:30:00');
 
-
 -- 5. Page 테이블 생성 및 더미 데이터 삽입
 CREATE TABLE IF NOT EXISTS Page (
-                                    page_id INT NOT NULL auto_increment,
+                                    page_id INT NOT NULL AUTO_INCREMENT,
                                     book_id INT NOT NULL,
                                     page_num INT NOT NULL,
                                     text VARCHAR(255) NOT NULL,
                                     illust_prompt VARCHAR(255) NOT NULL,
                                     image_path VARCHAR(255) NOT NULL,
                                     PRIMARY KEY (page_id),
-                                    FOREIGN KEY (book_id) REFERENCES Book(book_id)
+                                    CONSTRAINT fk_page_book FOREIGN KEY (book_id) REFERENCES Book(book_id) ON DELETE CASCADE
 );
 
 INSERT INTO Page (book_id, page_num, text, illust_prompt, image_path) VALUES
@@ -82,10 +80,9 @@ INSERT INTO Page (book_id, page_num, text, illust_prompt, image_path) VALUES
                                                                           (2, 1, '이튼튼이가 첫 걸음마를 떼었어요.', '아기가 첫 걸음마를 떼는 모습, 응원하는 가족들', '/images/book2_page1.jpg'),
                                                                           (2, 2, '온 가족이 박수를 치며 축하했답니다.', '박수치는 가족들과 웃는 아기, 축하 분위기', '/images/book2_page2.jpg');
 
-
 -- 6. Today_sum 테이블 생성 및 더미 데이터 삽입
 CREATE TABLE IF NOT EXISTS Today_sum (
-                                         today_id INT NOT NULL auto_increment,
+                                         today_id INT NOT NULL AUTO_INCREMENT,
                                          user_id INT NOT NULL,
                                          book_id INT NULL,
                                          content VARCHAR(255) NULL,
@@ -94,35 +91,33 @@ CREATE TABLE IF NOT EXISTS Today_sum (
                                          generated_date DATETIME NOT NULL,
                                          revision_date DATETIME NULL,
                                          PRIMARY KEY (today_id),
-                                         FOREIGN KEY (user_id) REFERENCES User (user_id),
-                                         FOREIGN KEY (book_id) REFERENCES Book (book_id)
+                                         CONSTRAINT fk_today_sum_user FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
+                                         CONSTRAINT fk_today_sum_book FOREIGN KEY (book_id) REFERENCES Book(book_id) ON DELETE CASCADE
 );
 
 INSERT INTO Today_sum (user_id, book_id, content, start_date, end_date, generated_date, revision_date) VALUES
                                                                                                            (1, 1, '오늘 아기는 처음으로 혼자 앉았어요...', '2024-03-01 00:00:00', '2024-03-01 23:59:59', '2024-03-01 22:00:00', NULL),
                                                                                                            (2, 2, '오늘 아기가 첫 걸음마를 뗐어요...', '2024-03-08 00:00:00', '2024-03-08 23:59:59', '2024-03-08 22:00:00', NULL);
 
-
 -- 7. Calendar_Photo 테이블 생성 및 더미 데이터 삽입
 CREATE TABLE IF NOT EXISTS Calendar_Photo (
-                                              calendar_photo_id INT NOT NULL auto_increment,
+                                              calendar_photo_id INT NOT NULL AUTO_INCREMENT,
                                               user_id INT NOT NULL,
                                               baby_id INT NOT NULL,
                                               file_path VARCHAR(255) NULL,
                                               date DATETIME NULL,
                                               PRIMARY KEY (calendar_photo_id),
-                                              FOREIGN KEY (user_id) REFERENCES User (user_id),
-                                              FOREIGN KEY (baby_id) REFERENCES Baby (baby_id)
+                                              CONSTRAINT fk_calendar_photo_user FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
+                                              CONSTRAINT fk_calendar_photo_baby FOREIGN KEY (baby_id) REFERENCES Baby(baby_id) ON DELETE CASCADE
 );
 
 INSERT INTO Calendar_Photo (user_id, baby_id, file_path, date) VALUES
                                                                    (1, 1, '/photos/baby1_photo1.jpg', '2024-05-15 14:45:00'),
                                                                    (2, 2, '/photos/baby2_photo1.jpg', '2024-01-10 14:45:00');
 
-
 -- 8. Calendar 테이블 생성 및 더미 데이터 삽입
 CREATE TABLE IF NOT EXISTS Calendar (
-                                        calendar_id INT NOT NULL auto_increment,
+                                        calendar_id INT NOT NULL AUTO_INCREMENT,
                                         user_id INT NOT NULL,
                                         baby_id INT NOT NULL,
                                         calendar_photo_id INT NULL,
@@ -133,30 +128,29 @@ CREATE TABLE IF NOT EXISTS Calendar (
                                         end_time DATETIME NULL,
                                         location VARCHAR(255) NULL,
                                         PRIMARY KEY (calendar_id),
-                                        FOREIGN KEY (user_id) REFERENCES User (user_id),
-                                        FOREIGN KEY (baby_id) REFERENCES Baby (baby_id),
-                                        FOREIGN KEY (calendar_photo_id) REFERENCES Calendar_Photo (calendar_photo_id),
-                                        FOREIGN KEY (today_id) REFERENCES Today_sum (today_id),
-                                        FOREIGN KEY (book_id) REFERENCES Book (book_id)
+                                        CONSTRAINT fk_calendar_user FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
+                                        CONSTRAINT fk_calendar_baby FOREIGN KEY (baby_id) REFERENCES Baby(baby_id) ON DELETE CASCADE,
+                                        CONSTRAINT fk_calendar_calendar_photo FOREIGN KEY (calendar_photo_id) REFERENCES Calendar_Photo(calendar_photo_id) ON DELETE CASCADE,
+                                        CONSTRAINT fk_calendar_today_sum FOREIGN KEY (today_id) REFERENCES Today_sum(today_id) ON DELETE CASCADE,
+                                        CONSTRAINT fk_calendar_book FOREIGN KEY (book_id) REFERENCES Book(book_id) ON DELETE CASCADE
 );
 
 INSERT INTO Calendar (user_id, baby_id, calendar_photo_id, today_id, book_id, title, start_time, end_time, location) VALUES
                                                                                                                          (1, 1, 1, 1, 1, '첫 돌 촬영', '2024-05-15 10:00:00', '2024-05-15 12:00:00', '스튜디오'),
                                                                                                                          (2, 2, 2, 2, 2, '백일 잔치', '2024-04-20 11:00:00', '2024-04-20 14:00:00', '자택');
 
-
 -- 9. Memo 테이블 생성 및 더미 데이터 삽입
 CREATE TABLE IF NOT EXISTS Memo (
-                                    memo_id INT NOT NULL auto_increment,
+                                    memo_id INT NOT NULL AUTO_INCREMENT,
                                     user_id INT NOT NULL,
                                     today_id INT NULL,
                                     book_id INT NULL,
                                     date DATETIME NULL,
                                     content VARCHAR(255) NULL,
                                     PRIMARY KEY (memo_id),
-                                    FOREIGN KEY (user_id) REFERENCES User (user_id),
-                                    FOREIGN KEY (today_id) REFERENCES Today_sum (today_id),
-                                    FOREIGN KEY (book_id) REFERENCES Book (book_id)
+                                    CONSTRAINT fk_memo_user FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
+                                    CONSTRAINT fk_memo_today_sum FOREIGN KEY (today_id) REFERENCES Today_sum(today_id) ON DELETE CASCADE,
+                                    CONSTRAINT fk_memo_book FOREIGN KEY (book_id) REFERENCES Book(book_id) ON DELETE CASCADE
 );
 
 INSERT INTO Memo (user_id, today_id, book_id, date, content) VALUES
@@ -165,14 +159,14 @@ INSERT INTO Memo (user_id, today_id, book_id, date, content) VALUES
 
 -- 10. Alim 테이블 생성 및 더미 데이터 삽입
 CREATE TABLE IF NOT EXISTS Alim (
-                                    alim_id INT NOT NULL auto_increment,
+                                    alim_id INT NOT NULL AUTO_INCREMENT,
                                     user_id INT NOT NULL,
                                     baby_id INT NOT NULL,
                                     content VARCHAR(255) NULL,
                                     date DATETIME NOT NULL,
                                     PRIMARY KEY (alim_id),
-                                    FOREIGN KEY (user_id) REFERENCES User (user_id),
-                                    FOREIGN KEY (baby_id) REFERENCES Baby (baby_id)
+                                    CONSTRAINT fk_alim_user FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
+                                    CONSTRAINT fk_alim_baby FOREIGN KEY (baby_id) REFERENCES Baby(baby_id) ON DELETE CASCADE
 );
 
 INSERT INTO Alim (user_id, baby_id, content, date) VALUES
@@ -181,14 +175,12 @@ INSERT INTO Alim (user_id, baby_id, content, date) VALUES
 
 -- 11. Alim_inf 테이블 생성 및 더미 데이터 삽입
 CREATE TABLE IF NOT EXISTS Alim_inf (
-                                        aliminf_id INT NOT NULL auto_increment,
+                                        aliminf_id INT NOT NULL AUTO_INCREMENT,
                                         alim_id INT NOT NULL,
                                         user_id INT NOT NULL,
                                         baby_id INT NOT NULL,
                                         today_id INT NULL,
                                         name VARCHAR(255) NULL,
-                                        age int NULL,
-                                        gender VARCHAR(255) NULL,
                                         emotion VARCHAR(255) NULL,
                                         health VARCHAR(255) NULL,
                                         nutrition VARCHAR(255) NULL,
@@ -197,11 +189,11 @@ CREATE TABLE IF NOT EXISTS Alim_inf (
                                         special VARCHAR(255) NULL,
                                         keywords VARCHAR(255) NULL,
                                         diary TEXT NULL,
-                                        date datetime NOT NULL,
+                                        date DATETIME NOT NULL,
                                         PRIMARY KEY (aliminf_id),
-                                        FOREIGN KEY (alim_id) REFERENCES Alim (alim_id),
-                                        FOREIGN KEY (user_id) REFERENCES User (user_id),
-                                        FOREIGN KEY (baby_id) REFERENCES Baby (baby_id),
-                                        FOREIGN KEY (today_id) REFERENCES Today_sum (today_id)
+                                        CONSTRAINT fk_alim_inf_alim FOREIGN KEY (alim_id) REFERENCES Alim(alim_id) ON DELETE CASCADE,
+                                        CONSTRAINT fk_alim_inf_user FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
+                                        CONSTRAINT fk_alim_inf_baby FOREIGN KEY (baby_id) REFERENCES Baby(baby_id) ON DELETE CASCADE,
+                                        CONSTRAINT fk_alim_inf_today_sum FOREIGN KEY (today_id) REFERENCES Today_sum(today_id) ON DELETE CASCADE
 );
 

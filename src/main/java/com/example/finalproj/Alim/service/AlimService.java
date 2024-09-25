@@ -33,7 +33,12 @@ public class AlimService {
         Alim savedAlim = alimRepository.save(alim);
 
         // ML 처리를 비동기적으로 시작
-        CompletableFuture.runAsync(() -> alimMlService.processAlim(savedAlim));
+        alimMlService.sendAlimToMLService(
+                savedAlim.getUserId(), // userId는 저장된 alim 객체에서 추출
+                savedAlim.getBabyId(), // babyId는 저장된 alim 객체에서 추출
+                savedAlim.getContent(), // content는 저장된 alim 객체에서 추출
+                savedAlim.getAlimId() // alimId는 저장된 alim 객체에서 추출
+        );
 
         return savedAlim;
     }

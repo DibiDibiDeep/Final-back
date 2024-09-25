@@ -33,8 +33,6 @@ public class AlimInfService {
         setFieldFromMap(alimInfData, "baby_id", alimInf, "setBabyId", Integer.class);
         setFieldFromMap(alimInfData, "today_id", alimInf, "setTodayId", Integer.class);
         setFieldFromMap(alimInfData, "name", alimInf, "setName", String.class);
-        setFieldFromMap(alimInfData, "age", alimInf, "setAge", Integer.class);
-        setFieldFromMap(alimInfData, "gender", alimInf, "setGender", String.class);
         setFieldFromMap(alimInfData, "emotion", alimInf, "setEmotion", String.class);
         setFieldFromMap(alimInfData, "health", alimInf, "setHealth", String.class);
         setFieldFromMap(alimInfData, "nutrition", alimInf, "setNutrition", String.class);
@@ -46,7 +44,10 @@ public class AlimInfService {
             String dateStr = alimInfData.get("date").toString();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
-            alimInf.setDate(dateTime);  // Assuming you have a setter for LocalDateTime
+            alimInf.setDate(dateTime);
+        } else {
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            alimInf.setDate(currentDateTime);
         }
         // Handle activities and keywords
         handleListField(alimInfData, "activities", alimInf, "setActivities");
@@ -97,8 +98,6 @@ public class AlimInfService {
         setFieldFromMap(alimInfData, "baby_id", existingAlimInf, "setBabyId", Integer.class);
         setFieldFromMap(alimInfData, "today_id", existingAlimInf, "setTodayId", Integer.class);
         setFieldFromMap(alimInfData, "name", existingAlimInf, "setName", String.class);
-        setFieldFromMap(alimInfData, "age", existingAlimInf, "setAge", Integer.class);
-        setFieldFromMap(alimInfData, "gender", existingAlimInf, "setGender", String.class);
         setFieldFromMap(alimInfData, "emotion", existingAlimInf, "setEmotion", String.class);
         setFieldFromMap(alimInfData, "health", existingAlimInf, "setHealth", String.class);
         setFieldFromMap(alimInfData, "nutrition", existingAlimInf, "setNutrition", String.class);
