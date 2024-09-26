@@ -21,9 +21,9 @@ Content-Type: {{contentType}}
 {
   "userId": 1,
   "todayId": 1,
-  "fairyTaleId": 1,
+  "content": "This is a test memo.",
   "date": "2024-09-08T10:00:00",
-  "content": "This is a test memo."
+  "sendToML": true
 }
 
 ### Update an existing memo

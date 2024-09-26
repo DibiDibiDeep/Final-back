@@ -34,7 +34,7 @@ Content-Type: {{contentType}}
     "웃음",
     "잠자리"
   ],
-  "diary": "오늘차! 💪  \n내일도 이렇게 신나는 하루가 되길 바래! 🌈",
+  "diary": "오늘은 정말 행복한 하루였어! 😊  \n나는 놀이터에서 친구들과 신나게 뛰어놀았어. 🛝  \n햇살이 따뜻하고 기분이 좋았어. ☀️  \n나는 용감하게 다양한 놀이를 시도했어! 💪  \n그네도 타고, 미끄럼틀도 타고, 심지어 모래놀이도 했어. 🏖️  \n친구들이랑 함께 웃고 떠들면서 정말 즐거웠어. 😄  \n내가 이렇게 건강하고 체격이 좋다는 걸 느꼈어. 🏃‍♂️  \n오늘은 정말 자신감 넘치는 하루였어! 🌈  \n내일도 또 놀이터에 가고 싶어! 🎉",
   "user_id": 1,
   "baby_id": 1,
   "alim_id" : 1,
@@ -67,3 +67,6 @@ DELETE {{baseUrl}}/1
 
 ### Get AlimInfs by Date Range
 GET {{baseUrl}}/date-range?startDate=2024-03-01T00:00:00&endDate=2024-03-31T23:59:59
+
+###get by alimId
+GET {{baseUrl}}/alim-id/2
