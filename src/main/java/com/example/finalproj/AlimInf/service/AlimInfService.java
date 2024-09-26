@@ -2,8 +2,12 @@ package com.example.finalproj.AlimInf.service;
 
 import com.example.finalproj.AlimInf.entity.AlimInf;
 import com.example.finalproj.AlimInf.repository.AlimInfRepository;
+import com.example.finalproj.baby.entity.Baby;
+import com.example.finalproj.baby.repository.BabyRepository;
+import com.example.finalproj.baby.service.BabyService;
 import com.example.finalproj.ml.ChatML.ChatMLService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +23,14 @@ public class AlimInfService {
     private final AlimInfRepository alimInfRepository;
     private final ObjectMapper objectMapper;
     private final ChatMLService chatMLService;
+    private final BabyService babyService;
 
     @Autowired
-    public AlimInfService(AlimInfRepository alimInfRepository, ObjectMapper objectMapper, ChatMLService chatMLService) {
+    public AlimInfService(AlimInfRepository alimInfRepository, ObjectMapper objectMapper, ChatMLService chatMLService, BabyService babyService) {
         this.alimInfRepository = alimInfRepository;
         this.objectMapper = objectMapper;
         this.chatMLService = chatMLService;
+        this.babyService = babyService;
     }
 
 
@@ -40,7 +46,25 @@ public class AlimInfService {
         setFieldFromMap(alimInfData, "user_id", alimInf, "setUserId", Integer.class);
         setFieldFromMap(alimInfData, "baby_id", alimInf, "setBabyId", Integer.class);
         setFieldFromMap(alimInfData, "today_id", alimInf, "setTodayId", Integer.class);
-        setFieldFromMap(alimInfData, "name", alimInf, "setName", String.class);
+
+        // Handle name field
+        if (alimInfData.containsKey("name") && alimInfData.get("name") != null) {
+            alimInf.setName((String) alimInfData.get("name"));
+        } else {
+            // If name is not provided, fetch babyName using babyId
+            Integer babyId = (Integer) alimInfData.get("baby_id");
+            if (babyId != null) {
+                Optional<Baby> babyOptional = babyService.getBabyById(babyId);
+                if (babyOptional.isPresent()) {
+                    Baby baby = babyOptional.get();
+                    alimInf.setName(baby.getBabyName());
+                } else {
+                    // Handle case where baby is not found
+                    throw new EntityNotFoundException("Baby not found with id: " + babyId);
+                }
+            }
+        }
+
         setFieldFromMap(alimInfData, "emotion", alimInf, "setEmotion", String.class);
         setFieldFromMap(alimInfData, "health", alimInf, "setHealth", String.class);
         setFieldFromMap(alimInfData, "nutrition", alimInf, "setNutrition", String.class);
