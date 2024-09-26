@@ -19,9 +19,9 @@ spring:
     password: ${DB_PWD}
     driver-class-name: ${DRIVER_NAME}
   sql:
-    init:
-      mode: always
-      schema-locations: classpath:init.sql
+#    init:
+#      mode: always
+#      schema-locations: classpath:init.sql
   jpa:
     hibernate:
       ddl-auto: update
