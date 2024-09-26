@@ -62,6 +62,7 @@ public class Book {
         this.coverPath = coverPath;
     }
 
+
     // generatedDate의 getter와 setter
     public LocalDateTime getGeneratedDate() {
         return generatedDate;

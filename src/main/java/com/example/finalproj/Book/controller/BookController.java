@@ -3,21 +3,34 @@ package com.example.finalproj.Book.controller;
 import com.example.finalproj.Book.entity.Book;
 import com.example.finalproj.Book.service.BookService;
 import com.example.finalproj.AlimInf.entity.AlimInf;
+import com.example.finalproj.AlimInf.service.AlimInfService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
 
+    private static final Logger logger = LoggerFactory.getLogger(BookController.class);
+
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private AlimInfService alimInfService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     // 책 처리 엔드포인트
     @PostMapping(value = "/process_book", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -61,28 +74,50 @@ public class BookController {
     // 사용자 ID로 책 조회 엔드포인트
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Book>> getBooksByUserId(@PathVariable Integer userId) {
-        try {
-            List<Book> books = bookService.getBooksByUserId(userId);
-            if (books.isEmpty()) {
-                return ResponseEntity.ok(Collections.emptyList()); // 빈 리스트를 반환
-            }
-            return ResponseEntity.ok(books);
-        } catch (Exception e) {
-            // 예외를 잡고 로그 출력
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList()); // 빈 리스트를 JSON 형식으로 반환
-        }
+        List<Book> books = bookService.getBooksByUserId(userId);
+        return ResponseEntity.ok(books);
     }
 
-    // 동화 생성 엔드포인트
-    @PostMapping("/generate_fairytale")
-    public ResponseEntity<String> generateFairyTale(@RequestBody AlimInf alimInf) {
+    // 동화 생성 엔드포인트 (AlimInf ID로 데이터 조회 후 ML 전송)
+    @PostMapping("/generate_fairytale/{alimInfId}")
+    public ResponseEntity<?> generateFairyTale(@PathVariable Integer alimInfId) {
         try {
+            // AlimInf ID로 데이터를 가져옴 (Optional로 처리)
+            Optional<AlimInf> optionalAlimInf = alimInfService.getAlimInfById(alimInfId);
+
+            // AlimInf가 존재하지 않으면 에러 반환
+            if (optionalAlimInf.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("해당 ID의 AlimInf 정보를 찾을 수 없습니다.");
+            }
+
+            // Optional에서 AlimInf 객체를 가져옴
+            AlimInf alimInf = optionalAlimInf.get();
+
+            // 가져온 AlimInf 데이터를 이용해 ML 모델에 전송하고 동화 생성
             String fairyTale = bookService.generateFairyTale(alimInf);
-            return ResponseEntity.ok(fairyTale);
+
+            // FastAPI inference 결과(JSON) 로그 출력
+            logger.info("FastAPI Inference 결과: {}", fairyTale);
+
+            // JSON 문자열을 객체로 파싱
+            Object jsonObject = objectMapper.readValue(fairyTale, Object.class);
+
+            // JSON을 보기 좋게 포맷팅
+            String prettyJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
+
+            // 포맷팅된 JSON 로그 출력
+            logger.info("포맷팅된 FastAPI Inference 결과:\n{}", prettyJson);
+
+            // ML 응답을 기반으로 책 생성
+            Book createdBook = bookService.createBookFromMLResponse(fairyTale, alimInf.getUserId());
+
+            // 생성된 책을 응답으로 반환
+            return ResponseEntity.ok(createdBook);
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("{\"error\": \"동화 생성 실패: " + e.getMessage() + "\"}"); // JSON 형식으로 오류 메시지 반환
+            logger.error("동화 생성 및 책 생성 중 오류 발생", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("동화 생성 및 책 생성 실패: " + e.getMessage());
         }
     }
 }

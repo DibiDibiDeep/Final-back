@@ -1,5 +1,4 @@
 package com.example.finalproj.AlimInf.entity;
-
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.List;
 public class AlimInf {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 증가 처리
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "aliminf_id")
     private Integer alimInfId;
 
@@ -55,6 +54,7 @@ public class AlimInf {
     }
 
     public AlimInf(Integer alimInfId, Integer alimId, Integer userId, Integer babyId, Integer todayId, String name, String emotion, String health, String nutrition, String activities, String social, String special, String keywords, String diary, LocalDateTime date, String role) {
+
         this.alimInfId = alimInfId;
         this.alimId = alimId;
         this.userId = userId;
@@ -91,6 +91,7 @@ public class AlimInf {
         this.alimId = alimId;
     }
 
+    // userId에 대한 Getter 메소드 (null 체크 추가)
     public Integer getUserId() {
         return userId != null ? userId : 0; // userId가 null이면 0을 반환
     }
@@ -99,6 +100,7 @@ public class AlimInf {
         this.userId = userId;
     }
 
+    // babyId에 대한 Getter 메소드 (null 체크 추가)
     public Integer getBabyId() {
         return babyId != null ? babyId : 0; // babyId가 null이면 0을 반환
     }
@@ -155,6 +157,7 @@ public class AlimInf {
         this.activities = activities;
     }
 
+    // 활동 목록을 List<String>으로 반환하는 메소드
     public List<String> getActivitiesList() {
         if (activities == null || activities.isEmpty()) {
             return new ArrayList<>();
@@ -162,6 +165,7 @@ public class AlimInf {
         return Arrays.asList(activities.split(","));
     }
 
+    // List<String>을 받아 문자열로 설정하는 메소드
     public void setActivitiesList(List<String> activitiesList) {
         this.activities = String.join(",", activitiesList);
     }
@@ -190,6 +194,7 @@ public class AlimInf {
         this.keywords = keywords;
     }
 
+    // 키워드 목록을 List<String>으로 반환하는 메소드
     public List<String> getKeywordsList() {
         if (keywords == null || keywords.isEmpty()) {
             return new ArrayList<>();
@@ -197,6 +202,7 @@ public class AlimInf {
         return Arrays.asList(keywords.split(","));
     }
 
+    // List<String>을 받아 문자열로 설정하는 메소드
     public void setKeywordsList(List<String> keywordsList) {
         this.keywords = String.join(",", keywordsList);
     }

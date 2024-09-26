@@ -30,6 +30,8 @@ public class AlimInfService {
 
     public AlimInf createAlimInf(Map<String, Object> alimInfData) {
         AlimInf alimInf = new AlimInf();
+
+        // Set fields from map
         Integer maxAlimId = alimInfRepository.findMaxAlimId();
         alimInf.setAlimId(maxAlimId + 1);
 
