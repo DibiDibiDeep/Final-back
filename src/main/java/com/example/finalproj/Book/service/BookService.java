@@ -93,15 +93,13 @@ public class BookService {
 
             page.setIllustPrompt(pageJson.getString("illustration_prompt"));
 
-            Book savedBook = bookRepository.save(book);
-            log.info("Book saved successfully. Book ID: {}", savedBook.getUserId());
-
             book.addPage(page);
         }
 
         // 책 저장 및 반환
-        return bookRepository.save(book);
-
+        Book savedBook = bookRepository.save(book);
+        log.info("Book saved successfully. Book ID: {}", savedBook.getBookId());
+        return savedBook;
     }
 
     // URL에서 이미지를 다운로드하여 S3에 업로드하는 메서드
@@ -136,7 +134,10 @@ public class BookService {
 
     // 모든 책을 조회하는 메서드
     public List<Book> getAllBooks() {
-        return bookRepository.findAll();
+        List<Book> books = bookRepository.findAll();
+        // 지연 로딩된 페이지들을 초기화합니다.
+        books.forEach(book -> book.getPages().size());
+        return books;
     }
 
     // 책을 업데이트하는 메서드
@@ -219,5 +220,26 @@ public class BookService {
 
         // 업데이트된 책 저장 및 반환
         return bookRepository.save(existingBook);
+    }
+
+    // 책 정보를 간소화하여 반환하는 메서드 (무한 재귀 참조 방지를 위해 추가)
+    public List<Book> getSimplifiedBooks() {
+        List<Book> books = bookRepository.findAll();
+        for (Book book : books) {
+            // 페이지 정보를 제거하여 간소화
+            book.setPages(null);
+        }
+        return books;
+    }
+
+    // 특정 책의 상세 정보를 조회하는 메서드 (페이지 정보 포함)
+    public Optional<Book> getBookWithPages(Integer bookId) {
+        Optional<Book> bookOptional = bookRepository.findById(bookId);
+        if (bookOptional.isPresent()) {
+            Book book = bookOptional.get();
+            // 지연 로딩된 페이지들을 초기화
+            book.getPages().size();
+        }
+        return bookOptional;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.finalproj.Page.entity;
 
 import com.example.finalproj.Book.entity.Book;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,8 +11,10 @@ public class Page {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pageId;
 
+    // @JsonBackReference 어노테이션을 추가하여 무한 재귀 참조를 방지합니다.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", nullable = false)
+    @JsonBackReference
     private Book book;
 
     private Integer pageNum;
