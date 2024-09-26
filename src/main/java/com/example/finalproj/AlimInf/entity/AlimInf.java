@@ -26,6 +26,7 @@ public class AlimInf {
     @Column(name = "today_id")
     private Integer todayId;
 
+    @Column(name = "name", nullable = false)
     private String name;
 
     private String emotion;
