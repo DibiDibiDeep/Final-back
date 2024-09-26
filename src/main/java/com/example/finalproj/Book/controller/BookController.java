@@ -42,15 +42,15 @@ public class BookController {
     // ID로 책 조회 엔드포인트
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBook(@PathVariable Integer id) {
-        return bookService.getBookById(id)
+        return bookService.getBookWithPages(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // 모든 책 조회 엔드포인트
+    // 모든 책 조회 엔드포인트 (간소화된 정보)
     @GetMapping
     public ResponseEntity<List<Book>> getAllBooks() {
-        List<Book> books = bookService.getAllBooks();
+        List<Book> books = bookService.getSimplifiedBooks();
         return ResponseEntity.ok(books);
     }
 

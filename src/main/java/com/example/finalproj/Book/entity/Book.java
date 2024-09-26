@@ -1,6 +1,7 @@
 package com.example.finalproj.Book.entity;
 
 import com.example.finalproj.Page.entity.Page;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,7 +19,9 @@ public class Book {
     private String coverPath;
     private LocalDateTime generatedDate;
 
+    // @JsonManagedReference 어노테이션을 추가하여 무한 재귀 참조를 방지합니다.
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Page> pages = new ArrayList<>();
 
     // 기본 생성자
@@ -61,7 +64,6 @@ public class Book {
     public void setCoverPath(String coverPath) {
         this.coverPath = coverPath;
     }
-
 
     // generatedDate의 getter와 setter
     public LocalDateTime getGeneratedDate() {

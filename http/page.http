@@ -1,63 +1,56 @@
-### Variables
-@baseUrl = http://localhost:8080/api/pages
-@contentType = application/json
+### 모든 페이지 조회 (페이징 적용)
+GET http://localhost:8080/api/pages?page=0&size=100
+Accept: application/json
 
-### Get all Pages
-GET {{baseUrl}}
+### 새 페이지 생성
+POST http://localhost:8080/api/pages
+Content-Type: multipart/form-data; boundary=WebAppBoundary
 
-### Get Page by ID
-GET {{baseUrl}}/1
-
-### Create new Page
-POST {{baseUrl}}
-Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
-
-------WebKitFormBoundary7MA4YWxkTrZu0gW
+--WebAppBoundary
 Content-Disposition: form-data; name="page"
 Content-Type: application/json
 
 {
-  "book": {
-    "bookId": 13
-  },
   "pageNum": 1,
-  "text": "옛날 옛적에 작은 토끼가 살았습니다...하지만 그래dfdf",
-  "illustPrompt": "작은 토끼가 숲속에 앉아있는 모습"
+  "text": "이것은 새로운 페이지의 텍스트입니다.",
+  "illustPrompt": "책의 첫 페이지를 나타내는 삽화"
 }
 
-------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="image"; filename="page1.jpg"
-Content-Type: image/png
-
-< C:\Users\Owner\Desktop\ㅇ.png
-------WebKitFormBoundary7MA4YWxkTrZu0gW--
-
-### Update Page
-PUT {{baseUrl}}/5
-Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
-
-------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="page"
-Content-Type: application/json
-
-{
-  "book": {
-    "bookId": 11
-  },
-  "pageNum": 1,
-  "text": "옛날 옛적에 귀여운 작은 토끼가 숲속에 살았습니다...근데 거기서",
-  "illustPrompt": "귀여운 작은 토끼가 숲속에서 뛰어노는 모습"
-}
-
-------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="image"; filename="page1_updated.jpg"
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="page_image.jpg"
 Content-Type: image/jpeg
 
-< ./path/to/your/image/page1_updated.jpg
-------WebKitFormBoundary7MA4YWxkTrZu0gW--
+< ./path/to/your/image.jpg
+--WebAppBoundary--
 
-### Delete Page
-DELETE {{baseUrl}}/1
+### ID로 페이지 조회
+GET http://localhost:8080/api/pages/23
+Accept: application/json
 
-### Get Pages by Book ID
-GET {{baseUrl}}/book/1
+### 책 ID로 페이지 조회
+GET http://localhost:8080/api/pages/book/18
+Accept: application/json
+
+### 페이지 수정
+PUT http://localhost:8080/api/pages/1
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="page"
+Content-Type: application/json
+
+{
+  "pageNum": 1,
+  "text": "이것은 수정된 페이지의 텍스트입니다.",
+  "illustPrompt": "수정된 삽화 프롬프트"
+}
+
+--WebAppBoundary
+Content-Disposition: form-data; name="image"; filename="updated_page_image.jpg"
+Content-Type: image/jpeg
+
+< ./path/to/your/updated_image.jpg
+--WebAppBoundary--
+
+### 페이지 삭제
+DELETE http://localhost:8080/api/pages/1
