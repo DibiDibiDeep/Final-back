@@ -1,6 +1,7 @@
 package com.example.finalproj.ml.ChatML;
 
 import com.example.finalproj.AlimInf.entity.AlimInf;
+import com.example.finalproj.Chat.entity.ChatMessageDTO;
 import com.example.finalproj.memo.entity.Memo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -90,6 +91,39 @@ public class ChatMLService {
             // 에러 처리
             e.printStackTrace();
             // 여기서 로깅을 추가하거나 다른 에러 처리 로직을 구현할 수 있습니다.
+        }
+    }
+
+    public ChatMessageDTO getResponse(ChatMessageDTO message) {
+        Map<String, Object> requestData = new HashMap<>();
+        requestData.put("user_id", message.getUserId());
+        requestData.put("baby_id", message.getBabyId());
+        requestData.put("text", message.getContent());
+        requestData.put("role", "user");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestData, headers);
+
+        try {
+            String mlResponse = restTemplate.postForObject(mlServiceUrl + "/chat", request, String.class);
+            return new ChatMessageDTO(
+                    message.getUserId(),
+                    message.getBabyId(),
+                    message.getTimestamp(),
+                    mlResponse,
+                    "bot"
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ChatMessageDTO(
+                    message.getUserId(),
+                    message.getBabyId(),
+                    message.getTimestamp(),
+                    "죄송합니다. 응답을 생성하는 데 문제가 발생했습니다.",
+                    "bot"
+            );
         }
     }
 }

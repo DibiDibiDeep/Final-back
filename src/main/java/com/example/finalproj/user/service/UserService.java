@@ -21,11 +21,11 @@ public class UserService {
 //
     public void createDummyUser() {
         // Check if the user already exists
-        Optional<User> existingUser = findUserByIdAndEmail(3, "mmongeul@gmail.com");
+        Optional<User> existingUser = findUserByIdAndEmail(1, "chulsoo@example.com");
         if (!existingUser.isPresent()) {
             User dummyUser = new User();
-            dummyUser.setUserId(3);
-            dummyUser.setEmail("mmongeul@gmail.com");
+            dummyUser.setUserId(1);
+            dummyUser.setEmail("chulsoo@example.com");
             dummyUser.setName("Dummy User");
             dummyUser.setNewUser(true); // Adjust as necessary
             // Save the dummy user to the database
