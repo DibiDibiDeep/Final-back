@@ -29,22 +29,22 @@ dependencies {
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.530'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'me.paulschwarz:spring-dotenv:2.5.4'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	// implementation 'org.springframework.boot:spring-boot-starter-security'
+	// implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-	// JWT 관련 의존성
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+	// // JWT 관련 의존성
+	// implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	// runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	// runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-	// Google API Client Library
-	implementation 'com.google.api-client:google-api-client:2.0.0'
+	// // Google API Client Library
+	// implementation 'com.google.api-client:google-api-client:2.0.0'
 
-	// Google OAuth Client Library
-	implementation 'com.google.oauth-client:google-oauth-client:1.34.1'
+	// // Google OAuth Client Library
+	// implementation 'com.google.oauth-client:google-oauth-client:1.34.1'
 
-	// Google HTTP Client Library (needed for OAuth)
-	implementation 'com.google.http-client:google-http-client-gson:1.42.3'
+	// // Google HTTP Client Library (needed for OAuth)
+	// implementation 'com.google.http-client:google-http-client-gson:1.42.3'
 
 	// JSON 라이브러리 추가
 	implementation 'org.json:json:20210307'
