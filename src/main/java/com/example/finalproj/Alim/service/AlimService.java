@@ -36,17 +36,17 @@ public class AlimService {
     public Alim createAlim(Alim alim) {
         Alim savedAlim = alimRepository.save(alim);
 
-        // ML 처리를 비동기적으로 시작
-        alimMlService.sendAlimToMLService(
-                savedAlim.getUserId(), // userId는 저장된 alim 객체에서 추출
-                savedAlim.getBabyId(), // babyId는 저장된 alim 객체에서 추출
-                savedAlim.getContent(), // content는 저장된 alim 객체에서 추출
-                savedAlim.getAlimId() // alimId는 저장된 alim 객체에서 추출
-        );
+        if (savedAlim.isSendToML()) {
+            alimMlService.sendAlimToMLService(
+                    savedAlim.getUserId(),
+                    savedAlim.getBabyId(),
+                    savedAlim.getContent(),
+                    savedAlim.getAlimId()
+            );
+        }
 
         return savedAlim;
     }
-
     // 주어진 사용자 ID로 Alim을 조회
     public Optional<Alim> getAlimById(Integer userid) {
         return alimRepository.findById(userid);
@@ -64,15 +64,31 @@ public class AlimService {
 
     // Alim 수정
     public Alim updateAlim(Integer id, Alim alimDetails) {
-        Optional<Alim> alim = alimRepository.findById(id);
-        if (alim.isPresent()) {
-            Alim existingAlim = alim.get();
+        Optional<Alim> alimOptional = alimRepository.findById(id);
+
+        if (alimOptional.isPresent()) {
+            Alim existingAlim = alimOptional.get();
+
             existingAlim.setUserId(alimDetails.getUserId());
             existingAlim.setBabyId(alimDetails.getBabyId());
             existingAlim.setContent(alimDetails.getContent());
             existingAlim.setDate(alimDetails.getDate());
-            return alimRepository.save(existingAlim);
+            existingAlim.setSendToML(alimDetails.isSendToML());
+
+            Alim updatedAlim = alimRepository.save(existingAlim);
+
+            if (updatedAlim.isSendToML()) {
+                alimMlService.sendAlimToMLService(
+                        updatedAlim.getUserId(),
+                        updatedAlim.getBabyId(),
+                        updatedAlim.getContent(),
+                        updatedAlim.getAlimId()
+                );
+            }
+
+            return updatedAlim;
         }
+
         return null;
     }
 
