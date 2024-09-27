@@ -161,7 +161,14 @@ public class UserController {
         try {
             String tokenResponse = exchangeCodeForToken(code);
             Map<String, Object> userInfo = getUserInfo(tokenResponse);
-            String jwtToken = generateJwtToken(userInfo);
+
+            String email = (String) userInfo.get("email");
+            String name = (String) userInfo.get("name");
+
+            // 이 부분에서 DB에서 사용자를 찾거나 새로 생성합니다
+            User user = userService.findOrCreateUserByEmail(email, name);
+
+            String jwtToken = jwtTokenProvider.generateJwtToken(user);
 
             // 프론트엔드 URL로 리다이렉트 (JWT 토큰을 쿼리 파라미터로 포함) ※ localhost 환경변수 처리!!!
             String redirectUrl = "http://localhost:3000/auth/token/set?token=" + URLEncoder.encode(jwtToken, StandardCharsets.UTF_8);
@@ -245,8 +252,8 @@ public class UserController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    private String generateJwtToken(Map<String, Object> userInfo) {
-        return jwtTokenProvider.generateJwtToken(userInfo);
+    private String generateJwtToken(User user) {
+        return jwtTokenProvider.generateJwtToken(user);
     }
 
 //    @PostMapping("/dev-login")

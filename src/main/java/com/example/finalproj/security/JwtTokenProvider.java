@@ -1,5 +1,6 @@
 package com.example.finalproj.security;
 
+import com.example.finalproj.user.entity.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -28,13 +29,14 @@ public class JwtTokenProvider {
         this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     }
 
-    public String generateJwtToken(Map<String, Object> userInfo) {
+    public String generateJwtToken(User user) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
 
         return Jwts.builder()
-                .setSubject((String) userInfo.get("email"))
-                .claim("name", userInfo.get("name"))
+                .setSubject(user.getEmail())
+                .claim("userId", user.getUserId())
+                .claim("name", user.getName())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(key, SignatureAlgorithm.HS512)
