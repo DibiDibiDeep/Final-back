@@ -23,12 +23,16 @@ public class Alim {
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
 
-    public Alim(Integer alimId, Integer userId, Integer babyId, String content, LocalDateTime date) {
+    @Column(name = "send_to_ml", nullable = false)
+    private boolean sendToML;
+
+    public Alim(Integer alimId, Integer userId, Integer babyId, String content, LocalDateTime date, boolean sendToML) {
         this.alimId = alimId;
         this.userId = userId;
         this.babyId = babyId;
         this.content = content;
         this.date = date;
+        this.sendToML = sendToML;
     }
 
     public Alim() {
@@ -75,6 +79,14 @@ public class Alim {
         this.date = date;
     }
 
+    public boolean isSendToML() {
+        return sendToML;
+    }
+
+    public void setSendToML(boolean sendToML) {
+        this.sendToML = sendToML;
+    }
+
     @Override
     public String toString() {
         return "Alim{" +
@@ -83,6 +95,7 @@ public class Alim {
                 ", babyId=" + babyId +
                 ", content='" + content + '\'' +
                 ", date=" + date +
+                ", sendToML=" + sendToML +
                 '}';
     }
 }
