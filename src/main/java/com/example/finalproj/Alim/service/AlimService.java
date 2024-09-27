@@ -2,7 +2,9 @@ package com.example.finalproj.Alim.service;
 
 import com.example.finalproj.Alim.entity.Alim;
 import com.example.finalproj.Alim.repository.AlimRepository;
+import com.example.finalproj.AlimInf.repository.AlimInfRepository;
 import com.example.finalproj.ml.AlimML.AlimMLService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +18,13 @@ import java.util.concurrent.CompletableFuture;
 public class AlimService {
     private final AlimRepository alimRepository;
     private final AlimMLService alimMlService;
+    private final AlimInfRepository alimInfRepository;
 
     @Autowired
-    public AlimService(AlimRepository alimRepository, AlimMLService alimMlService) {
+    public AlimService(AlimRepository alimRepository, AlimMLService alimMlService, AlimInfRepository alimInfRepository) {
         this.alimRepository = alimRepository;
         this.alimMlService = alimMlService;
+        this.alimInfRepository = alimInfRepository;
     }
 
     // 주어진 날짜로 Alim 목록을 조회
@@ -73,7 +77,9 @@ public class AlimService {
     }
 
     // Alim 삭제
+    @Transactional
     public void deleteAlim(Integer id) {
+        alimInfRepository.deleteByAlimId(id);
         alimRepository.deleteById(id);
     }
 }

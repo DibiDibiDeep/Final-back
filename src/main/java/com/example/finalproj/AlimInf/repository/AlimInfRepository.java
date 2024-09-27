@@ -21,4 +21,5 @@ public interface AlimInfRepository extends JpaRepository<AlimInf, Integer> {
     @Query("SELECT COALESCE(MAX(a.alimId), 0) FROM AlimInf a")
     Integer findMaxAlimId();
 
+    void deleteByAlimId(Integer alimId);
 }
