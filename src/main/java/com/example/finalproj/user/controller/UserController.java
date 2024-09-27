@@ -41,6 +41,9 @@ public class UserController {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    @Value("${front.url}")
+    private String frontUrl;  // 환경 변수로 주입
+
     @Autowired
     public UserController(UserService userService,
                           BabyService babyService,
@@ -172,14 +175,11 @@ public class UserController {
 
             String jwtToken = jwtTokenProvider.generateJwtToken(user);
 
-            String frontUrl = "${front.url}";
-
             // 프론트엔드 URL로 리다이렉트 (JWT 토큰을 쿼리 파라미터로 포함) ※ localhost 환경변수 처리!!!
             String redirectUrl = frontUrl + "/auth/token/set?token=" + URLEncoder.encode(jwtToken, StandardCharsets.UTF_8);
             response.sendRedirect(redirectUrl);
         } catch (Exception e) {
             logger.error("Error handling Google callback", e);
-            String frontUrl = "${front.url}";
             response.sendRedirect(frontUrl + "/auth/token/set?token=" + URLEncoder.encode("Authentication failed", StandardCharsets.UTF_8));
         }
     }
