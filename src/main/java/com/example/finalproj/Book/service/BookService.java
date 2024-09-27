@@ -17,11 +17,9 @@ import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -45,24 +43,9 @@ public class BookService {
     @Value("${aws.s3.bucket}")
     private String bucketName;
 
-    // AlimInf 정보를 기반으로 책을 처리하는 메서드
-    @Transactional
-    public Book processBook(AlimInf alimInf) {
-        log.info("책 처리 시작: userId={}, babyId={}", alimInf.getUserId(), alimInf.getBabyId());
-        try {
-            // ML 서비스에 AlimInf 정보 전송 및 응답 수신
-            String mlResponse = bookMLService.sendAlimInfToMLService(alimInf);
-            // ML 응답을 기반으로 책 생성
-            Book processedBook = createBookFromMLResponse(mlResponse, alimInf.getUserId());
-            log.info("책 처리 완료: bookId={}", processedBook.getBookId());
-            return processedBook;
-        } catch (Exception e) {
-            log.error("책 처리 중 오류 발생: userId={}, babyId={}", alimInf.getUserId(), alimInf.getBabyId(), e);
-            throw new RuntimeException("책 처리에 실패했습니다.", e);
-        }
-    }
+    // 삭제된 메소드: processBook
 
-    // ML 서비스 응답을 기반으로 책을 생성하는 메서드
+    // ML 서비스 응답을 기반으로 책을 생성하는 메소드
     @Transactional
     public Book createBookFromMLResponse(String mlResponse, Integer userId) throws IOException {
         JSONObject jsonResponse = new JSONObject(mlResponse);
@@ -102,7 +85,7 @@ public class BookService {
         return savedBook;
     }
 
-    // URL에서 이미지를 다운로드하여 S3에 업로드하는 메서드
+    // URL에서 이미지를 다운로드하여 S3에 업로드하는 메소드
     private String uploadImageFromUrlToS3(String imageUrl, String folder) throws IOException {
         log.info("S3 업로드 시작: URL={}, 폴더={}", imageUrl, folder);
         URL url = new URL(imageUrl);
@@ -127,12 +110,12 @@ public class BookService {
         }
     }
 
-    // ID로 책을 조회하는 메서드
+    // ID로 책을 조회하는 메소드
     public Optional<Book> getBookById(Integer id) {
         return bookRepository.findById(id);
     }
 
-    // 모든 책을 조회하는 메서드
+    // 모든 책을 조회하는 메소드
     public List<Book> getAllBooks() {
         List<Book> books = bookRepository.findAll();
         // 지연 로딩된 페이지들을 초기화합니다.
@@ -140,7 +123,7 @@ public class BookService {
         return books;
     }
 
-    // 책을 업데이트하는 메서드
+    // 책을 업데이트하는 메소드
     public Book updateBook(Integer id, Book bookDetails) {
         Optional<Book> book = bookRepository.findById(id);
         if (book.isPresent()) {
@@ -153,17 +136,17 @@ public class BookService {
         return null;
     }
 
-    // 책을 삭제하는 메서드
+    // 책을 삭제하는 메소드
     public void deleteBook(Integer id) {
         bookRepository.deleteById(id);
     }
 
-    // 사용자 ID로 책을 조회하는 메서드
+    // 사용자 ID로 책을 조회하는 메소드
     public List<Book> getBooksByUserId(Integer userId) {
         return bookRepository.findByUserId(userId);
     }
 
-    // 동화를 생성하는 메서드
+    // 동화를 생성하는 메소드
     public String generateFairyTale(AlimInf alimInf) {
         log.info("동화 생성 시작: userId={}, babyId={}", alimInf.getUserId(), alimInf.getBabyId());
         try {
@@ -180,7 +163,7 @@ public class BookService {
         }
     }
 
-    // ML 응답을 기반으로 기존 책을 업데이트하는 메서드
+    // ML 응답을 기반으로 기존 책을 업데이트하는 메소드
     @Transactional
     public Book updateBookWithMLResponse(Integer bookId, String mlResponse) throws IOException {
         // 기존 책 조회
@@ -222,7 +205,7 @@ public class BookService {
         return bookRepository.save(existingBook);
     }
 
-    // 책 정보를 간소화하여 반환하는 메서드 (무한 재귀 참조 방지를 위해 추가)
+    // 책 정보를 간소화하여 반환하는 메소드 (무한 재귀 참조 방지를 위해 추가)
     public List<Book> getSimplifiedBooks() {
         List<Book> books = bookRepository.findAll();
         for (Book book : books) {
@@ -232,7 +215,7 @@ public class BookService {
         return books;
     }
 
-    // 특정 책의 상세 정보를 조회하는 메서드 (페이지 정보 포함)
+    // 특정 책의 상세 정보를 조회하는 메소드 (페이지 정보 포함)
     public Optional<Book> getBookWithPages(Integer bookId) {
         Optional<Book> bookOptional = bookRepository.findById(bookId);
         if (bookOptional.isPresent()) {

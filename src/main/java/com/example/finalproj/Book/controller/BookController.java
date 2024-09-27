@@ -5,12 +5,10 @@ import com.example.finalproj.Book.service.BookService;
 import com.example.finalproj.AlimInf.entity.AlimInf;
 import com.example.finalproj.AlimInf.service.AlimInfService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,16 +30,12 @@ public class BookController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    // 책 처리 엔드포인트
-    @PostMapping(value = "/process_book", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Book> processBook(@RequestBody AlimInf alimInf) {
-        Book processedBook = bookService.processBook(alimInf);
-        return ResponseEntity.ok(processedBook);
-    }
+    // 삭제된 메소드: processBook
 
     // ID로 책 조회 엔드포인트
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBook(@PathVariable Integer id) {
+        // 책 ID로 책을 조회하고 페이지 정보와 함께 반환
         return bookService.getBookWithPages(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -50,6 +44,7 @@ public class BookController {
     // 모든 책 조회 엔드포인트 (간소화된 정보)
     @GetMapping
     public ResponseEntity<List<Book>> getAllBooks() {
+        // 모든 책의 간소화된 정보를 조회하여 반환
         List<Book> books = bookService.getSimplifiedBooks();
         return ResponseEntity.ok(books);
     }
@@ -57,6 +52,7 @@ public class BookController {
     // 책 업데이트 엔드포인트
     @PutMapping("/{id}")
     public ResponseEntity<Book> updateBook(@PathVariable Integer id, @RequestBody Book bookDetails) {
+        // 특정 ID의 책 정보를 업데이트
         Book updatedBook = bookService.updateBook(id, bookDetails);
         if (updatedBook == null) {
             return ResponseEntity.notFound().build();
@@ -67,6 +63,7 @@ public class BookController {
     // 책 삭제 엔드포인트
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable Integer id) {
+        // 특정 ID의 책을 삭제
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
     }
@@ -74,6 +71,7 @@ public class BookController {
     // 사용자 ID로 책 조회 엔드포인트
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Book>> getBooksByUserId(@PathVariable Integer userId) {
+        // 특정 사용자 ID에 해당하는 모든 책을 조회
         List<Book> books = bookService.getBooksByUserId(userId);
         return ResponseEntity.ok(books);
     }
