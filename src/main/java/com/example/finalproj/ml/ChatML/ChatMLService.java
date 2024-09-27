@@ -3,10 +3,13 @@ package com.example.finalproj.ml.ChatML;
 import com.example.finalproj.AlimInf.entity.AlimInf;
 import com.example.finalproj.Chat.entity.ChatMessageDTO;
 import com.example.finalproj.memo.entity.Memo;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,10 +26,13 @@ public class ChatMLService {
 
     @Value("${ml.service.url}")
     private String mlServiceUrl;
-    private final RestTemplate restTemplate;
 
-    public ChatMLService(RestTemplate restTemplate) {
+    private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
+
+    public ChatMLService(RestTemplate restTemplate, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
+        this.objectMapper = objectMapper;
     }
 
     public void sendAlimInfToMLService(AlimInf alimInf) {
@@ -107,23 +113,27 @@ public class ChatMLService {
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestData, headers);
 
         try {
-            String mlResponse = restTemplate.postForObject(mlServiceUrl + "/chat", request, String.class);
-            return new ChatMessageDTO(
-                    message.getUserId(),
-                    message.getBabyId(),
-                    message.getTimestamp(),
-                    mlResponse,
-                    "bot"
-            );
+            String endpoint = mlServiceUrl + "/process_query";
+            ResponseEntity<String> responseEntity = restTemplate.postForEntity(endpoint, request, String.class);
+
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                String responseBody = responseEntity.getBody();
+                JsonNode jsonNode = objectMapper.readTree(responseBody);
+                String response = jsonNode.get("response").asText();
+
+                return new ChatMessageDTO(
+                        message.getUserId(),
+                        message.getBabyId(),
+                        message.getTimestamp(),
+                        response, // 여기서 response만 전달합니다.
+                        "bot"
+                );
+            } else {
+                throw new RuntimeException("ML service returned non-200 status: " + responseEntity.getStatusCodeValue());
+            }
         } catch (Exception e) {
-            e.printStackTrace();
-            return new ChatMessageDTO(
-                    message.getUserId(),
-                    message.getBabyId(),
-                    message.getTimestamp(),
-                    "죄송합니다. 응답을 생성하는 데 문제가 발생했습니다.",
-                    "bot"
-            );
+            System.err.println("Error processing ML service response: " + e.getMessage());
+            throw new RuntimeException("Error communicating with ML service", e);
         }
     }
 }

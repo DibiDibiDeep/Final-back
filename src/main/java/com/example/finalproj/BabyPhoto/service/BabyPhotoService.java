@@ -95,4 +95,16 @@ public class BabyPhotoService {
     public void deleteBabyPhoto(Integer id) {
         babyPhotoRepository.deleteById(id);
     }
+    
+    // 아기 사진 수정
+//    public BabyPhoto updateBabyPhoto(MultipartFile file, Integer babyId) throws IOException {
+//        String fileUrl = uploadFileToS3(file);
+//
+//        BabyPhoto babyPhoto = new BabyPhoto();
+//        babyPhoto.setBabyId(babyId);
+//        babyPhoto.setFilePath(fileUrl);
+//        babyPhoto.setUploadDate(LocalDateTime.now());
+//
+//        return babyPhotoRepository.edit(babyPhoto);
+//    }
 }

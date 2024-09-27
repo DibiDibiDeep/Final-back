@@ -13,10 +13,10 @@ public class ChatMessageDTO {
     private Long id;
 
     @Column(nullable = false)
-    private String userId;
+    private Long  userId;
 
     @Column(nullable = false)
-    private String babyId;
+    private Long  babyId;
 
     @Column(nullable = false)
     private LocalDateTime timestamp;
@@ -29,7 +29,7 @@ public class ChatMessageDTO {
 
     public ChatMessageDTO() {}
 
-    public ChatMessageDTO(String userId, String babyId, LocalDateTime timestamp, String content, String sender) {
+    public ChatMessageDTO(Long  userId, Long  babyId, LocalDateTime timestamp, String content, String sender) {
         this.userId = userId;
         this.babyId = babyId;
         this.timestamp = timestamp;
@@ -45,19 +45,19 @@ public class ChatMessageDTO {
         this.id = id;
     }
 
-    public String getUserId() {
+    public Long  getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long  userId) {
         this.userId = userId;
     }
 
-    public String getBabyId() {
+    public Long  getBabyId() {
         return babyId;
     }
 
-    public void setBabyId(String babyId) {
+    public void setBabyId(Long babyId) {
         this.babyId = babyId;
     }
 
