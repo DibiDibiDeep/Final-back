@@ -12,4 +12,6 @@ public interface BabyPhotoRepository extends JpaRepository<BabyPhoto, Integer> {
 
     // 특정 날짜에 업로드된 사진 찾기
     List<BabyPhoto> findByUploadDate(LocalDateTime uploadDate);
+
+//    BabyPhoto edit(BabyPhoto babyPhoto);
 }
