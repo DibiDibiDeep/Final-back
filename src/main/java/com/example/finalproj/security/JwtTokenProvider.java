@@ -24,9 +24,8 @@ public class JwtTokenProvider {
 
     @PostConstruct
     public void init() {
-        // Use the provided secret to generate a secure key
-        byte[] keyBytes = jwtSecret.getBytes();
-        this.key = Keys.hmacShaKeyFor(keyBytes);
+        // Generate a key with a size of at least 512 bits
+        this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     }
 
     public String generateJwtToken(Map<String, Object> userInfo) {
