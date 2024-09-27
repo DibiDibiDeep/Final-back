@@ -13,19 +13,39 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-//    @Autowired
+    //    @Autowired
 //    private JwtTokenProvider jwtTokenProvider;
 //
 //    @Value("${google.client.id}")
 //    private String CLIENT_ID;
 //
+
+    public User findOrCreateUserByEmail(String email, String name) {
+        return userRepository.findByEmail(email)
+                .map(existingUser -> {
+                    // 필요한 경우 기존 사용자 정보 업데이트
+                    if (!existingUser.getName().equals(name)) {
+                        existingUser.setName(name);
+                        return userRepository.save(existingUser);
+                    }
+                    return existingUser;
+                })
+                .orElseGet(() -> {
+                    // 새 사용자 생성
+                    User newUser = new User();
+                    newUser.setEmail(email);
+                    newUser.setName(name);
+                    newUser.setNewUser(true);
+                    return userRepository.save(newUser);
+                });
+    }
     public void createDummyUser() {
         // Check if the user already exists
-        Optional<User> existingUser = findUserByIdAndEmail(1, "chulsoo@example.com");
+        Optional<User> existingUser = findUserByIdAndEmail(3, "mmongeul@gmail.com");
         if (!existingUser.isPresent()) {
             User dummyUser = new User();
-            dummyUser.setUserId(1);
-            dummyUser.setEmail("chulsoo@example.com");
+            dummyUser.setUserId(3);
+            dummyUser.setEmail("mmongeul@gmail.com");
             dummyUser.setName("Dummy User");
             dummyUser.setNewUser(true); // Adjust as necessary
             // Save the dummy user to the database

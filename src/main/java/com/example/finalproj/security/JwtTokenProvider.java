@@ -1,55 +1,45 @@
 package com.example.finalproj.security;
 
-import io.jsonwebtoken.*;
+import com.example.finalproj.user.entity.User;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import jakarta.annotation.PostConstruct;
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 
 @Component
 public class JwtTokenProvider {
 
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+
     @Value("${jwt.expiration}")
-    private int jwtExpiration;
+    private long jwtExpirationMs;
 
     private Key key;
 
     @PostConstruct
     public void init() {
+        // Generate a key with a size of at least 512 bits
         this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     }
 
-    public String generateToken(Integer userId) {
+    public String generateJwtToken(User user) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpiration);
+        Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
 
         return Jwts.builder()
-                .setSubject(Integer.toString(userId))
-                .setIssuedAt(new Date())
+                .setSubject(user.getEmail())
+                .claim("userId", user.getUserId())
+                .claim("name", user.getName())
+                .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
-    }
-
-    public Integer getUserIdFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        return Integer.parseInt(claims.getSubject());
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
-        }
     }
 }
