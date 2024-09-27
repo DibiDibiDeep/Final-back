@@ -4,10 +4,10 @@ import com.example.finalproj.baby.service.BabyService;
 import com.example.finalproj.user.entity.User;
 import com.example.finalproj.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.util.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -17,6 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 @RestController
 @RequestMapping("/api/auth")
 public class UserController {
@@ -24,13 +29,24 @@ public class UserController {
 
     private final UserService userService;
     private final BabyService babyService;
+    private  String clientId = "";
+    private  String clientSecret="";
+    private  String redirectUri="";
+
 
     @Autowired
-    public UserController(UserService userService, BabyService babyService) {
+    public UserController(UserService userService,
+                          BabyService babyService,
+                          @Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId,
+                          @Value("${spring.security.oauth2.client.registration.google.client-secret}") String clientSecret,
+                          @Value("${spring.security.oauth2.client.registration.google.redirect-uri}") String redirectUri) {
         this.userService = userService;
         this.babyService = babyService;
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+        this.redirectUri = redirectUri;
     }
-    
+
     // 자체 로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginData) {
@@ -66,19 +82,21 @@ public class UserController {
         }
     }
 
-    @Value("${google.client.id}")
-    private String clientId;
 
-    @Value("${google.client.secret}")
-    private String clientSecret;
+//    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+//    private String clientId;
+//
+//    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
+//    private String clientSecret;
+//
+//    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
+//    private String redirectUri;
 
-    @Value("${google.redirect.uri}")
-    private String redirectUri;
 
     // OAuth URL 생성 시 포함
     String authUrl = "https://accounts.google.com/o/oauth2/auth" +
             "?client_id=" + clientId +
-            "&redirect_uri=" + "http://localhost:3000/api/auth/google/callback" + // 여기에서 redirectUri가 null이면 안 됩니다.
+            "&redirect_uri=" + "http://localhost:8080/api/auth/google-callback" + // 여기에서 redirectUri가 null이면 안 됩니다.
             "&response_type=code" +
             "&scope=email%20profile";
 
@@ -118,6 +136,8 @@ public class UserController {
     // Google 인증 URL 반환
     @GetMapping("/google-url")
     public ResponseEntity<Map<String, String>> getGoogleAuthUrl() {
+        logger.info("Google OAuth URL generation: clientId={}, redirectUri={}", clientId, redirectUri);
+
         String authUrl = "https://accounts.google.com/o/oauth2/auth" +
                 "?client_id=" + clientId +
                 "&redirect_uri=" + redirectUri +
@@ -131,10 +151,11 @@ public class UserController {
 
 
     // Google Callback 처리
-    @PostMapping("/google-callback")
-    public ResponseEntity<?> handleGoogleCallback(@RequestBody Map<String, String> body) {
-        String code = body.get("code");
+    @GetMapping("/google-callback")
+    public ResponseEntity<?> handleGoogleCallback(@RequestParam String code) {
+//        logger.info("Handling Google callback with code: {}", code);
         try {
+            logger.info("Handling Google callback with code: {}", code);
             String tokenResponse = exchangeCodeForToken(code);
             Map<String, Object> userInfo = getUserInfo(tokenResponse);
             String jwtToken = generateJwtToken(userInfo);
@@ -149,25 +170,34 @@ public class UserController {
         }
     }
 
-    private String exchangeCodeForToken(String code) {
-        RestTemplate restTemplate = new RestTemplate();
-
+    private String exchangeCodeForToken(String code) throws Exception {
+        // Google에 토큰 요청을 보내는 로직
         String tokenUrl = "https://oauth2.googleapis.com/token";
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("code", code);
-        requestBody.put("client_id", clientId);
-        requestBody.put("client_secret", clientSecret);
-        requestBody.put("redirect_uri", redirectUri);
-        requestBody.put("grant_type", "authorization_code");
+        HttpClient client = HttpClient.newHttpClient();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/x-www-form-urlencoded");
+        String requestBody = "code=" + code +
+                "&client_id=" + clientId +
+                "&client_secret=" + clientSecret + // 비밀 키를 사용해야 함
+                "&redirect_uri=" + redirectUri +
+                "&grant_type=authorization_code";
 
-        HttpEntity<Map<String, String>> entity = new HttpEntity<>(requestBody, headers);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(tokenUrl))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
 
-        ResponseEntity<String> response = restTemplate.postForEntity(tokenUrl, entity, String.class);
-        return response.getBody();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            throw new RuntimeException("Failed to exchange code for token: " + response.body());
+        }
+
+        return response.body();
     }
+
+
+
 
     private Map<String, Object> getUserInfo(String tokenResponse) {
         try {
