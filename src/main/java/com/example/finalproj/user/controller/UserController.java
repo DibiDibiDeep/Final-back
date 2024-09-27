@@ -1,9 +1,11 @@
 package com.example.finalproj.user.controller;
 
 import com.example.finalproj.baby.service.BabyService;
+import com.example.finalproj.security.JwtTokenProvider;
 import com.example.finalproj.user.entity.User;
 import com.example.finalproj.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,9 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,21 +157,18 @@ public class UserController {
 
     // Google Callback 처리
     @GetMapping("/google-callback")
-    public ResponseEntity<?> handleGoogleCallback(@RequestParam String code) {
-//        logger.info("Handling Google callback with code: {}", code);
+    public void handleGoogleCallback(@RequestParam String code, HttpServletResponse response) throws IOException {
         try {
-            logger.info("Handling Google callback with code: {}", code);
             String tokenResponse = exchangeCodeForToken(code);
             Map<String, Object> userInfo = getUserInfo(tokenResponse);
             String jwtToken = generateJwtToken(userInfo);
 
-            Map<String, String> response = new HashMap<>();
-            response.put("token", jwtToken);
-            return ResponseEntity.ok(response);
+            // 프론트엔드 URL로 리다이렉트 (JWT 토큰을 쿼리 파라미터로 포함) ※ localhost 환경변수 처리!!!
+            String redirectUrl = "http://localhost:3000/auth/token/set?token=" + URLEncoder.encode(jwtToken, StandardCharsets.UTF_8);
+            response.sendRedirect(redirectUrl);
         } catch (Exception e) {
             logger.error("Error handling Google callback", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error processing Google callback: " + e.getMessage());
+            response.sendRedirect("http://localhost:3000/auth/error?message=" + URLEncoder.encode("Authentication failed", StandardCharsets.UTF_8));
         }
     }
 
@@ -220,24 +222,31 @@ public class UserController {
         }
     }
 
+//    private String generateJwtToken(Map<String, Object> userInfo) {
+//        // Implement JWT generation logic using the userInfo map.
+//        // This could include adding claims like user ID, email, roles, etc.
+//        // You might want to use a library like JJWT or Spring Security's JWT support.
+//
+//        // For example:
+//        String email = (String) userInfo.get("email");
+//        String name = (String) userInfo.get("name");
+//
+//        // Pseudo code for generating JWT:
+//        // return JWT.create()
+//        //          .withSubject(email)
+//        //          .withClaim("name", name)
+//        //          .withExpiresAt(expirationDate)
+//        //          .sign(algorithm);
+//
+//        // For now, return a dummy token for illustration purposes
+//        return "jwt_token_" + System.currentTimeMillis();
+//    }
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     private String generateJwtToken(Map<String, Object> userInfo) {
-        // Implement JWT generation logic using the userInfo map.
-        // This could include adding claims like user ID, email, roles, etc.
-        // You might want to use a library like JJWT or Spring Security's JWT support.
-
-        // For example:
-        String email = (String) userInfo.get("email");
-        String name = (String) userInfo.get("name");
-
-        // Pseudo code for generating JWT:
-        // return JWT.create()
-        //          .withSubject(email)
-        //          .withClaim("name", name)
-        //          .withExpiresAt(expirationDate)
-        //          .sign(algorithm);
-
-        // For now, return a dummy token for illustration purposes
-        return "jwt_token_" + System.currentTimeMillis();
+        return jwtTokenProvider.generateJwtToken(userInfo);
     }
 
 //    @PostMapping("/dev-login")
