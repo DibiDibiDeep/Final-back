@@ -46,7 +46,7 @@ public class BabyPhotoController {
 
     // 새로운 아기 사진 업로드
     @PostMapping
-    public ResponseEntity<?> createBabyPhoto(
+    public ResponseEntity<?> createOrUpdateBabyPhoto(
             @RequestParam("file") MultipartFile file,
             @RequestParam("babyId") Integer babyId) {
         try {
@@ -54,29 +54,12 @@ public class BabyPhotoController {
             if (!"image/jpeg".equals(contentType) && !"image/png".equals(contentType)) {
                 return ResponseEntity.badRequest().body("Only JPG and PNG files are allowed.");
             }
-            BabyPhoto babyPhoto = babyPhotoService.createBabyPhoto(file, babyId);
+            BabyPhoto babyPhoto = babyPhotoService.createOrUpdateBabyPhoto(file, babyId);
             return ResponseEntity.ok(babyPhoto);
         } catch (IOException e) {
             return ResponseEntity.internalServerError().body("Failed to upload file: " + e.getMessage());
         }
     }
-
-    // 아기 사진 수정
-//    @PutMapping("/edit")
-//    public ResponseEntity<?> editBabyPhoto(
-//            @RequestParam("file") MultipartFile file,
-//            @RequestParam("babyId") Integer babyId) {
-//        try {
-//            String contentType = file.getContentType();
-//            if (!"image/jpeg".equals(contentType) && !"image/png".equals(contentType)) {
-//                return ResponseEntity.badRequest().body("Only JPG and PNG files are allowed.");
-//            }
-//            BabyPhoto updatedBabyPhoto = babyPhotoService.updateBabyPhoto(file, babyId);
-//            return ResponseEntity.ok(updatedBabyPhoto);
-//        } catch (IOException e) {
-//            return ResponseEntity.internalServerError().body("Failed to update file: " + e.getMessage());
-//        }
-//    }
 
     // 아기 사진 삭제
     @DeleteMapping("/{id}")

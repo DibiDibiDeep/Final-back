@@ -1,10 +1,13 @@
 package com.example.finalproj.BabyPhoto.service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.finalproj.BabyPhoto.entity.BabyPhoto;
 import com.example.finalproj.BabyPhoto.repository.BabyPhotoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,9 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -57,38 +57,50 @@ public class BabyPhotoService {
     }
 
     // 새로운 아기 사진 생성 및 S3에 업로드
-    public BabyPhoto createBabyPhoto(MultipartFile file, Integer babyId) throws IOException {
-        String fileUrl = uploadFileToS3(file);
+    @Transactional
+    public BabyPhoto createOrUpdateBabyPhoto(MultipartFile file, Integer babyId) throws IOException {
+        // 기존 사진 찾기
+        BabyPhoto existingPhoto = (BabyPhoto) babyPhotoRepository.findTopByBabyIdOrderByUploadDateDesc(babyId).orElse(null);
 
-        BabyPhoto babyPhoto = new BabyPhoto();
-        babyPhoto.setBabyId(babyId);
-        babyPhoto.setFilePath(fileUrl);
-        babyPhoto.setUploadDate(LocalDateTime.now());
+        // 새 사진 업로드
+        String fileName = generateFileName(file);
+        String fileUrl = uploadFileToS3(file, fileName);
 
-        return babyPhotoRepository.save(babyPhoto);
+        if (existingPhoto != null) {
+            // 기존 사진 S3에서 삭제
+            deleteFileFromS3(existingPhoto.getFilePath());
+
+            // 기존 사진 정보 업데이트
+            existingPhoto.setFilePath(fileUrl);
+            existingPhoto.setUploadDate(LocalDateTime.now());
+            return babyPhotoRepository.save(existingPhoto);
+        } else {
+            // 새 사진 정보 생성
+            BabyPhoto newPhoto = new BabyPhoto();
+            newPhoto.setBabyId(babyId);
+            newPhoto.setFilePath(fileUrl);
+            newPhoto.setUploadDate(LocalDateTime.now());
+            return babyPhotoRepository.save(newPhoto);
+        }
     }
 
-    // 파일을 S3에 업로드하고 URL 반환
-    private String uploadFileToS3(MultipartFile multipartFile) throws IOException {
-        File file = convertMultiPartToFile(multipartFile);
-        String fileName = generateFileName(multipartFile);
-        s3Client.putObject(new PutObjectRequest(bucketName, fileName, file));
-        file.delete();
+    private String uploadFileToS3(MultipartFile file, String fileName) throws IOException {
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(file.getContentType());
+        metadata.setContentLength(file.getSize());
+
+        s3Client.putObject(new PutObjectRequest(bucketName, fileName, file.getInputStream(), metadata));
+
         return s3Client.getUrl(bucketName, fileName).toString();
     }
 
-    // MultipartFile을 File로 변환
-    private File convertMultiPartToFile(MultipartFile file) throws IOException {
-        File convFile = new File(file.getOriginalFilename());
-        FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(file.getBytes());
-        fos.close();
-        return convFile;
+    private void deleteFileFromS3(String fileUrl) {
+        String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+        s3Client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
     }
 
-    // 유니크한 파일 이름 생성
-    private String generateFileName(MultipartFile multiPart) {
-        return UUID.randomUUID().toString() + "-" + multiPart.getOriginalFilename().replace(" ", "_");
+    private String generateFileName(MultipartFile file) {
+        return UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
     }
 
     // 아기 사진 삭제
