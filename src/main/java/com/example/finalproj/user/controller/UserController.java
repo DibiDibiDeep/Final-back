@@ -103,12 +103,12 @@ public class UserController {
 //    private String redirectUri;
 
 
-    // OAuth URL 생성 시 포함
-    String authUrl = "https://accounts.google.com/o/oauth2/auth" +
-            "?client_id=" + clientId +
-            "&redirect_uri=" + "http://localhost:8080/api/auth/google-callback" + // 여기에서 redirectUri가 null이면 안 됩니다.
-            "&response_type=code" +
-            "&scope=email%20profile";
+//    // OAuth URL 생성 시 포함
+//    String authUrl = "https://accounts.google.com/o/oauth2/auth" +
+//            "?client_id=" + clientId +
+//            "&redirect_uri=" + "http://localhost:8080/api/auth/google-callback" + // 여기에서 redirectUri가 null이면 안 됩니다.
+//            "&response_type=code" +
+//            "&scope=email%20profile";
 
     // Google 사용자 인증
 //    @PostMapping("/google")
