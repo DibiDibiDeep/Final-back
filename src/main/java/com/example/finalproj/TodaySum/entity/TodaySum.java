@@ -1,7 +1,7 @@
 package com.example.finalproj.TodaySum.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "Today_sum")
@@ -20,29 +20,16 @@ public class TodaySum {
 
     private String content;
 
-    @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private LocalDate date;
 
-    @Column(name = "end_date")
-    private LocalDateTime endDate;
+    public TodaySum() {}
 
-    @Column(name = "generated_date")
-    private LocalDateTime generatedDate;
-
-    @Column(name = "revision_date")
-    private LocalDateTime revisionDate;
-
-    public TodaySum(){}
-
-    public TodaySum(Integer todayId, Integer userId, Integer bookId, String content, LocalDateTime startDate, LocalDateTime endDate, LocalDateTime generatedDate, LocalDateTime revisionDate) {
+    public TodaySum(Integer todayId, Integer userId, Integer bookId, String content, LocalDate date) {
         this.todayId = todayId;
         this.userId = userId;
         this.bookId = bookId;
         this.content = content;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.generatedDate = generatedDate;
-        this.revisionDate = revisionDate;
+        this.date = date;
     }
 
     public Integer getTodayId() {
@@ -65,7 +52,7 @@ public class TodaySum {
         return bookId;
     }
 
-    public void setBookId(Integer fairyTaleId) {
+    public void setBookId(Integer bookId) {
         this.bookId = bookId;
     }
 
@@ -77,36 +64,12 @@ public class TodaySum {
         this.content = content;
     }
 
-    public LocalDateTime getStartDate() {
-        return startDate;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDateTime getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
-    }
-
-    public LocalDateTime getGeneratedDate() {
-        return generatedDate;
-    }
-
-    public void setGeneratedDate(LocalDateTime generatedDate) {
-        this.generatedDate = generatedDate;
-    }
-
-    public LocalDateTime getRevisionDate() {
-        return revisionDate;
-    }
-
-    public void setRevisionDate(LocalDateTime revisionDate) {
-        this.revisionDate = revisionDate;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     @Override
@@ -116,10 +79,7 @@ public class TodaySum {
                 ", userId=" + userId +
                 ", bookId=" + bookId +
                 ", content='" + content + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", generatedDate=" + generatedDate +
-                ", revisionDate=" + revisionDate +
+                ", date=" + date +
                 '}';
     }
 }

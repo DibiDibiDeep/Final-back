@@ -42,10 +42,7 @@ public class TodaySumService {
             existingTodaySum.setUserId(todaySumDetails.getUserId());
             existingTodaySum.setBookId(todaySumDetails.getBookId());
             existingTodaySum.setContent(todaySumDetails.getContent());
-            existingTodaySum.setStartDate(todaySumDetails.getStartDate());
-            existingTodaySum.setEndDate(todaySumDetails.getEndDate());
-            existingTodaySum.setGeneratedDate(todaySumDetails.getGeneratedDate());
-            existingTodaySum.setRevisionDate(todaySumDetails.getRevisionDate());
+            existingTodaySum.setDate(todaySumDetails.getDate());
             return todaySumRepository.save(existingTodaySum);
         }
         return null; // 레코드가 존재하지 않을 경우 null 반환
@@ -56,8 +53,4 @@ public class TodaySumService {
         todaySumRepository.deleteById(id);
     }
 
-    // 날짜 범위에 해당하는 TodaySum 레코드 조회
-    public List<TodaySum> getTodaySumsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-        return todaySumRepository.findByDateRange(startDate, endDate);
-    }
 }
