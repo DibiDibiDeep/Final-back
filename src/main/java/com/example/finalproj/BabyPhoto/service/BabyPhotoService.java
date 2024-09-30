@@ -107,7 +107,34 @@ public class BabyPhotoService {
     public void deleteBabyPhoto(Integer id) {
         babyPhotoRepository.deleteById(id);
     }
-    
+
+    public Optional<BabyPhoto> updateBabyPhoto(Integer babyPhotoId, MultipartFile file, Integer babyId, Integer userId) throws IOException {
+        Optional<BabyPhoto> existingPhotoOpt = babyPhotoRepository.findById(babyPhotoId);
+
+        if (existingPhotoOpt.isPresent()) {
+            BabyPhoto existingPhoto = existingPhotoOpt.get();
+
+            // 파일 처리 로직 (예: S3에 업로드)
+            String fileName = generateFileName(file);
+            String fileUrl = uploadFileToS3(file, fileName); // 이 메소드는 별도로 구현해야 합니다
+
+            existingPhoto.setFilePath(fileUrl);
+            existingPhoto.setUploadDate(LocalDateTime.now());
+            existingPhoto.setBabyId(babyId);
+            if (userId != null) {
+                existingPhoto.setUserId(userId);
+            }
+
+            return Optional.of(babyPhotoRepository.save(existingPhoto));
+        }
+
+        return Optional.empty();
+    }
+
+    public List<BabyPhoto> getBabyPhotosByUserIdAndBabyId(Integer userId, Integer babyId) {
+        return babyPhotoRepository.findByUserIdAndBabyId(userId, babyId);
+    }
+
     // 아기 사진 수정
 //    public BabyPhoto updateBabyPhoto(MultipartFile file, Integer babyId) throws IOException {
 //        String fileUrl = uploadFileToS3(file);

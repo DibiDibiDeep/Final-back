@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/baby-photos")
@@ -45,20 +46,35 @@ public class BabyPhotoController {
     }
 
     // 새로운 아기 사진 업로드
-    @PostMapping
-    public ResponseEntity<?> createOrUpdateBabyPhoto(
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateBabyPhoto(
+            @PathVariable Integer id,
             @RequestParam("file") MultipartFile file,
-            @RequestParam("babyId") Integer babyId) {
+            @RequestParam("babyId") Integer babyId,
+            @RequestParam(value = "userId", required = false) Integer userId) {
         try {
             String contentType = file.getContentType();
             if (!"image/jpeg".equals(contentType) && !"image/png".equals(contentType)) {
                 return ResponseEntity.badRequest().body("Only JPG and PNG files are allowed.");
             }
-            BabyPhoto babyPhoto = babyPhotoService.createOrUpdateBabyPhoto(file, babyId);
-            return ResponseEntity.ok(babyPhoto);
+            Optional<BabyPhoto> updatedPhotoOpt = babyPhotoService.updateBabyPhoto(id, file, babyId, userId);
+            if (updatedPhotoOpt.isPresent()) {
+                return ResponseEntity.ok(updatedPhotoOpt.get());
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         } catch (IOException e) {
-            return ResponseEntity.internalServerError().body("Failed to upload file: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Failed to update file: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Unexpected error: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/user/{userId}/baby/{babyId}")
+    public ResponseEntity<List<BabyPhoto>> getBabyPhotosByUserIdAndBabyId(
+            @PathVariable Integer userId,
+            @PathVariable Integer babyId) {
+        return ResponseEntity.ok(babyPhotoService.getBabyPhotosByUserIdAndBabyId(userId, babyId));
     }
 
     // 아기 사진 삭제

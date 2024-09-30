@@ -55,4 +55,8 @@ public class BabyService {
     public boolean userHasBaby(Integer userId) {
         return babyRepository.existsByUserId(userId);
     }
+
+    public Baby save(Baby baby) {
+        return babyRepository.save(baby);
+    }
 }

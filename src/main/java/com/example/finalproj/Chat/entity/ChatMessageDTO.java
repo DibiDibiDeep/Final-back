@@ -21,20 +21,23 @@ public class ChatMessageDTO {
     @Column(nullable = false)
     private LocalDateTime timestamp;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Column(nullable = false)
     private String sender;
 
+    private String sessionId;
+
     public ChatMessageDTO() {}
 
-    public ChatMessageDTO(Long  userId, Long  babyId, LocalDateTime timestamp, String content, String sender) {
+    public ChatMessageDTO(Long  userId, Long  babyId, LocalDateTime timestamp, String content, String sender, String sessionId) {
         this.userId = userId;
         this.babyId = babyId;
         this.timestamp = timestamp;
         this.content = content;
         this.sender = sender;
+        this.sessionId = sessionId;
     }
 
     public Long getId() {
@@ -85,6 +88,14 @@ public class ChatMessageDTO {
         this.sender = sender;
     }
 
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
     @Override
     public String toString() {
         return "ChatMessageDTO{" +
@@ -93,6 +104,7 @@ public class ChatMessageDTO {
                 ", timestamp=" + timestamp +
                 ", content='" + content + '\'' +
                 ", sender='" + sender + '\'' +
+                ", sessionId='" + sessionId + '\'' +
                 '}';
     }
 }

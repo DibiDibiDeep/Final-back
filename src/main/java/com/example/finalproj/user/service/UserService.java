@@ -1,5 +1,6 @@
 package com.example.finalproj.user.service;
 
+import com.example.finalproj.security.JwtTokenProvider;
 import com.example.finalproj.user.entity.User;
 import com.example.finalproj.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,8 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    //    @Autowired
-//    private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 //
 //    @Value("${google.client.id}")
 //    private String CLIENT_ID;
@@ -52,6 +53,8 @@ public class UserService {
             userRepository.save(dummyUser);
         }
     }
+
+    
 
     // 모든 사용자 조회
     public List<User> getAllUsers() {
@@ -137,4 +140,7 @@ public class UserService {
         return user.orElseThrow().isNewUser(); // Adjust logic as necessary
     }
 
+    public String generateJwtToken(User user) {
+        return jwtTokenProvider.generateJwtToken(user);
+    }
 }

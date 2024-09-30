@@ -16,5 +16,7 @@ public interface BabyPhotoRepository extends JpaRepository<BabyPhoto, Integer> {
 
     Optional<Object> findTopByBabyIdOrderByUploadDateDesc(Integer babyId);
 
+    List<BabyPhoto> findByUserIdAndBabyId(Integer userId, Integer babyId);
+
 //    BabyPhoto edit(BabyPhoto babyPhoto);
 }

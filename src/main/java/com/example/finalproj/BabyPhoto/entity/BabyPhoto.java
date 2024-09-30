@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Baby_Photo")
+@Table(name = "baby_photo")
 public class BabyPhoto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +15,9 @@ public class BabyPhoto {
     @Column(name = "baby_id", nullable = false)
     private Integer babyId;
 
+    @Column(name = "user_id", nullable = false)  // 추가된 필드
+    private Integer userId;
+
     @Column(name = "file_path", nullable = false)
     private String filePath;
 
@@ -22,9 +25,10 @@ public class BabyPhoto {
     private LocalDateTime uploadDate;
 
     // 모든 필드를 포함한 생성자
-    public BabyPhoto(Integer babyPhotoId, Integer babyId, String filePath, LocalDateTime uploadDate) {
+    public BabyPhoto(Integer babyPhotoId, Integer babyId, Integer userId, String filePath, LocalDateTime uploadDate) {
         this.babyPhotoId = babyPhotoId;
         this.babyId = babyId;
+        this.userId = userId;
         this.filePath = filePath;
         this.uploadDate = uploadDate;
     }
@@ -50,6 +54,14 @@ public class BabyPhoto {
         this.babyId = babyId;
     }
 
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
     public String getFilePath() {
         return filePath;
     }
@@ -72,6 +84,7 @@ public class BabyPhoto {
         return "BabyPhoto{" +
                 "babyPhotoId=" + babyPhotoId +
                 ", babyId=" + babyId +
+                ", userId=" + userId +
                 ", filePath='" + filePath + '\'' +
                 ", uploadDate=" + uploadDate +
                 '}';

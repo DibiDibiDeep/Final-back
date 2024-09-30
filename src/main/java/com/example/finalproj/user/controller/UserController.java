@@ -170,17 +170,16 @@ public class UserController {
             String email = (String) userInfo.get("email");
             String name = (String) userInfo.get("name");
 
-            // 이 부분에서 DB에서 사용자를 찾거나 새로 생성합니다
             User user = userService.findOrCreateUserByEmail(email, name);
 
-            String jwtToken = jwtTokenProvider.generateJwtToken(user);
+            String jwtToken = userService.generateJwtToken(user);
 
-            // 프론트엔드 URL로 리다이렉트 (JWT 토큰을 쿼리 파라미터로 포함) ※ localhost 환경변수 처리!!!
+            // 프론트엔드 URL로 리다이렉트 (JWT 토큰을 쿼리 파라미터로 포함)
             String redirectUrl = frontUrl + "/auth/token/set?token=" + URLEncoder.encode(jwtToken, StandardCharsets.UTF_8);
             response.sendRedirect(redirectUrl);
         } catch (Exception e) {
             logger.error("Error handling Google callback", e);
-            response.sendRedirect(frontUrl + "/auth/token/set?token=" + URLEncoder.encode("Authentication failed", StandardCharsets.UTF_8));
+            response.sendRedirect(frontUrl + "/auth/login?error=" + URLEncoder.encode("Authentication failed", StandardCharsets.UTF_8));
         }
     }
 
@@ -210,8 +209,9 @@ public class UserController {
         return response.body();
     }
 
-
-
+    public String generateJwtToken(User user) {
+        return jwtTokenProvider.generateJwtToken(user);
+    }
 
     private Map<String, Object> getUserInfo(String tokenResponse) {
         try {

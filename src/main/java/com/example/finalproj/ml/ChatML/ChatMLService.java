@@ -100,12 +100,13 @@ public class ChatMLService {
         }
     }
 
-    public ChatMessageDTO getResponse(ChatMessageDTO message) {
+    public ChatMessageDTO getResponse(ChatMessageDTO message, String authToken) {
         Map<String, Object> requestData = new HashMap<>();
         requestData.put("user_id", message.getUserId());
         requestData.put("baby_id", message.getBabyId());
         requestData.put("text", message.getContent());
         requestData.put("role", "user");
+        requestData.put("session_id", authToken);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -125,8 +126,9 @@ public class ChatMLService {
                         message.getUserId(),
                         message.getBabyId(),
                         message.getTimestamp(),
-                        response, // 여기서 response만 전달합니다.
-                        "bot"
+                        response,
+                        "bot",
+                        authToken
                 );
             } else {
                 throw new RuntimeException("ML service returned non-200 status: " + responseEntity.getStatusCodeValue());
