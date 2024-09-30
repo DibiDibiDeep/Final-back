@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS today_sum (
                                          today_id INT NOT NULL AUTO_INCREMENT,
                                          user_id INT NOT NULL,
                                          baby_id INT NULL,
-                                         content VARCHAR(255) NULL,
+                                         content TEXT NULL,
                                          date DATE NOT NULL,
                                          PRIMARY KEY (today_id),
                                          CONSTRAINT fk_today_sum_user FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
