@@ -1,5 +1,6 @@
 package com.example.finalproj.Alim.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -21,6 +22,7 @@ public class Alim {
     private String content;
 
     @Column(name = "date", nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime date;
 
     @Column(name = "send_to_ml", nullable = false)

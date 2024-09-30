@@ -26,8 +26,8 @@ public class AlimController {
 
     // userID로 Alim 조회
     @GetMapping("/{id}")
-    public ResponseEntity<Alim> getAlimById(@PathVariable Integer userid) {
-        return alimService.getAlimById(userid)
+    public ResponseEntity<Alim> getAlimById(@PathVariable Integer id) {
+        return alimService.getAlimById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

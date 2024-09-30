@@ -11,15 +11,21 @@ import java.util.Optional;
 
 public interface AlimInfRepository extends JpaRepository<AlimInf, Integer> {
 
-    //정해진 기간 내 AlimInf 조회
+    // 정해진 기간 내 AlimInf 조회
     @Query("SELECT a FROM AlimInf a WHERE a.date BETWEEN :startDate AND :endDate")
     List<AlimInf> findByDateBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
-  
-    Optional<AlimInf> findByAlimId(Integer alimId);
+
+    // alimId에 해당하는 모든 AlimInf 조회
+    List<AlimInf> findByAlimId(Integer alimId);
+
+    // alimId에 해당하는 가장 최근의 AlimInf 조회
+    @Query("SELECT a FROM AlimInf a WHERE a.alimId = :alimId ORDER BY a.date DESC")
+    List<AlimInf> findLatestByAlimId(@Param("alimId") Integer alimId);
 
     // alimId의 최대 값을 가져오는 쿼리
     @Query("SELECT COALESCE(MAX(a.alimId), 0) FROM AlimInf a")
     Integer findMaxAlimId();
 
+    // alimId에 해당하는 AlimInf 삭제
     void deleteByAlimId(Integer alimId);
 }
