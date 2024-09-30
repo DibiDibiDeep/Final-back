@@ -40,7 +40,7 @@ public class TodaySumService {
         if (todaySum.isPresent()) {
             TodaySum existingTodaySum = todaySum.get();
             existingTodaySum.setUserId(todaySumDetails.getUserId());
-            existingTodaySum.setBookId(todaySumDetails.getBookId());
+            existingTodaySum.setBabyId(todaySumDetails.getBabyId());
             existingTodaySum.setContent(todaySumDetails.getContent());
             existingTodaySum.setDate(todaySumDetails.getDate());
             return todaySumRepository.save(existingTodaySum);
