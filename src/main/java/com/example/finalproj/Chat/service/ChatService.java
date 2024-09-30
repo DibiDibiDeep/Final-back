@@ -3,14 +3,18 @@ package com.example.finalproj.Chat.service;
 import com.example.finalproj.Chat.entity.ChatMessageDTO;
 import com.example.finalproj.Chat.repository.ChatRepository;
 import com.example.finalproj.ml.ChatML.ChatMLService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ChatService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ChatService.class);
+    private static final int MAX_CONTENT_LENGTH = 65535;
 
     private final ChatRepository chatRepository;
     private final ChatMLService chatMLService;
@@ -21,32 +25,55 @@ public class ChatService {
         this.chatMLService = chatMLService;
     }
 
-    public ChatMessageDTO processMessage(ChatMessageDTO message) {
-        // babyId가 null인 경우 처리
+    public ChatMessageDTO processMessage(ChatMessageDTO message, String authToken) {
+        // Validate input
         if (message.getBabyId() == null) {
-            System.out.println("message.getBabyId() = " + message.getBabyId());
-            // 적절한 기본값 설정 또는 예외 처리
+            logger.error("Received message with null babyId: {}", message);
             throw new IllegalArgumentException("babyId cannot be null");
         }
 
-        // Save the user message
-        chatRepository.save(message);
-
-        // Process the message using ML service
-        ChatMessageDTO response = chatMLService.getResponse(message);
-
-        // babyId가 response에도 제대로 설정되어 있는지 확인
-        if (response.getBabyId() == null) {
-            response.setBabyId(message.getBabyId());
+        // Truncate content if it exceeds the maximum length
+        if (message.getContent().length() > MAX_CONTENT_LENGTH) {
+            logger.warn("Message content exceeds maximum length. Truncating...");
+            message.setContent(message.getContent().substring(0, MAX_CONTENT_LENGTH));
         }
 
-        // Save the bot response
-        chatRepository.save(response);
+        try {
+            // Set sessionId for the user message
+            message.setSessionId(authToken);
 
-        return response;
+            // Save the user message
+            chatRepository.save(message);
+            logger.info("Saved user message: {}", message);
+
+            // Process the message using ML service
+            ChatMessageDTO response = chatMLService.getResponse(message, authToken);
+
+            // Ensure babyId is set in the response
+            if (response.getBabyId() == null) {
+                logger.warn("ML service response had null babyId, setting to original message babyId");
+                response.setBabyId(message.getBabyId());
+            }
+
+            // Truncate response content if it exceeds the maximum length
+            if (response.getContent().length() > MAX_CONTENT_LENGTH) {
+                logger.warn("Response content exceeds maximum length. Truncating...");
+                response.setContent(response.getContent().substring(0, MAX_CONTENT_LENGTH));
+            }
+
+            // Save the bot response
+            chatRepository.save(response);
+            logger.info("Saved bot response: {}", response);
+
+            return response;
+        } catch (Exception e) {
+            logger.error("Error processing message: {}", message, e);
+            throw new RuntimeException("Error processing chat message", e);
+        }
     }
 
     public List<ChatMessageDTO> getChatHistory(Long userId, Long babyId) {
+        logger.info("Fetching chat history for userId: {} and babyId: {}", userId, babyId);
         return chatRepository.findByUserIdAndBabyId(userId, babyId);
     }
 }

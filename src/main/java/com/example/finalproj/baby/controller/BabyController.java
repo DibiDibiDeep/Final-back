@@ -2,7 +2,9 @@ package com.example.finalproj.baby.controller;
 
 import com.example.finalproj.baby.entity.Baby;
 import com.example.finalproj.baby.service.BabyService;
+import com.example.finalproj.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -13,6 +15,9 @@ public class BabyController {
     // BabyService 주입
     @Autowired
     private BabyService babyService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     // 모든 아기 정보 조회
     @GetMapping
@@ -37,8 +42,13 @@ public class BabyController {
 
     // 새로운 아기 정보 생성
     @PostMapping
-    public ResponseEntity<Baby> createBaby(@RequestBody Baby baby) {
-        return ResponseEntity.ok(babyService.createBaby(baby));
+    public Object createBaby(@RequestBody Baby baby) {
+        if (!userRepository.existsById(baby.getUserId())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("User ID does not exist.");
+        }
+        Baby savedBaby = babyService.save(baby);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedBaby);
     }
 
     // 아기 정보 수정

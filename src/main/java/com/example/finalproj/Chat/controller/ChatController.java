@@ -2,7 +2,10 @@ package com.example.finalproj.Chat.controller;
 
 import com.example.finalproj.Chat.entity.ChatMessageDTO;
 import com.example.finalproj.Chat.service.ChatService;
+import com.example.finalproj.ml.ChatML.ChatMLService;
 import com.example.finalproj.security.JwtTokenProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,8 @@ import java.util.List;
 @RequestMapping("/api/chat")
 public class ChatController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
+
     private final ChatService chatService;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -25,63 +30,61 @@ public class ChatController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity<ChatMessageDTO> sendMessage(@RequestBody ChatMessageDTO message, @RequestHeader(value = "Authorization", required = false) String authHeader) {
+    public ResponseEntity<ChatMessageDTO> sendMessage(@RequestBody ChatMessageDTO message, @RequestHeader(value = "Authorization") String authHeader) {
         try {
-            System.out.println("Received Authorization header: " + authHeader); // 디버깅을 위한 로그
-
-            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                System.out.println("Invalid Authorization header");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            String authToken = authHeader.replace("Bearer ", "");
+            if (!jwtTokenProvider.validateToken(authToken)) {
+                logger.warn("Invalid token received: {}", authToken);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
 
-            String token = authHeader.substring(7);
-            System.out.println("Extracted token: " + token); // 디버깅을 위한 로그
-
-            if (!jwtTokenProvider.validateToken(token)) {
-                System.out.println("Token validation failed");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            Long tokenUserId = jwtTokenProvider.getUserIdFromToken(authToken);
+            if (!tokenUserId.equals(message.getUserId())) {
+                logger.warn("Token user ID does not match message user ID. Token user ID: {}, Message user ID: {}", tokenUserId, message.getUserId());
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
 
-            Long userId = jwtTokenProvider.getUserIdFromToken(token);
-            System.out.println("Extracted userId: " + userId);
-
-            if (userId == null || !userId.equals(message.getUserId())) {
-                System.out.println("User ID mismatch. Token userId: " + userId + ", Message userId: " + message.getUserId());
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-            }
-
-            if (message.getBabyId() == null || message.getContent() == null) {
-                return ResponseEntity.badRequest().build();
-            }
-
-            if (message.getTimestamp() == null) {
-                message.setTimestamp(LocalDateTime.now());
-            }
-
-            ChatMessageDTO response = chatService.processMessage(message);
+            logger.info("Processing message for user ID: {} and baby ID: {}", message.getUserId(), message.getBabyId());
+            ChatMessageDTO response = chatService.processMessage(message, authToken);
             return ResponseEntity.ok(response);
-
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid input received: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
         } catch (Exception e) {
-            System.out.println("Error in sendMessage: " + e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            logger.error("Error processing message", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @GetMapping("/history/{userId}/{babyId}")
     public ResponseEntity<List<ChatMessageDTO>> getChatHistory(@PathVariable Long userId,
                                                                @PathVariable Long babyId,
-                                                               @RequestHeader("Authorization") String token) {
-        // Extract token
-        String jwt = token.replace("Bearer ", "");
+                                                               @RequestHeader("Authorization") String authHeader) {
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                logger.warn("Invalid authorization header received");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
 
-        // Validate token and extract userId from token
-        Long tokenUserId = jwtTokenProvider.getUserIdFromToken(jwt);
-        if (tokenUserId == null || !tokenUserId.equals(userId)) {
-            return ResponseEntity.badRequest().build();
+            String token = authHeader.substring(7);
+
+            if (!jwtTokenProvider.validateToken(token)) {
+                logger.warn("Invalid token received: {}", token);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+            Long tokenUserId = jwtTokenProvider.getUserIdFromToken(token);
+            if (tokenUserId == null || !tokenUserId.equals(userId)) {
+                logger.warn("Token user ID does not match path user ID. Token user ID: {}, Path user ID: {}", tokenUserId, userId);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            logger.info("Fetching chat history for user ID: {} and baby ID: {}", userId, babyId);
+            List<ChatMessageDTO> chatHistory = chatService.getChatHistory(userId, babyId);
+            return ResponseEntity.ok(chatHistory);
+        } catch (Exception e) {
+            logger.error("Error fetching chat history", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-        List<ChatMessageDTO> chatHistory = chatService.getChatHistory(userId, babyId);
-        return ResponseEntity.ok(chatHistory);
     }
 }

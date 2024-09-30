@@ -2,13 +2,13 @@
 GET http://localhost:8080/api/baby-photos
 
 ### Get Baby Photo by ID
-GET http://localhost:8080/api/baby-photos/1
+GET http://localhost:8080/api/baby-photos/3
 
 ### Get Baby Photos by User ID
-GET http://localhost:8080/api/baby-photos/user/1
+GET http://localhost:8080/api/baby-photos/user/4
 
 ### Get Baby Photos by Baby ID
-GET http://localhost:8080/api/baby-photos/baby/1
+GET http://localhost:8080/api/baby-photos/baby/4
 
 ### Get Baby Photos by Upload Date
 GET http://localhost:8080/api/baby-photos/date/2023-05-20T10:30:00
