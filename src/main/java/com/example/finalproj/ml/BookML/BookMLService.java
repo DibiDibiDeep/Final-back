@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -66,17 +67,17 @@ public class BookMLService {
             validateAlimInfData(alimInf);
 
             // 요청 본문 구성
-            requestBody.put("name", alimInf.getName());
-            requestBody.put("age", calculateAge(baby.getBirth()));
-            requestBody.put("gender", baby.getGender());
-            requestBody.put("emotion", alimInf.getEmotion());
-            requestBody.put("health", alimInf.getHealth());
-            requestBody.put("nutrition", alimInf.getNutrition());
-            requestBody.put("activities", alimInf.getActivitiesList());
+            requestBody.put("name", alimInf.getName() != null ? alimInf.getName() : "");
+            requestBody.put("age", baby.getBirth() != null ? calculateAge(baby.getBirth()) : null);
+            requestBody.put("gender", baby.getGender() != null ? baby.getGender() : "");
+            requestBody.put("emotion", alimInf.getEmotion() != null ? alimInf.getEmotion() : "");
+            requestBody.put("health", alimInf.getHealth() != null ? alimInf.getHealth() : "");
+            requestBody.put("nutrition", alimInf.getNutrition() != null ? alimInf.getNutrition() : "");
+            requestBody.put("activities", alimInf.getActivitiesList() != null ? alimInf.getActivitiesList() : new ArrayList<>());
             requestBody.put("social", alimInf.getSocial() != null ? alimInf.getSocial() : "");
-            requestBody.put("special", alimInf.getSpecial());
-            requestBody.put("keywords", alimInf.getKeywordsList());
-            requestBody.put("diary", alimInf.getDiary());
+            requestBody.put("special", alimInf.getSpecial() != null ? alimInf.getSpecial() : "");
+            requestBody.put("keywords", alimInf.getKeywordsList() != null ? alimInf.getKeywordsList() : new ArrayList<>());
+            requestBody.put("diary", alimInf.getDiary() != null ? alimInf.getDiary() : "");
             requestBody.put("user_id", alimInf.getUserId());
             requestBody.put("baby_id", alimInf.getBabyId());
 
