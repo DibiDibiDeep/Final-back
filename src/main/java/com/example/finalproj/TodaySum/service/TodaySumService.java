@@ -53,8 +53,4 @@ public class TodaySumService {
         todaySumRepository.deleteById(id);
     }
 
-    // 날짜 범위에 해당하는 TodaySum 레코드 조회
-    public List<TodaySum> getTodaySumsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-        return todaySumRepository.findByDateRange(startDate, endDate);
-    }
 }

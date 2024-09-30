@@ -58,11 +58,5 @@ public class TodaySumController {
         return ResponseEntity.noContent().build();
     }
 
-    // 주어진 날짜 범위 내의 TodaySum 레코드를 조회하는 GET 메소드
-    @GetMapping("/date-range")
-    public List<TodaySum> getTodaySumsByDateRange(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
-        return todaySumService.getTodaySumsByDateRange(startDate, endDate);
-    }
+
 }
