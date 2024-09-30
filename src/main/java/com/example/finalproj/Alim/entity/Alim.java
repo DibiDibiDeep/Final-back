@@ -18,7 +18,7 @@ public class Alim {
     @Column(name = "baby_id", nullable = false)
     private Integer babyId;
 
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "date", nullable = false)
