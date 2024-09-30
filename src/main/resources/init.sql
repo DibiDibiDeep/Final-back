@@ -63,15 +63,12 @@ CREATE TABLE IF NOT EXISTS page (
 CREATE TABLE IF NOT EXISTS today_sum (
                                          today_id INT NOT NULL AUTO_INCREMENT,
                                          user_id INT NOT NULL,
-                                         book_id INT NULL,
+                                         baby_id INT NULL,
                                          content VARCHAR(255) NULL,
-                                         start_date DATETIME NOT NULL,
-                                         end_date DATETIME NOT NULL,
-                                         generated_date DATETIME NOT NULL,
-                                         revision_date DATETIME NULL,
+                                         date DATE NOT NULL,
                                          PRIMARY KEY (today_id),
                                          CONSTRAINT fk_today_sum_user FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
-                                         CONSTRAINT fk_today_sum_book FOREIGN KEY (book_id) REFERENCES Book(book_id) ON DELETE CASCADE
+                                         CONSTRAINT fk_today_sum_baby FOREIGN KEY (baby_id) REFERENCES Baby(baby_id) ON DELETE CASCADE
 );
 
 -- 7. Calendar_Photo 테이블 생성 및 더미 데이터 삽입
