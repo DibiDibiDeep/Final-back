@@ -174,6 +174,8 @@ public class AlimInfService {
     }
 
     public Optional<AlimInf> getAlimInfByAlimId(Integer alimId) {
-        return alimInfRepository.findByAlimId(alimId);
+        List<AlimInf> alimInfs = alimInfRepository.findLatestByAlimId(alimId);
+        return alimInfs.isEmpty() ? Optional.empty() : Optional.of(alimInfs.get(0));
     }
+
 }

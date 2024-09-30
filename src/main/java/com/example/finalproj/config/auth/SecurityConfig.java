@@ -23,7 +23,7 @@ public class SecurityConfig {
                         )
                 )
                 .authorizeHttpRequests((authorizeRequest) -> authorizeRequest
-                        .requestMatchers("/", "/css/**", "images/**", "/js/**", "/login/*", "/logout/*", "/api/auth/**", "/api/books/**", "/api/**", "api/auth/login", "/api/alim-inf","/api/alim-inf/**", "/api/books/generate_fairytale","/api/baby-photos/**","/api/baby-photos","/api/baby-photos/edit/","/api/baby-photos/baby/", "/api/books/user/**", "/api/alim-inf/alim-id/**","/api/chat/send/**", "/api/chat/send/", "/api/chat/history/", "/api/baby/**", "/api/baby/").permitAll()
+                        .requestMatchers("/", "/css/**", "images/**", "/js/**", "/login/*", "/logout/*", "/api/auth/**", "/api/books/**", "/api/**", "api/auth/login", "/api/alim-inf","/api/alim-inf/**", "/api/books/generate_fairytale","/api/baby-photos/**","/api/baby-photos","/api/baby-photos/edit/","/api/baby-photos/baby/", "/api/books/user/**", "/api/alim-inf/alim-id/**","/api/chat/send/**", "/api/chat/send/", "/api/chat/history/", "/api/baby/**", "/api/baby/", "/api/alims/", "/api/alims/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(
