@@ -42,10 +42,7 @@ public class TodaySumService {
             existingTodaySum.setUserId(todaySumDetails.getUserId());
             existingTodaySum.setBookId(todaySumDetails.getBookId());
             existingTodaySum.setContent(todaySumDetails.getContent());
-            existingTodaySum.setStartDate(todaySumDetails.getStartDate());
-            existingTodaySum.setEndDate(todaySumDetails.getEndDate());
-            existingTodaySum.setGeneratedDate(todaySumDetails.getGeneratedDate());
-            existingTodaySum.setRevisionDate(todaySumDetails.getRevisionDate());
+            existingTodaySum.setDate(todaySumDetails.getDate());
             return todaySumRepository.save(existingTodaySum);
         }
         return null; // 레코드가 존재하지 않을 경우 null 반환
