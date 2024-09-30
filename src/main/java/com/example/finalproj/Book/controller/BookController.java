@@ -4,6 +4,7 @@ import com.example.finalproj.Book.entity.Book;
 import com.example.finalproj.Book.service.BookService;
 import com.example.finalproj.AlimInf.entity.AlimInf;
 import com.example.finalproj.AlimInf.service.AlimInfService;
+import com.example.finalproj.ml.BookML.BookMLService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -30,7 +33,8 @@ public class BookController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    // 삭제된 메소드: processBook
+    @Autowired
+    private BookMLService bookMLService;
 
     // ID로 책 조회 엔드포인트
     @GetMapping("/{id}")
@@ -117,5 +121,15 @@ public class BookController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("동화 생성 및 책 생성 실패: " + e.getMessage());
         }
+    }
+
+    // 동화 생성 상태 조회 엔드포인트
+    @GetMapping("/fairytale-status/{alimId}")
+    public ResponseEntity<?> getFairyTaleStatus(@PathVariable Integer alimId) {
+        String status = bookMLService.getFairyTaleStatus(alimId);
+        Map<String, Object> response = new HashMap<>();
+        response.put("alimId", alimId);
+        response.put("status", status);
+        return ResponseEntity.ok(response);
     }
 }
