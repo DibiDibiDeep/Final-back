@@ -4,6 +4,7 @@ import com.example.finalproj.TodaySum.entity.TodaySum;
 import com.example.finalproj.TodaySum.service.TodaySumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,8 +38,13 @@ public class TodaySumController {
 
     // 새로운 TodaySum 레코드를 생성하는 POST 메소드
     @PostMapping
-    public TodaySum createTodaySum(@RequestBody TodaySum todaySum) {
-        return todaySumService.createTodaySum(todaySum);
+    public ResponseEntity<TodaySum> createTodaySum(@RequestBody TodaySum todaySum) {
+        try {
+            TodaySum createdTodaySum = todaySumService.createTodaySum(todaySum);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdTodaySum);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     // 기존 TodaySum 레코드를 업데이트하는 PUT 메소드
