@@ -11,4 +11,6 @@ public interface ChatRepository extends JpaRepository<ChatMessageDTO, Long> {
 
 
     List<ChatMessageDTO> findByUserIdAndBabyId(Long userId, Long babyId);
+
+    void deleteByUserIdAndBabyId(Long userId, Long babyId);
 }

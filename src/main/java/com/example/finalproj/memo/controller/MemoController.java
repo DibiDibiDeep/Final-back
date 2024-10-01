@@ -79,4 +79,13 @@ public class MemoController {
         List<Memo> memos = memoService.getMemosByUserAndDate(userId, date);
         return ResponseEntity.ok(memos);
     }
+
+    // 특정 사용자 ID와 아이 ID로 MEMO 조회
+    @GetMapping("/user/{userId}/baby/{babyId}")
+    public ResponseEntity<List<Memo>> getMemosByUserAndBaby(
+            @PathVariable Integer userId,
+            @PathVariable Integer babyId) {
+        List<Memo> memos = memoService.getMemosByUserIdAndBabyId(userId, babyId);
+        return ResponseEntity.ok(memos);
+    }
 }

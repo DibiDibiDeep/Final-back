@@ -46,6 +46,15 @@ public class CalendarController {
         return ResponseEntity.ok(calendarService.getCalendarsByBabyId(babyId));
     }
 
+    // 특정 사용자 ID와 아기 ID로 Calendar 목록을 조회
+    @GetMapping("/user/{userId}/baby/{babyId}")
+    public ResponseEntity<List<Calendar>> getCalendarsByUserIdAndBabyId(
+            @PathVariable Integer userId,
+            @PathVariable Integer babyId) {
+        List<Calendar> calendars = calendarService.getCalendarsByUserIdAndBabyId(userId, babyId);
+        return ResponseEntity.ok(calendars);
+    }
+
     // 특정 날짜로 Calendar 목록을 조회
     @GetMapping
     public ResponseEntity<List<Calendar>> getCalendarsByDate(
