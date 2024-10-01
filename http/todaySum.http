@@ -1,0 +1,42 @@
+### Variables
+@baseUrl = http://localhost:8080/api/today-sum
+@contentType = application/json
+
+### Get all TodaySums
+GET {{baseUrl}}
+
+### Get TodaySum by ID
+GET {{baseUrl}}/1
+
+### Create new TodaySum
+POST {{baseUrl}}
+Content-Type: {{contentType}}
+
+{
+  "userId": 1,
+  "fairyTaleId": 1,
+  "content": "오늘의 요약: 아기가 처음으로 웃었어요.",
+  "startDate": "2024-03-20T00:00:00",
+  "endDate": "2024-03-20T23:59:59",
+  "generatedDate": "2024-03-20T22:00:00"
+}
+
+### Update TodaySum
+PUT {{baseUrl}}/1
+Content-Type: {{contentType}}
+
+{
+  "userId": 1,
+  "fairyTaleId": 1,
+  "content": "오늘의 요약 수정: 아기가 처음으로 크게 웃었어요.",
+  "startDate": "2024-03-20T00:00:00",
+  "endDate": "2024-03-20T23:59:59",
+  "generatedDate": "2024-03-20T22:00:00",
+  "revisionDate": "2024-03-21T10:00:00"
+}
+
+### Delete TodaySum
+DELETE {{baseUrl}}/1
+
+### Get TodaySums by Date Range
+GET {{baseUrl}}/date-range?startDate=2024-03-01T00:00:00&endDate=2024-03-31T23:59:59

@@ -1,0 +1,18 @@
+### Variables
+@baseUrl = http://localhost:8080/api/book-inf
+@contentType = application/json
+
+### Get all BookInfs
+GET {{baseUrl}}
+
+### Get BookInf by Book ID
+GET {{baseUrl}}/9
+
+### Save and process inference result
+POST {{baseUrl}}/9
+Content-Type: {{contentType}}
+
+{
+  "user_id": "1",
+  "some_other_data": "value"
+}
