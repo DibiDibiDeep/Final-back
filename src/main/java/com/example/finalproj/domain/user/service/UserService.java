@@ -16,10 +16,6 @@ public class UserService {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
-//
-//    @Value("${google.client.id}")
-//    private String CLIENT_ID;
-//
 
     public User findOrCreateUserByEmail(String email, String name) {
         return userRepository.findByEmail(email)
@@ -65,40 +61,6 @@ public class UserService {
     public Optional<User> getUserById(Integer userId) {
         return userRepository.findById(userId);
     }
-//
-//    // Google 사용자 인증
-//    public Map<String, Object> authenticateGoogleUser(String token) throws AuthenticationServiceException {
-//        try {
-//            GoogleIdToken.Payload payload = verifyGoogleToken(token);
-//            String email = payload.getEmail();
-//            String name = (String) payload.get("name");
-//
-//            User user = userRepository.findByEmail(email)
-//                    .orElseGet(() -> {
-//                        User newUser = new User(email, name);
-//                        return userRepository.save(newUser);
-//                    });
-//
-//            String jwtToken = jwtTokenProvider.generateToken(user.getUserId());
-//
-//            Map<String, Object> response = new HashMap<>();
-//            response.put("user", user);
-//            response.put("token", jwtToken);
-//            response.put("isNewUser", user.getCreatedAt().isAfter(LocalDateTime.now().minusSeconds(5)));
-//
-//            return response;
-//        } catch (Exception e) {
-//            throw new AuthenticationServiceException("Authentication failed: " + e.getMessage(), e);
-//        }
-//    }
-//
-//    // 개인정보 처리방침 메서드
-//    public User acceptPrivacyPolicy(Integer userId) {
-//        return userRepository.findById(userId).map(user -> {
-//            user.setPrivacyPolicyAccepted(true);
-//            return userRepository.save(user);
-//        }).orElseThrow(() -> new RuntimeException("User not found"));
-//    }
 
     // 사용자 정보 업데이트
     public User updateUser(Integer userId, User userDetails) {
@@ -115,20 +77,6 @@ public class UserService {
     public void deleteUser(Integer userId) {
         userRepository.deleteById(userId);
     }
-
-//    // Google ID 토큰 검증
-//    private GoogleIdToken.Payload verifyGoogleToken(String token) throws Exception {
-//        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
-//                .setAudience(Collections.singletonList(CLIENT_ID))
-//                .build();
-//
-//        GoogleIdToken idToken = verifier.verify(token);
-//        if (idToken != null) {
-//            return idToken.getPayload();
-//        } else {
-//            throw new AuthenticationServiceException("Invalid ID token.");
-//        }
-//    }
 
     // Find user by userId and email
     public Optional<User> findUserByIdAndEmail(Integer userId, String email) {

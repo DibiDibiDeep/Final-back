@@ -24,15 +24,18 @@ public class User {
 
     private boolean newUser;
 
+    private boolean hasBaby;
+
     // Default constructor
     public User() {}
 
-    public User(Integer userId, String email, String name, LocalDateTime createdAt, boolean newUser) {
+    public User(Integer userId, String email, String name, LocalDateTime createdAt, boolean newUser, boolean hasBaby) {
         this.userId = userId;
         this.email = email;
         this.name = name;
         this.createdAt = createdAt;
         this.newUser = newUser;
+        this.hasBaby = hasBaby;
     }
 
     public Integer getUserId() {
@@ -75,6 +78,14 @@ public class User {
         this.newUser = newUser;
     }
 
+    public boolean isHasBaby() {
+        return hasBaby;
+    }
+
+    public void setHasBaby(boolean hasBaby) {
+        this.hasBaby = hasBaby;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -83,6 +94,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", createdAt=" + createdAt +
                 ", newUser=" + newUser +
+                ", hasBaby=" + hasBaby +
                 '}';
     }
 
