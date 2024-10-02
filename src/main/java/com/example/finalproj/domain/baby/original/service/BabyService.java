@@ -2,6 +2,8 @@ package com.example.finalproj.domain.baby.original.service;
 
 import com.example.finalproj.domain.baby.original.entity.Baby;
 import com.example.finalproj.domain.baby.original.repository.BabyRepository;
+import com.example.finalproj.domain.user.entity.User;
+import com.example.finalproj.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -11,6 +13,8 @@ import java.util.Optional;
 public class BabyService {
     @Autowired
     private BabyRepository babyRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     // 모든 아기 정보 조회
     public List<Baby> getAllBabies() {
@@ -29,7 +33,9 @@ public class BabyService {
 
     // 새로운 아기 정보 생성
     public Baby createBaby(Baby baby) {
-        return babyRepository.save(baby);
+        Baby savedBaby = babyRepository.save(baby);
+        updateUserHasBabyFlag(baby.getUserId(), true);
+        return savedBaby;
     }
 
     // 아기 정보 수정
@@ -48,7 +54,15 @@ public class BabyService {
 
     // 아기 정보 삭제
     public void deleteBaby(Integer babyId) {
-        babyRepository.deleteById(babyId);
+        Optional<Baby> babyOptional = babyRepository.findById(babyId);
+        if (babyOptional.isPresent()) {
+            Integer userId = babyOptional.get().getUserId();
+            babyRepository.deleteById(babyId);
+
+            // Check if the user has any remaining babies
+            boolean hasRemainingBabies = babyRepository.existsByUserId(userId);
+            updateUserHasBabyFlag(userId, hasRemainingBabies);
+        }
     }
 
     // 사용자가 아기 정보를 가지고 있는지 확인
@@ -58,5 +72,14 @@ public class BabyService {
 
     public Baby save(Baby baby) {
         return babyRepository.save(baby);
+    }
+
+    private void updateUserHasBabyFlag(Integer userId, boolean hasBaby) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setHasBaby(hasBaby);
+            userRepository.save(user);
+        }
     }
 }
