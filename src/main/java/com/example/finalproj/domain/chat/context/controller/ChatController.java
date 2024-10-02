@@ -85,4 +85,36 @@ public class ChatController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @PostMapping("/reset/{userId}/{babyId}")
+    public ResponseEntity<Void> resetChatHistory(@PathVariable Long userId,
+                                                 @PathVariable Long babyId,
+                                                 @RequestHeader("Authorization") String authHeader) {
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                logger.warn("Invalid authorization header received");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+            String token = authHeader.substring(7);
+
+            if (!jwtTokenProvider.validateToken(token)) {
+                logger.warn("Invalid token received: {}", token);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+            Long tokenUserId = jwtTokenProvider.getUserIdFromToken(token);
+            if (tokenUserId == null || !tokenUserId.equals(userId)) {
+                logger.warn("Token user ID does not match path user ID. Token user ID: {}, Path user ID: {}", tokenUserId, userId);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            logger.info("Resetting chat history for user ID: {} and baby ID: {}", userId, babyId);
+            chatService.resetChatHistory(userId, babyId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            logger.error("Error resetting chat history", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

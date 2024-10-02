@@ -21,8 +21,8 @@ spring:
   hikari:
     maximum-pool-size: 10
     minimum-idle: 5
-    idle-timeout: 300000
-    max-lifetime: 170000
+    idle-timeout: 600000
+    max-lifetime: 3600000
     connection-timeout: 30000
   sql:
 #    init:
@@ -42,10 +42,17 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 60000
+
 
 ml:
   service:
-    url: ${ML_SERVICE_URL:http://ml:8000}
+    url: ${ML_SERVICE_URL:http://192.168.0.227:8000}
   app:
     url: ${ML_APP_URL:http://localhost:8080}
 
