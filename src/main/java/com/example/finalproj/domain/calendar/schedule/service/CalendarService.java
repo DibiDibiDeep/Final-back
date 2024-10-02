@@ -76,4 +76,7 @@ public class CalendarService {
         calendarRepository.deleteById(calendarId);
     }
 
+    public List<Calendar> getCalendarsByUserIdAndBabyId(Integer userId, Integer babyId) {
+        return calendarRepository.findByUserIdAndBabyId(userId, babyId);
+    }
 }

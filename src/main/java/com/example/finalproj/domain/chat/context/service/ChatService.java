@@ -3,6 +3,7 @@ package com.example.finalproj.domain.chat.context.service;
 import com.example.finalproj.domain.chat.context.entity.ChatMessageDTO;
 import com.example.finalproj.domain.chat.context.repository.ChatRepository;
 import com.example.finalproj.ml.chatML.ChatMLService;
+import com.example.finalproj.redis.service.RedisChatService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,13 @@ public class ChatService {
 
     private final ChatRepository chatRepository;
     private final ChatMLService chatMLService;
+    private final RedisChatService redisChatService;
 
     @Autowired
-    public ChatService(ChatRepository chatRepository, ChatMLService chatMLService) {
+    public ChatService(ChatRepository chatRepository, ChatMLService chatMLService, RedisChatService redisChatService) {
         this.chatRepository = chatRepository;
         this.chatMLService = chatMLService;
+        this.redisChatService = redisChatService;
     }
 
     public ChatMessageDTO processMessage(ChatMessageDTO message, String authToken) {
@@ -44,6 +47,7 @@ public class ChatService {
 
             // Save the user message
             chatRepository.save(message);
+            redisChatService.saveMessage(message);
             logger.info("Saved user message: {}", message);
 
             // Process the message using ML service
@@ -63,6 +67,7 @@ public class ChatService {
 
             // Save the bot response
             chatRepository.save(response);
+            redisChatService.saveMessage(response);
             logger.info("Saved bot response: {}", response);
 
             return response;
@@ -74,6 +79,12 @@ public class ChatService {
 
     public List<ChatMessageDTO> getChatHistory(Long userId, Long babyId) {
         logger.info("Fetching chat history for userId: {} and babyId: {}", userId, babyId);
-        return chatRepository.findByUserIdAndBabyId(userId, babyId);
+        return redisChatService.getChatHistory(userId, babyId);
+    }
+
+    public void resetChatHistory(Long userId, Long babyId) {
+        chatRepository.deleteByUserIdAndBabyId(userId, babyId);
+        redisChatService.deleteChatHistory(userId, babyId);
+        chatMLService.resetChatHistory(userId, babyId);
     }
 }

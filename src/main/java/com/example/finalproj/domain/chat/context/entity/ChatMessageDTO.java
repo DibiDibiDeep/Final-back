@@ -2,11 +2,13 @@ package com.example.finalproj.domain.chat.context.entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "chat_messages")
-public class ChatMessageDTO {
+public class ChatMessageDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

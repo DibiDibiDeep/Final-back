@@ -26,4 +26,6 @@ public interface MemoRepository extends JpaRepository<Memo, Integer> {
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate
     );
+
+    List<Memo> findByUserIdAndBabyId(Integer userId, Integer babyId);
 }

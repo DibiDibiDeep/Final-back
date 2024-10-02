@@ -27,4 +27,5 @@ public interface CalendarRepository extends JpaRepository<Calendar, Integer> {
     // 특정 사용자 ID와 시작 시간, 제목이 존재하는지 확인
     boolean existsByUserIdAndBabyIdAndStartTimeAndTitle(Integer userId, Integer babyId, LocalDateTime startTime, String title);
 
+    List<Calendar> findByUserIdAndBabyId(Integer userId, Integer babyId);
 }
