@@ -1,10 +1,10 @@
 package com.example.finalproj.redis.service;
 
-import com.example.finalproj.ml.ChatML.ChatMLService;
+import com.example.finalproj.ml.chatML.ChatMLService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.data.redis.core.RedisTemplate;
-import com.example.finalproj.Chat.entity.ChatMessageDTO;
+import com.example.finalproj.domain.chat.context.entity.ChatMessageDTO;
 
 import java.util.ArrayList;
 import java.util.List;

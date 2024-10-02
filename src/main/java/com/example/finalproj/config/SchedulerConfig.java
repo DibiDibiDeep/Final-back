@@ -1,6 +1,6 @@
 package com.example.finalproj.config;
 
-import com.example.finalproj.ml.ChatML.ChatMLService;
+import com.example.finalproj.ml.chatML.ChatMLService;
 import com.example.finalproj.redis.service.RedisChatService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
