@@ -60,6 +60,6 @@ public class OAuthAttributes {
 
     // User 엔티티 생성
     public User toEntity() {
-        return new User(null, email, name, null, true);
+        return new User(null, email, name, null, true, true);
     }
 }
