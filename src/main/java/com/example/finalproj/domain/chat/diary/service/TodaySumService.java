@@ -52,4 +52,8 @@ public class TodaySumService {
         todaySumRepository.deleteById(id);
     }
 
+    // 특정 사용자와 아기에 대한 TodaySum 목록 조회
+    public List<TodaySum> getTodaySumByUserIdAndBabyId(Integer userId, Integer babyId) {
+        return todaySumRepository.findByUserIdAndBabyId(userId, babyId);
+    }
 }
