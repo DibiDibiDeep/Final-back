@@ -1,7 +1,9 @@
 package com.example.finalproj.domain.baby.original.entity;
 
+import com.example.finalproj.domain.baby.photo.entity.BabyPhoto;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "Baby")
@@ -87,4 +89,5 @@ public class Baby {
                 ", gender='" + gender + '\'' +
                 '}';
     }
+
 }

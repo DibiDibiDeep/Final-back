@@ -1,5 +1,6 @@
 package com.example.finalproj.domain.notice.original.repository;
 
+import com.example.finalproj.domain.baby.photo.entity.BabyPhoto;
 import com.example.finalproj.domain.notice.original.entity.Alim;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +18,6 @@ public interface AlimRepository extends JpaRepository<Alim, Integer> {
 
     // 주어진 사용자 ID와 날짜 범위 내의 Alim 레코드를 조회
     List<Alim> findByUserIdAndDateBetween(Integer userId, LocalDateTime start, LocalDateTime end);
+
+    List<Alim> findByBabyId(Integer babyId);
 }
