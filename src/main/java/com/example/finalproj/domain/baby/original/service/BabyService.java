@@ -2,6 +2,8 @@ package com.example.finalproj.domain.baby.original.service;
 
 import com.example.finalproj.domain.baby.original.entity.Baby;
 import com.example.finalproj.domain.baby.original.repository.BabyRepository;
+import com.example.finalproj.domain.user.entity.User;
+import com.example.finalproj.domain.user.repository.UserRepository;
 import com.example.finalproj.domain.baby.photo.entity.BabyPhoto;
 import com.example.finalproj.domain.baby.photo.repository.BabyPhotoRepository;
 import com.example.finalproj.domain.book.cover.entity.Book;
@@ -31,6 +33,8 @@ import java.util.Optional;
 public class BabyService {
     @Autowired
     private BabyRepository babyRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private BabyPhotoRepository babyPhotoRepository;
@@ -79,7 +83,9 @@ public class BabyService {
 
     // 새로운 아기 정보 생성
     public Baby createBaby(Baby baby) {
-        return babyRepository.save(baby);
+        Baby savedBaby = babyRepository.save(baby);
+        updateUserHasBabyFlag(baby.getUserId(), true);
+        return savedBaby;
     }
 
     // 아기 정보 수정
@@ -152,5 +158,14 @@ public class BabyService {
 
     public Baby save(Baby baby) {
         return babyRepository.save(baby);
+    }
+
+    private void updateUserHasBabyFlag(Integer userId, boolean hasBaby) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setHasBaby(hasBaby);
+            userRepository.save(user);
+        }
     }
 }

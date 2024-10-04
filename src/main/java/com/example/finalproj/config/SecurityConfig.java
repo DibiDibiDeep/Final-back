@@ -44,7 +44,7 @@ public class SecurityConfig {
                         sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorizeRequest -> authorizeRequest
-                        .requestMatchers("/api/auth/google-callback","/api/auth/google-url", "/", "/css/**", "images/**", "/js/**", "/login/*", "/logout/*", "/api/auth/**", "/api/books/**", "/api/**", "api/auth/login", "/api/alim-inf","/api/alim-inf/**", "/api/books/generate_fairytale","/api/baby-photos/**","/api/baby-photos","/api/baby-photos/edit/","/api/baby-photos/baby/", "/api/books/user/**", "/api/alim-inf/alim-id/**","/api/chat/send/**", "/api/chat/send/", "/api/chat/history/", "/api/baby/**", "/api/baby/", "/api/alims/", "/api/alims/**").permitAll()
+                        .requestMatchers("/api/auth/google-callback","/api/auth/google-url", "/", "/css/**", "images/**", "/js/**", "/login/*", "/logout/*").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(logoutConfig -> logoutConfig.logoutSuccessUrl("/"))
