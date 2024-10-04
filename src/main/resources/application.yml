@@ -73,13 +73,15 @@ logging:
   level:
     root: WARN
     com.example.finalproj: INFO
-    com.example.finalproj.user: DEBUG
+    com.example.finalproj.domain.user.controller: DEBUG
     org.springframework.web: WARN
     org.hibernate.SQL: WARN
 
 jwt:
   secret: ${JWT_SECRET}
   expiration: ${JWT_EXPIRATION:86400000}
+  refresh-token:
+    expiration: 604800000  # 7일 (밀리초 단위)
 
 google:
   client:
