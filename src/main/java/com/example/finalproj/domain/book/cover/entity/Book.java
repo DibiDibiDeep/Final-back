@@ -13,8 +13,8 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer bookId;
-
     private Integer userId;
+    private Integer babyId;
     private String title;
     private String coverPath;
     private LocalDateTime generatedDate;
@@ -45,6 +45,15 @@ public class Book {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    // babyId의 getter와 setter
+    public Integer getBabyId() {
+        return babyId;
+    }
+
+    public void setBabyId(Integer babyId) {
+        this.babyId = babyId;
     }
 
     // title의 getter와 setter

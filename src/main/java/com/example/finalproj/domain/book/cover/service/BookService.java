@@ -47,13 +47,14 @@ public class BookService {
 
     // ML 서비스 응답을 기반으로 책을 생성하는 메소드
     @Transactional
-    public Book createBookFromMLResponse(String mlResponse, Integer userId) throws IOException {
+    public Book createBookFromMLResponse(String mlResponse, Integer userId, Integer babyId) throws IOException {
         JSONObject jsonResponse = new JSONObject(mlResponse);
         Book book = new Book();
 
         // 책 제목 설정
         book.setTitle(jsonResponse.getString("title"));
         book.setUserId(userId);
+        book.setBabyId(babyId);
 
         // 책 표지 이미지 처리
         String coverImageUrl = jsonResponse.getString("title_img_path");
@@ -81,7 +82,7 @@ public class BookService {
 
         // 책 저장 및 반환
         Book savedBook = bookRepository.save(book);
-        log.info("Book saved successfully. Book ID: {}", savedBook.getBookId());
+        log.info("Book saved successfully. Book ID: {}, Baby ID: {}", savedBook.getBookId(), savedBook.getBabyId());
         return savedBook;
     }
 
@@ -224,5 +225,10 @@ public class BookService {
             book.getPages().size();
         }
         return bookOptional;
+    }
+
+    // 특정 사용자와 아기에 대한 책 목록 조회
+    public List<Book> getBookByUserIdAndBabyId(Integer userId, Integer babyId) {
+        return bookRepository.findByUserIdAndBabyId(userId, babyId);
     }
 }

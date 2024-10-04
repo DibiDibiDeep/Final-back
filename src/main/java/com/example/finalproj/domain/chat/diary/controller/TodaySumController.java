@@ -62,5 +62,11 @@ public class TodaySumController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @GetMapping("/user/{userId}/baby/{babyId}")
+    public ResponseEntity<List<TodaySum>> getTodaySumByUserIdAndBabyId(
+            @PathVariable Integer userId,
+            @PathVariable Integer babyId) {
+        List<TodaySum> todaySums = todaySumService.getTodaySumByUserIdAndBabyId(userId, babyId);
+        return ResponseEntity.ok(todaySums);
+    }
 }

@@ -105,6 +105,7 @@ public class ChatMLService {
         requestData.put("user_id", message.getUserId());
         requestData.put("baby_id", message.getBabyId());
         requestData.put("text", message.getContent());
+        requestData.put("timestamp", message.getTimestamp());
         requestData.put("role", "user");
         requestData.put("session_id", authToken);
 
@@ -135,29 +136,6 @@ public class ChatMLService {
             }
         } catch (Exception e) {
             System.err.println("Error processing ML service response: " + e.getMessage());
-            throw new RuntimeException("Error communicating with ML service", e);
-        }
-    }
-
-    public void resetChatHistory(Long userId, Long babyId) {
-        Map<String, Object> requestData = new HashMap<>();
-        requestData.put("user_id", userId);
-        requestData.put("baby_id", babyId);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestData, headers);
-
-        try {
-            String endpoint = mlServiceUrl + "/reset_chat_history";
-            ResponseEntity<String> responseEntity = restTemplate.postForEntity(endpoint, request, String.class);
-
-            if (!responseEntity.getStatusCode().is2xxSuccessful()) {
-                throw new RuntimeException("ML service returned non-200 status: " + responseEntity.getStatusCodeValue());
-            }
-        } catch (Exception e) {
-            System.err.println("Error resetting chat history in ML service: " + e.getMessage());
             throw new RuntimeException("Error communicating with ML service", e);
         }
     }

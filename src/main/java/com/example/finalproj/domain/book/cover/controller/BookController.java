@@ -112,7 +112,7 @@ public class BookController {
             logger.info("포맷팅된 FastAPI Inference 결과:\n{}", prettyJson);
 
             // ML 응답을 기반으로 책 생성
-            Book createdBook = bookService.createBookFromMLResponse(fairyTale, alimInf.getUserId());
+            Book createdBook = bookService.createBookFromMLResponse(fairyTale, alimInf.getUserId(), alimInf.getBabyId());
 
             // 생성된 책을 응답으로 반환
             return ResponseEntity.ok(createdBook);
@@ -131,5 +131,13 @@ public class BookController {
         response.put("alimId", alimId);
         response.put("status", status);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/user/{userId}/baby/{babyId}")
+    public ResponseEntity<List<Book>> getBookByUserIdAndBabyId(
+            @PathVariable Integer userId,
+            @PathVariable Integer babyId) {
+        List<Book> books = bookService.getBookByUserIdAndBabyId(userId, babyId);
+        return ResponseEntity.ok(books);
     }
 }
