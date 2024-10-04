@@ -1,5 +1,6 @@
 package com.example.finalproj.domain.notice.inference.repository;
 
+import com.example.finalproj.domain.baby.photo.entity.BabyPhoto;
 import com.example.finalproj.domain.notice.inference.entity.AlimInf;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,4 +28,7 @@ public interface AlimInfRepository extends JpaRepository<AlimInf, Integer> {
 
     // alimId에 해당하는 AlimInf 삭제
     void deleteByAlimId(Integer alimId);
+
+    // 특정 아기의 Alim 찾기
+    List<AlimInf> findByBabyId(Integer babyId);
 }

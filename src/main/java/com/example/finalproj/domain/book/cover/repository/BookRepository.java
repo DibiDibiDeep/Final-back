@@ -20,4 +20,6 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     // userId와 babyId로 책을 조회하는 메서드
     List<Book> findByUserIdAndBabyId(Integer userId, Integer babyId);
+
+    List<Book> findByBabyId(Integer babyId);
 }

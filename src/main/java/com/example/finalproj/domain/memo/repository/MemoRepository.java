@@ -28,4 +28,6 @@ public interface MemoRepository extends JpaRepository<Memo, Integer> {
     );
 
     List<Memo> findByUserIdAndBabyId(Integer userId, Integer babyId);
+
+    List<Memo> findByBabyId(Integer babyId);
 }

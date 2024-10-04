@@ -13,4 +13,6 @@ public interface CalendarPhotoInfRepository extends JpaRepository<CalendarPhotoI
 
     // 특정 사용자 ID로 CalendarPhotoInf 목록을 조회
     List<CalendarPhotoInf> findCalendarPhotoInfByUserId(Integer userId);
+
+    List<CalendarPhotoInf> findByBabyId(Integer babyId);
 }
