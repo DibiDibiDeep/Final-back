@@ -1,35 +1,55 @@
 package com.example.finalproj.config;
 
+import com.example.finalproj.auth.jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(
-                        (csrfConfig) -> csrfConfig.disable()
+                .csrf(csrfConfig -> csrfConfig.disable())
+                .headers(headerConfig -> headerConfig.frameOptions(
+                        frameOptionsConfig -> frameOptionsConfig.disable()
+                ))
+                .sessionManagement(sessionConfig ->
+                        sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .headers(
-                        (headerConfig) -> headerConfig.frameOptions(
-                                frameOptionsConfig -> frameOptionsConfig.disable()
-                        )
-                )
-                .authorizeHttpRequests((authorizeRequest) -> authorizeRequest
-                        .requestMatchers("/", "/css/**", "images/**", "/js/**", "/login/*", "/logout/*", "/api/auth/**", "/api/books/**", "/api/**", "api/auth/login", "/api/alim-inf","/api/alim-inf/**", "/api/books/generate_fairytale","/api/baby-photos/**","/api/baby-photos","/api/baby-photos/edit/","/api/baby-photos/baby/", "/api/books/user/**", "/api/alim-inf/alim-id/**","/api/chat/send/**", "/api/chat/send/", "/api/chat/history/", "/api/baby/**", "/api/baby/", "/api/alims/", "/api/alims/**").permitAll()
+                .authorizeHttpRequests(authorizeRequest -> authorizeRequest
+                        .requestMatchers("/api/auth/google-callback","/api/auth/google-url", "/", "/css/**", "images/**", "/js/**", "/login/*", "/logout/*", "/api/auth/**", "/api/books/**", "/api/**", "api/auth/login", "/api/alim-inf","/api/alim-inf/**", "/api/books/generate_fairytale","/api/baby-photos/**","/api/baby-photos","/api/baby-photos/edit/","/api/baby-photos/baby/", "/api/books/user/**", "/api/alim-inf/alim-id/**","/api/chat/send/**", "/api/chat/send/", "/api/chat/history/", "/api/baby/**", "/api/baby/", "/api/alims/", "/api/alims/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .logout(
-                        (logoutConfig) -> logoutConfig.logoutSuccessUrl("/")
-                )
-                .oauth2Login(Customizer.withDefaults());
+                .logout(logoutConfig -> logoutConfig.logoutSuccessUrl("/"))
+                .oauth2Login(Customizer.withDefaults())
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
