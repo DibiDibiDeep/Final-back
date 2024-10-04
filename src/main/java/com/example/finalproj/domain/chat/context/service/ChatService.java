@@ -7,8 +7,12 @@ import com.example.finalproj.redis.service.RedisChatService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -16,6 +20,8 @@ public class ChatService {
 
     private static final Logger logger = LoggerFactory.getLogger(ChatService.class);
     private static final int MAX_CONTENT_LENGTH = 65535;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    private static final ZoneId seoulZone = ZoneId.of("Asia/Seoul");
 
     private final ChatRepository chatRepository;
     private final ChatMLService chatMLService;
@@ -45,10 +51,12 @@ public class ChatService {
             // Set sessionId for the user message
             message.setSessionId(authToken);
 
-            // Save the user message
-            chatRepository.save(message);
+            // Set current Seoul time
+            message.setTimestamp(LocalDateTime.now(seoulZone));
+
+            // Save the user message in redis
             redisChatService.saveMessage(message);
-            logger.info("Saved user message: {}", message);
+            logger.info("Saved user message to Redis: {}", message);
 
             // Process the message using ML service
             ChatMessageDTO response = chatMLService.getResponse(message, authToken);
@@ -66,9 +74,8 @@ public class ChatService {
             }
 
             // Save the bot response
-            chatRepository.save(response);
             redisChatService.saveMessage(response);
-            logger.info("Saved bot response: {}", response);
+            logger.info("Saved bot response to Redis: {}", response);
 
             return response;
         } catch (Exception e) {
@@ -83,8 +90,7 @@ public class ChatService {
     }
 
     public void resetChatHistory(Long userId, Long babyId) {
-        chatRepository.deleteByUserIdAndBabyId(userId, babyId);
-        redisChatService.deleteChatHistory(userId, babyId);
-        chatMLService.resetChatHistory(userId, babyId);
+        redisChatService.resetChatHistory(userId, babyId);
     }
+
 }
