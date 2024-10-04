@@ -20,6 +20,9 @@ public class JwtTokenProvider {
     @Value("${jwt.expiration}")
     private long jwtExpirationMs;
 
+    @Value("${jwt.refresh-token.expiration}")
+    private long refreshTokenExpirationMs;
+
     private Key key;
 
     @PostConstruct
@@ -70,6 +73,39 @@ public class JwtTokenProvider {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    public String generateRefreshToken(User user) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + refreshTokenExpirationMs);
+
+        return Jwts.builder()
+                .setSubject(user.getEmail())
+                .claim("userId", user.getUserId())
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    public String refreshAccessToken(String refreshToken) {
+        if (validateToken(refreshToken)) {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(refreshToken)
+                    .getBody();
+
+            Integer userId = claims.get("userId", Integer.class);
+            String email = claims.getSubject();
+
+            User user = new User(); // 실제로는 UserRepository에서 사용자 정보를 가져와야 합니다.
+            user.setUserId(userId);
+            user.setEmail(email);
+
+            return generateJwtToken(user);
+        }
+        throw new JwtException("Invalid refresh token");
     }
 
 }
