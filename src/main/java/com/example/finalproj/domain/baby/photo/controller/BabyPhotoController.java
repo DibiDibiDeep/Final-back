@@ -57,12 +57,10 @@ public class BabyPhotoController {
             if (!"image/jpeg".equals(contentType) && !"image/png".equals(contentType)) {
                 return ResponseEntity.badRequest().body("Only JPG and PNG files are allowed.");
             }
-            Optional<BabyPhoto> updatedPhotoOpt = babyPhotoService.updateBabyPhoto(id, file, babyId, userId);
-            if (updatedPhotoOpt.isPresent()) {
-                return ResponseEntity.ok(updatedPhotoOpt.get());
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+
+            BabyPhoto updatedOrCreatedPhoto = babyPhotoService.createOrUpdateBabyPhoto(file, babyId, userId);
+            return ResponseEntity.ok(updatedOrCreatedPhoto);
+
         } catch (IOException e) {
             return ResponseEntity.internalServerError().body("Failed to update file: " + e.getMessage());
         } catch (Exception e) {

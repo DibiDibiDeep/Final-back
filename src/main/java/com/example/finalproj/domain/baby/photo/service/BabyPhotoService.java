@@ -55,7 +55,7 @@ public class BabyPhotoService {
 
     // 새로운 아기 사진 생성 및 S3에 업로드
     @Transactional
-    public BabyPhoto createOrUpdateBabyPhoto(MultipartFile file, Integer babyId) throws IOException {
+    public BabyPhoto createOrUpdateBabyPhoto(MultipartFile file, Integer babyId, Integer userId) throws IOException {
         // 기존 사진 찾기
         BabyPhoto existingPhoto = (BabyPhoto) babyPhotoRepository.findTopByBabyIdOrderByUploadDateDesc(babyId).orElse(null);
 
@@ -74,6 +74,7 @@ public class BabyPhotoService {
         } else {
             // 새 사진 정보 생성
             BabyPhoto newPhoto = new BabyPhoto();
+            newPhoto.setUserId(userId);
             newPhoto.setBabyId(babyId);
             newPhoto.setFilePath(fileUrl);
             newPhoto.setUploadDate(LocalDateTime.now());
