@@ -27,18 +27,22 @@ public class ChatMessageDTO implements Serializable {
     private String content;
 
     @Column(nullable = false)
+    private String role;
+
+    @Column(nullable = false)
     private String sender;
 
     private String sessionId;
 
     public ChatMessageDTO() {}
 
-    public ChatMessageDTO(Long  userId, Long  babyId, LocalDateTime timestamp, String content, String sender, String sessionId) {
+    public ChatMessageDTO(Long  userId, Long  babyId, LocalDateTime timestamp, String content, String sender, String role, String sessionId) {
         this.userId = userId;
         this.babyId = babyId;
         this.timestamp = timestamp;
         this.content = content;
         this.sender = sender;
+        this.role = role;
         this.sessionId = sessionId;
     }
 
@@ -90,6 +94,14 @@ public class ChatMessageDTO implements Serializable {
         this.sender = sender;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public String getSessionId() {
         return sessionId;
     }
@@ -106,6 +118,7 @@ public class ChatMessageDTO implements Serializable {
                 ", timestamp=" + timestamp +
                 ", content='" + content + '\'' +
                 ", sender='" + sender + '\'' +
+                ", role='" + role + '\'' +
                 ", sessionId='" + sessionId + '\'' +
                 '}';
     }

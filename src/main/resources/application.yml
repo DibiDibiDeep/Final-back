@@ -52,7 +52,7 @@ spring:
 
 ml:
   service:
-    url: ${ML_SERVICE_URL:http://192.168.0.69:8000}
+    url: ${ML_SERVICE_URL:http://ml:8000}
   app:
     url: ${ML_APP_URL:http://localhost:8080}
 

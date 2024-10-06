@@ -106,7 +106,7 @@ public class ChatMLService {
         requestData.put("baby_id", message.getBabyId());
         requestData.put("text", message.getContent());
         requestData.put("timestamp", message.getTimestamp());
-        requestData.put("role", "user");
+        requestData.put("role", message.getRole());
         requestData.put("session_id", authToken);
 
         HttpHeaders headers = new HttpHeaders();
@@ -128,6 +128,7 @@ public class ChatMLService {
                         message.getBabyId(),
                         message.getTimestamp(),
                         response,
+                        "bot",
                         "bot",
                         authToken
                 );
