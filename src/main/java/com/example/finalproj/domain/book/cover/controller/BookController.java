@@ -102,7 +102,11 @@ public class BookController {
             String fairyTale = bookService.generateFairyTale(alimInf);
 
             // Base64로 인코딩된 ML 응답 로그 출력
-            logger.info("ML 서비스 응답 (Base64): {}", fairyTale);
+            if (fairyTale != null) {
+                logger.info("ML 서비스 응답 (Base64): {}", "동화생성 성공");
+            } else {
+                logger.info("ML 서비스 응답 (Base64): {}", "동화생성 실패");
+            }
 
             // ML 응답을 기반으로 책 생성
             Book createdBook = bookService.createBookFromMLResponse(fairyTale, alimInf.getUserId(), alimInf.getBabyId());
