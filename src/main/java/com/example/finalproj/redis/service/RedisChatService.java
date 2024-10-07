@@ -17,16 +17,13 @@ public class RedisChatService {
     private static final Logger logger = LoggerFactory.getLogger(RedisChatService.class);
     private final RedisTemplate<String, Object> redisTemplate;
     private final ObjectMapper objectMapper;
-    private final ChatMLService chatMLService;
     private final ChatRepository chatRepository;
 
     public RedisChatService(RedisTemplate<String, Object> redisTemplate,
                             ObjectMapper objectMapper,
-                            ChatMLService chatMLService,
                             ChatRepository chatRepository) {
         this.redisTemplate = redisTemplate;
         this.objectMapper = objectMapper;
-        this.chatMLService = chatMLService;
         this.chatRepository = chatRepository;
     }
 
@@ -36,7 +33,7 @@ public class RedisChatService {
         redisTemplate.expire(key, 7, TimeUnit.DAYS); // 7일 후 만료
 
         // ML 서비스로 메시지 전송
-        chatMLService.getResponse(message, message.getSessionId());
+//        chatMLService.getResponse(message, message.getSessionId());
     }
 
     public List<ChatMessageDTO> getChatHistory(Long userId, Long babyId) {

@@ -1,11 +1,13 @@
 package com.example.finalproj.ml.chatML;
 
+import com.example.finalproj.domain.chat.context.repository.ChatRepository;
 import com.example.finalproj.domain.notice.inference.entity.AlimInf;
 import com.example.finalproj.domain.chat.context.entity.ChatMessageDTO;
 import com.example.finalproj.domain.memo.entity.Memo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -29,10 +31,12 @@ public class ChatMLService {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
+    private final ChatRepository chatRepository;
 
-    public ChatMLService(RestTemplate restTemplate, ObjectMapper objectMapper) {
+    public ChatMLService(RestTemplate restTemplate, ObjectMapper objectMapper, ChatRepository chatRepository) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
+        this.chatRepository = chatRepository;
     }
 
     public void sendAlimInfToMLService(AlimInf alimInf) {
@@ -101,6 +105,12 @@ public class ChatMLService {
     }
 
     public ChatMessageDTO getResponse(ChatMessageDTO message, String authToken) {
+        String previousResponse = getPreviousResponse(message.getUserId(), message.getBabyId());
+
+        if (isInvalidInput(message.getContent(), previousResponse)) {
+            return createErrorResponse("잘못된 입력입니다.", message);
+        }
+
         Map<String, Object> requestData = new HashMap<>();
         requestData.put("user_id", message.getUserId());
         requestData.put("baby_id", message.getBabyId());
@@ -123,7 +133,7 @@ public class ChatMLService {
                 JsonNode jsonNode = objectMapper.readTree(responseBody);
                 String response = jsonNode.get("response").asText();
 
-                return new ChatMessageDTO(
+                ChatMessageDTO botResponse = new ChatMessageDTO(
                         message.getUserId(),
                         message.getBabyId(),
                         message.getTimestamp(),
@@ -132,12 +142,41 @@ public class ChatMLService {
                         "bot",
                         authToken
                 );
+
+//                saveResponse(botResponse);
+                return botResponse;
             } else {
                 throw new RuntimeException("ML service returned non-200 status: " + responseEntity.getStatusCodeValue());
             }
         } catch (Exception e) {
-            System.err.println("Error processing ML service response: " + e.getMessage());
-            throw new RuntimeException("Error communicating with ML service", e);
+//            logger.error("Error processing ML service response: ", e);
+            return createErrorResponse("ML 서비스와 통신 중 오류가 발생했습니다.", message);
         }
+    }
+
+    private String getPreviousResponse(Long userId, Long babyId) {
+        List<ChatMessageDTO> recentMessages = chatRepository.findRecentMessagesByUserAndBaby(
+                userId, babyId, PageRequest.of(0, 1));
+        return recentMessages.isEmpty() ? null : recentMessages.get(0).getContent();
+    }
+
+    private boolean isInvalidInput(String input, String previousResponse) {
+        return input.equals(previousResponse) || input.isEmpty();
+    }
+
+    private ChatMessageDTO createErrorResponse(String errorMessage, ChatMessageDTO originalMessage) {
+        return new ChatMessageDTO(
+                originalMessage.getUserId(),
+                originalMessage.getBabyId(),
+                originalMessage.getTimestamp(),
+                errorMessage,
+                "bot",
+                "error",
+                originalMessage.getSessionId()
+        );
+    }
+
+    private void saveResponse(ChatMessageDTO response) {
+        chatRepository.save(response);
     }
 }

@@ -41,6 +41,8 @@ public class ChatService {
             throw new IllegalArgumentException("babyId cannot be null");
         }
 
+        message.setRole("user");
+
         // Truncate content if it exceeds the maximum length
         if (message.getContent().length() > MAX_CONTENT_LENGTH) {
             logger.warn("Message content exceeds maximum length. Truncating...");
@@ -76,6 +78,8 @@ public class ChatService {
             // Save the bot response
             redisChatService.saveMessage(response);
             logger.info("Saved bot response to Redis: {}", response);
+
+            response.setRole("bot");
 
             return response;
         } catch (Exception e) {
