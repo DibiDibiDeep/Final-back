@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -89,14 +90,15 @@ public class BookMLService {
             setFairyTaleStatus(alimInf.getAlimId(), "PROCESSING");
 
             // ML 서비스 호출
-            String response = restTemplate.postForObject(mlServiceUrl + "/generate_fairytale", request, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(mlServiceUrl + "/generate_fairytale", request, String.class);
 
-            logger.info("ML 서비스로부터 응답 수신: {}", response);
+            logger.info("ML 서비스로부터 응답 수신 (Base64 인코딩됨)");
 
             // 동화 생성 상태를 "완료"로 설정
             setFairyTaleStatus(alimInf.getAlimId(), "COMPLETED");
 
-            return response;
+            // Base64로 인코딩된 응답을 그대로 반환
+            return response.getBody();
         } catch (HttpClientErrorException e) {
             logger.error("ML 서비스 클라이언트 에러: {}", e.getResponseBodyAsString());
             setFairyTaleStatus(alimInf.getAlimId(), "FAILED");
