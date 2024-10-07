@@ -18,17 +18,17 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 // 모든 헤더를 허용합니다.
                 .allowedHeaders("*")
-                .exposedHeaders("Authorization", "Content-Type", "Custom-Header")
+                .exposedHeaders("Authorization")
                 // 자격 증명은 비활성화합니다 (allowedOrigins("*")와 함께 사용할 수 없음).
                 .allowCredentials(false)
                 // preflight 요청의 응답 캐시 시간(초 단위)을 지정합니다.
                 .maxAge(3600);  // 1시간 동안 preflight 응답을 캐시함
     }
 
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        // http에서 https로 리다이렉션
-        registry.addRedirectViewController("http://mongeul.com/oauth2/authorization/google",
-                "https://mongeul.com/oauth2/authorization/google");
-    }
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        // http에서 https로 리다이렉션
+//        registry.addRedirectViewController("http://mongeul.com/oauth2/authorization/google",
+//                "https://mongeul.com/oauth2/authorization/google");
+//    }
 }
