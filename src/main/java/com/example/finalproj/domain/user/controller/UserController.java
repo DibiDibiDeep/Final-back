@@ -363,4 +363,28 @@ public class UserController {
                     .body("An error occurred while deleting the user");
         }
     }
+
+    // 미들웨어 사용자 인증
+    @PostMapping("/validate-token")
+    public ResponseEntity<Map<String, Boolean>> validateToken(@RequestBody Map<String, String> tokenMap) {
+        logger.info("Validating token");
+
+        String token = tokenMap.get("token");
+
+        if (token == null || token.isEmpty()) {
+            logger.warn("Token is missing or empty");
+            return ResponseEntity.badRequest().body(createResponse(false));
+        }
+
+        boolean isValid = jwtTokenProvider.validateToken(token);
+        logger.info("Token validation result: {}", isValid);
+
+        return ResponseEntity.ok(createResponse(isValid));
+    }
+
+    private Map<String, Boolean> createResponse(boolean isValid) {
+        Map<String, Boolean> response = new HashMap<String, Boolean>();
+        response.put("isValid", isValid);
+        return response;
+    }
 }
