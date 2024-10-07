@@ -22,8 +22,10 @@ import java.util.Optional;
 @RequestMapping("/api/books")
 public class BookController {
 
+    // 로깅을 위한 Logger 객체 생성
     private static final Logger logger = LoggerFactory.getLogger(BookController.class);
 
+    // 필요한 서비스 클래스들을 주입받음
     @Autowired
     private BookService bookService;
 
@@ -99,17 +101,8 @@ public class BookController {
             // 가져온 AlimInf 데이터를 이용해 ML 모델에 전송하고 동화 생성
             String fairyTale = bookService.generateFairyTale(alimInf);
 
-            // FastAPI inference 결과(JSON) 로그 출력
-            logger.info("FastAPI Inference 결과: {}", fairyTale);
-
-            // JSON 문자열을 객체로 파싱
-            Object jsonObject = objectMapper.readValue(fairyTale, Object.class);
-
-            // JSON을 보기 좋게 포맷팅
-            String prettyJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
-
-            // 포맷팅된 JSON 로그 출력
-            logger.info("포맷팅된 FastAPI Inference 결과:\n{}", prettyJson);
+            // Base64로 인코딩된 ML 응답 로그 출력
+            logger.info("ML 서비스 응답 (Base64): {}", fairyTale);
 
             // ML 응답을 기반으로 책 생성
             Book createdBook = bookService.createBookFromMLResponse(fairyTale, alimInf.getUserId(), alimInf.getBabyId());

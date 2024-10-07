@@ -7,29 +7,28 @@ import com.example.finalproj.domain.notice.inference.entity.AlimInf;
 import com.example.finalproj.ml.bookML.BookMLService;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import org.json.JSONObject;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.json.JSONObject;
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.io.ByteArrayInputStream;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class BookService {
-    // 로깅을 위한 Logger 인스턴스 생성
+    // 로깅을 위한 Logger 객체 생성
     private static final Logger log = LoggerFactory.getLogger(BookService.class);
 
-    // 의존성 주입
+    // 필요한 서비스와 리포지토리 클래스들을 주입받음
     @Autowired
     private BookMLService bookMLService;
 
@@ -39,45 +38,82 @@ public class BookService {
     @Autowired
     private AmazonS3 s3Client;
 
-    // AWS S3 버킷 이름 주입
+    // AWS S3 버킷 이름을 설정 파일에서 가져옴
     @Value("${aws.s3.bucket}")
     private String bucketName;
 
-    // 삭제된 메소드: processBook
+    // 동화 생성 메소드
+    public String generateFairyTale(AlimInf alimInf) {
+        log.info("동화 생성 시작: userId={}, babyId={}", alimInf.getUserId(), alimInf.getBabyId());
+        try {
+            // BookMLService를 통해 ML 서비스에 요청을 보내고 응답을 받음
+            String mlResponse = bookMLService.sendAlimInfToMLService(alimInf);
+            if (mlResponse == null || mlResponse.isEmpty()) {
+                throw new RuntimeException("ML 서비스로부터 빈 응답을 받았습니다.");
+            }
+            log.info("동화 생성 완료: userId={}, babyId={}", alimInf.getUserId(), alimInf.getBabyId());
+            return mlResponse;
+        } catch (Exception e) {
+            log.error("동화 생성 중 오류 발생: userId={}, babyId={}, error={}",
+                    alimInf.getUserId(), alimInf.getBabyId(), e.getMessage(), e);
+            throw new RuntimeException("동화 생성에 실패했습니다: " + e.getMessage(), e);
+        }
+    }
 
-    // ML 서비스 응답을 기반으로 책을 생성하는 메소드
+    // ML 응답을 기반으로 책을 생성하는 메소드
     @Transactional
     public Book createBookFromMLResponse(String mlResponse, Integer userId, Integer babyId) throws IOException {
-        JSONObject jsonResponse = new JSONObject(mlResponse);
+        JSONObject jsonObject = new JSONObject(mlResponse);
         Book book = new Book();
 
         // 책 제목 설정
-        book.setTitle(jsonResponse.getString("title"));
+        if (jsonObject.has("title")) {
+            book.setTitle(truncateString(jsonObject.getString("title"), 255)); // Assuming title column has max 255 characters
+        }
         book.setUserId(userId);
         book.setBabyId(babyId);
 
         // 책 표지 이미지 처리
-        String coverImageUrl = jsonResponse.getString("title_img_path");
-        String coverPath = uploadImageFromUrlToS3(coverImageUrl, "covers");
-        book.setCoverPath(coverPath);
+        if (jsonObject.has("cover_illustration")) {
+            String coverImageBase64 = jsonObject.getString("cover_illustration");
+            String coverPath = uploadBase64ImageToS3(coverImageBase64, "covers");
+            if (!coverPath.isEmpty()) {
+                book.setCoverPath(coverPath);
+            } else {
+                log.warn("Failed to upload cover image for book: {}", book.getTitle());
+            }
+        }
 
         // 페이지 처리
-        JSONArray pages = jsonResponse.getJSONArray("pages");
-        for (int i = 0; i < pages.length(); i++) {
-            JSONObject pageJson = pages.getJSONObject(i);
-            Page page = new Page();
-            page.setBook(book);
-            page.setPageNum(i + 1);
-            page.setText(pageJson.getString("text"));
+        if (jsonObject.has("pages")) {
+            JSONArray pages = jsonObject.getJSONArray("pages");
+            for (int i = 0; i < pages.length(); i++) {
+                JSONObject pageJson = pages.getJSONObject(i);
+                Page page = new Page();
+                page.setBook(book);
+                page.setPageNum(i + 1);
 
-            // 페이지 이미지 처리
-            String pageImageUrl = pageJson.getString("image_url");
-            String pagePath = uploadImageFromUrlToS3(pageImageUrl, "pages");
-            page.setImagePath(pagePath);
+                if (pageJson.has("text")) {
+                    page.setText(truncateString(pageJson.getString("text"), 1000000000)); // Adjust the limit as needed
+                }
 
-            page.setIllustPrompt(pageJson.getString("illustration_prompt"));
+                // 페이지 이미지 처리 (Base64 디코딩)
+                if (pageJson.has("illustration")) {
+                    String pageImageBase64 = pageJson.getString("illustration");
+                    String pagePath = uploadBase64ImageToS3(pageImageBase64, "pages");
+                    if (!pagePath.isEmpty()) {
+                        page.setImagePath(pagePath);
+                    } else {
+                        log.warn("Failed to upload image for page {} of book: {}", i + 1, book.getTitle());
+                    }
+                }
 
-            book.addPage(page);
+                if (pageJson.has("illustration_prompt")) {
+                    page.setIllustPrompt(truncateString(pageJson.getString("illustration_prompt"), 50000000));
+                }
+
+                book.addPage(page);
+            }
         }
 
         // 책 저장 및 반환
@@ -86,29 +122,28 @@ public class BookService {
         return savedBook;
     }
 
-    // URL에서 이미지를 다운로드하여 S3에 업로드하는 메소드
-    private String uploadImageFromUrlToS3(String imageUrl, String folder) throws IOException {
-        log.info("S3 업로드 시작: URL={}, 폴더={}", imageUrl, folder);
-        URL url = new URL(imageUrl);
+    private String truncateString(String input, int maxLength) {
+        if (input.length() <= maxLength) {
+            return input;
+        }
+        return input.substring(0, maxLength);
+    }
+
+    // Base64 이미지를 S3에 업로드하는 메소드
+    private String uploadBase64ImageToS3(String base64Image, String folder) throws IOException {
+
+        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(imageBytes);
+
         String fileName = folder + "/" + UUID.randomUUID() + ".png";
 
-        try (InputStream inputStream = url.openStream()) {
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType("image/png");
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(imageBytes.length);
+        metadata.setContentType("image/png");
 
-            log.debug("S3 업로드 시도: 버킷={}, 파일명={}", bucketName, fileName);
-            s3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, metadata));
+        s3Client.putObject(bucketName, fileName, inputStream, metadata);
 
-            String uploadedUrl = s3Client.getUrl(bucketName, fileName).toString();
-            log.info("S3 업로드 성공: URL={}", uploadedUrl);
-            return uploadedUrl;
-        } catch (IOException e) {
-            log.error("S3 업로드 실패: URL={}, 폴더={}, 오류={}", imageUrl, folder, e.getMessage(), e);
-            throw e;
-        } catch (Exception e) {
-            log.error("S3 업로드 중 예상치 못한 오류 발생: URL={}, 폴더={}, 오류={}", imageUrl, folder, e.getMessage(), e);
-            throw new IOException("S3 업로드 중 오류 발생", e);
-        }
+        return s3Client.getUrl(bucketName, fileName).toString();
     }
 
     // ID로 책을 조회하는 메소드
@@ -147,65 +182,6 @@ public class BookService {
         return bookRepository.findByUserId(userId);
     }
 
-    // 동화를 생성하는 메소드
-    public String generateFairyTale(AlimInf alimInf) {
-        log.info("동화 생성 시작: userId={}, babyId={}", alimInf.getUserId(), alimInf.getBabyId());
-        try {
-            String mlResponse = bookMLService.sendAlimInfToMLService(alimInf);
-            if (mlResponse == null || mlResponse.isEmpty()) {
-                throw new RuntimeException("ML 서비스로부터 빈 응답을 받았습니다.");
-            }
-            log.info("동화 생성 완료: userId={}, babyId={}", alimInf.getUserId(), alimInf.getBabyId());
-            return mlResponse;
-        } catch (Exception e) {
-            log.error("동화 생성 중 오류 발생: userId={}, babyId={}, error={}",
-                    alimInf.getUserId(), alimInf.getBabyId(), e.getMessage(), e);
-            throw new RuntimeException("동화 생성에 실패했습니다: " + e.getMessage(), e);
-        }
-    }
-
-    // ML 응답을 기반으로 기존 책을 업데이트하는 메소드
-    @Transactional
-    public Book updateBookWithMLResponse(Integer bookId, String mlResponse) throws IOException {
-        // 기존 책 조회
-        Book existingBook = bookRepository.findById(bookId)
-                .orElseThrow(() -> new RuntimeException("Book not found with id: " + bookId));
-
-        JSONObject jsonResponse = new JSONObject(mlResponse);
-
-        // 책 제목 업데이트
-        existingBook.setTitle(jsonResponse.getString("title"));
-
-        // 책 표지 이미지 업데이트
-        String coverImageUrl = jsonResponse.getString("title_img_path");
-        String coverPath = uploadImageFromUrlToS3(coverImageUrl, "covers");
-        existingBook.setCoverPath(coverPath);
-
-        // 기존 페이지 삭제
-        existingBook.getPages().clear();
-
-        // 새 페이지 추가
-        JSONArray pages = jsonResponse.getJSONArray("pages");
-        for (int i = 0; i < pages.length(); i++) {
-            JSONObject pageJson = pages.getJSONObject(i);
-            Page page = new Page();
-            page.setBook(existingBook);
-            page.setPageNum(i + 1);
-            page.setText(pageJson.getString("text"));
-
-            String pageImageUrl = pageJson.getString("image_url");
-            String pagePath = uploadImageFromUrlToS3(pageImageUrl, "pages");
-            page.setImagePath(pagePath);
-
-            page.setIllustPrompt(pageJson.getString("illustration_prompt"));
-
-            existingBook.addPage(page);
-        }
-
-        // 업데이트된 책 저장 및 반환
-        return bookRepository.save(existingBook);
-    }
-
     // 책 정보를 간소화하여 반환하는 메소드 (무한 재귀 참조 방지를 위해 추가)
     public List<Book> getSimplifiedBooks() {
         List<Book> books = bookRepository.findAll();
@@ -230,5 +206,51 @@ public class BookService {
     // 특정 사용자와 아기에 대한 책 목록 조회
     public List<Book> getBookByUserIdAndBabyId(Integer userId, Integer babyId) {
         return bookRepository.findByUserIdAndBabyId(userId, babyId);
+    }
+
+    // ML 응답을 기반으로 기존 책을 업데이트하는 메소드
+    @Transactional
+    public Book updateBookWithMLResponse(Integer bookId, String mlResponse) throws IOException {
+        // 기존 책 조회
+        Book existingBook = bookRepository.findById(bookId)
+                .orElseThrow(() -> new RuntimeException("Book not found with id: " + bookId));
+
+        // Base64 디코딩
+        byte[] decodedBytes = Base64.getDecoder().decode(mlResponse);
+        String jsonResponse = new String(decodedBytes);
+
+        JSONObject jsonObject = new JSONObject(jsonResponse);
+
+        // 책 제목 업데이트
+        existingBook.setTitle(jsonObject.getString("title"));
+
+        // 책 표지 이미지 업데이트
+        String coverImageBase64 = jsonObject.getString("title_img_path");
+        String coverPath = uploadBase64ImageToS3(coverImageBase64, "covers");
+        existingBook.setCoverPath(coverPath);
+
+        // 기존 페이지 삭제
+        existingBook.getPages().clear();
+
+        // 새 페이지 추가
+        JSONArray pages = jsonObject.getJSONArray("pages");
+        for (int i = 0; i < pages.length(); i++) {
+            JSONObject pageJson = pages.getJSONObject(i);
+            Page page = new Page();
+            page.setBook(existingBook);
+            page.setPageNum(i + 1);
+            page.setText(pageJson.getString("text"));
+
+            String pageImageBase64 = pageJson.getString("image_url");
+            String pagePath = uploadBase64ImageToS3(pageImageBase64, "pages");
+            page.setImagePath(pagePath);
+
+            page.setIllustPrompt(pageJson.getString("illustration_prompt"));
+
+            existingBook.addPage(page);
+        }
+
+        // 업데이트된 책 저장 및 반환
+        return bookRepository.save(existingBook);
     }
 }
