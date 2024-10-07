@@ -28,7 +28,7 @@ public class ChatController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity<ChatMessageDTO> sendMessage(@RequestBody ChatMessageDTO message, @RequestHeader(value = "Authorization") String authHeader) {
+    public ResponseEntity<ChatMessageDTO> sendMessage(@RequestBody ChatMessageDTO message, @RequestHeader(value = "Authorization") String authHeader, boolean resetHistory) {
         try {
             String authToken = authHeader.replace("Bearer ", "");
             if (!jwtTokenProvider.validateToken(authToken)) {
@@ -43,7 +43,7 @@ public class ChatController {
             }
 
             logger.info("Processing message for user ID: {} and baby ID: {}", message.getUserId(), message.getBabyId());
-            ChatMessageDTO response = chatService.processMessage(message, authToken);
+            ChatMessageDTO response = chatService.processMessage(message, authToken, resetHistory);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             logger.error("Invalid input received: {}", e.getMessage());
@@ -117,4 +117,38 @@ public class ChatController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @PostMapping("/reset")
+    public ResponseEntity<Void> resetChatHistory(
+            @RequestBody ChatMessageDTO messageDTO,
+            @RequestHeader ("Authorization") String authHeader) {
+
+        try {
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                logger.warn("Invalid authorization header received");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+            String token = authHeader.substring(7);
+
+            if (!jwtTokenProvider.validateToken(token)) {
+                logger.warn("Invalid token received: {}", token);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+            Long tokenUserId = jwtTokenProvider.getUserIdFromToken(token);
+            if (tokenUserId == null || !tokenUserId.equals(messageDTO.getUserId())) {
+//                logger.warn("Token user ID does not match path user ID. Token user ID: {}, Path user ID: {}", tokenUserId, userId);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            chatService.resetChatHistoryML(messageDTO.getUserId(), messageDTO.getBabyId(), true);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            logger.error("Error resetting chat history", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+    }
+
 }

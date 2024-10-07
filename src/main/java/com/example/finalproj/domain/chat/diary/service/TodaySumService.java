@@ -56,4 +56,8 @@ public class TodaySumService {
     public List<TodaySum> getTodaySumByUserIdAndBabyId(Integer userId, Integer babyId) {
         return todaySumRepository.findByUserIdAndBabyId(userId, babyId);
     }
+
+    public List<TodaySum> getTodaySumByUserId(Integer userId) {
+        return todaySumRepository.getTodaySumByUserId(userId);
+    }
 }
