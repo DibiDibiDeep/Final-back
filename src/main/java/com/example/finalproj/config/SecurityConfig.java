@@ -44,7 +44,7 @@ public class SecurityConfig {
                         sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(authorizeRequest -> authorizeRequest
-                        .requestMatchers("/api/calendar-photo-inf/*","/api/auth/validate-token" ,"/api/auth/google-callback","/api/auth/google-url", "/", "/css/**", "images/**", "/js/**", "/login/*", "/logout/*").permitAll()
+                        .requestMatchers("/api/today-sum","/api/calendar-photo-inf/*","/api/auth/validate-token" ,"/api/auth/google-callback","/api/auth/google-url", "/", "/css/**", "images/**", "/js/**", "/login/*", "/logout/*").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(logoutConfig -> logoutConfig.logoutSuccessUrl("/"))
