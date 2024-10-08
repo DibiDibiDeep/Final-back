@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ChatService {
@@ -34,7 +36,7 @@ public class ChatService {
         this.redisChatService = redisChatService;
     }
 
-    public ChatMessageDTO processMessage(ChatMessageDTO message, String authToken) {
+    public ChatMessageDTO processMessage(ChatMessageDTO message, String authToken, boolean resetHistory) {
         // Validate input
         if (message.getBabyId() == null) {
             logger.error("Received message with null babyId: {}", message);
@@ -61,7 +63,7 @@ public class ChatService {
             logger.info("Saved user message to Redis: {}", message);
 
             // Process the message using ML service
-            ChatMessageDTO response = chatMLService.getResponse(message, authToken);
+            ChatMessageDTO response = chatMLService.getResponse(message, authToken, resetHistory);
 
             // Ensure babyId is set in the response
             if (response.getBabyId() == null) {
@@ -97,4 +99,14 @@ public class ChatService {
         redisChatService.resetChatHistory(userId, babyId);
     }
 
+    public void resetChatHistoryML(Long userId, Long babyId, boolean resetHistory) {
+        // ML 서비스로 요청 보내기
+        Map<String, Object> requestData = new HashMap<>();
+        requestData.put("user_id", userId);
+        requestData.put("baby_id", babyId);
+        requestData.put("reset_history", resetHistory);
+
+        chatMLService.resetChatHistoryML(userId, babyId, resetHistory);
+
+    }
 }
