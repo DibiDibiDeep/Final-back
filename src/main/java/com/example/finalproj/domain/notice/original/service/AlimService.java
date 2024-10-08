@@ -97,4 +97,8 @@ public class AlimService {
         alimInfRepository.deleteByAlimId(id);
         alimRepository.deleteById(id);
     }
+
+    public List<Alim> getAlimsByUserIdAndBabyId(Integer userId, Integer babyId) {
+        return alimRepository.findByUserIdAndBabyId(userId, babyId);
+    }
 }

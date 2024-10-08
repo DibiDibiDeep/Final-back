@@ -71,4 +71,12 @@ public class AlimController {
         alimService.deleteAlim(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/user/{userId}/baby/{babyId}")
+    public ResponseEntity<List<Alim>> getAlimsByUserIdAndBabyId
+            (@PathVariable Integer userId,
+             @PathVariable Integer babyId) {
+            List<Alim> alims = alimService.getAlimsByUserIdAndBabyId(userId, babyId);
+            return ResponseEntity.ok(alims);
+    }
 }

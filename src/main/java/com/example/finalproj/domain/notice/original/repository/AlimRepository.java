@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface AlimRepository extends JpaRepository<Alim, Integer> {
 
@@ -20,4 +21,6 @@ public interface AlimRepository extends JpaRepository<Alim, Integer> {
     List<Alim> findByUserIdAndDateBetween(Integer userId, LocalDateTime start, LocalDateTime end);
 
     List<Alim> findByBabyId(Integer babyId);
+
+    List<Alim> findByUserIdAndBabyId(Integer userId, Integer babyId);
 }
