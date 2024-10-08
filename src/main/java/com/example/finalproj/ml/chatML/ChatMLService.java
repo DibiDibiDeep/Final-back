@@ -6,6 +6,8 @@ import com.example.finalproj.domain.chat.context.entity.ChatMessageDTO;
 import com.example.finalproj.domain.memo.entity.Memo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
@@ -25,6 +28,7 @@ import java.util.Map;
 @Service
 public class ChatMLService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ChatMLService.class);
 
     @Value("${ml.service.url}")
     private String mlServiceUrl;
@@ -104,7 +108,7 @@ public class ChatMLService {
         }
     }
 
-    public ChatMessageDTO getResponse(ChatMessageDTO message, String authToken) {
+    public ChatMessageDTO getResponse(ChatMessageDTO message, String authToken, boolean resetHistory) {
         String previousResponse = getPreviousResponse(message.getUserId(), message.getBabyId());
 
         if (isInvalidInput(message.getContent(), previousResponse)) {
@@ -118,6 +122,7 @@ public class ChatMLService {
         requestData.put("timestamp", message.getTimestamp());
         requestData.put("role", message.getRole());
         requestData.put("session_id", authToken);
+        requestData.put("reset_history", resetHistory );
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -143,13 +148,14 @@ public class ChatMLService {
                         authToken
                 );
 
-//                saveResponse(botResponse);
+                if (!resetHistory) {
+                    saveResponse(botResponse);
+                }
                 return botResponse;
             } else {
                 throw new RuntimeException("ML service returned non-200 status: " + responseEntity.getStatusCodeValue());
             }
         } catch (Exception e) {
-//            logger.error("Error processing ML service response: ", e);
             return createErrorResponse("ML 서비스와 통신 중 오류가 발생했습니다.", message);
         }
     }
@@ -178,5 +184,38 @@ public class ChatMLService {
 
     private void saveResponse(ChatMessageDTO response) {
         chatRepository.save(response);
+    }
+
+    public void resetChatHistoryML(Long userId, Long babyId, boolean resetHistory) {
+        logger.info("Resetting chat history for user ID: {}, baby ID: {}, resetHistory: {}", userId, babyId, resetHistory);
+
+        Map<String, Object> requestData = new HashMap<>();
+        requestData.put("user_id", userId);
+        requestData.put("baby_id", babyId);
+        requestData.put("reset_history", resetHistory);
+        requestData.put("text", ""); // ML 서비스가 텍스트 필드를 요구할 경우 빈 문자열 전송
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestData, headers);
+
+        try {
+            String endpoint = mlServiceUrl + "/process_query" + (resetHistory ? "?reset_history=true" : "");
+            ResponseEntity<String> responseEntity = restTemplate.postForEntity(endpoint, request, String.class);
+
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                logger.info("Successfully reset chat history for user ID: {} and baby ID: {}", userId, babyId);
+            } else {
+                logger.error("Failed to reset chat history. ML service returned non-200 status: {}", responseEntity.getStatusCodeValue());
+                throw new RuntimeException("ML service returned non-200 status: " + responseEntity.getStatusCodeValue());
+            }
+        } catch (RestClientException e) {
+            logger.error("Error communicating with ML service while resetting chat history", e);
+            throw new RuntimeException("Error communicating with ML service", e);
+        } catch (Exception e) {
+            logger.error("Unexpected error while resetting chat history", e);
+            throw new RuntimeException("Unexpected error while resetting chat history", e);
+        }
     }
 }

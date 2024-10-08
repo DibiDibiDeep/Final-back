@@ -11,4 +11,6 @@ public interface TodaySumRepository extends JpaRepository<TodaySum, Integer> {
     List<TodaySum> findByUserIdAndBabyId(Integer userId, Integer babyId);
 
     List<TodaySum> findByBabyId(Integer babyId);
+
+    List<TodaySum> getTodaySumByUserId(Integer userId);
 }
