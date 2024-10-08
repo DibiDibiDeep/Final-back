@@ -35,7 +35,6 @@ public class CalendarMLEventListener {
 
             ResponseEntity<String> forwardResponse = restTemplate.postForEntity(forwardUrl, request, String.class);
             System.out.println("Calendar Photo Inf Controller response: " + forwardResponse.getBody());
-            System.out.println("Calendar Photo Inf Controller response: " + forwardResponse.getHeaders());
         } catch (Exception e) {
             System.err.println("Error forwarding ML response: " + e.getMessage());
         }
