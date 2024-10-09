@@ -1,6 +1,6 @@
-package com.example.finalproj.domain.memo.repository;
+package com.example.finalproj.domain.memo.original.repository;
 
-import com.example.finalproj.domain.memo.entity.Memo;
+import com.example.finalproj.domain.memo.original.entity.Memo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

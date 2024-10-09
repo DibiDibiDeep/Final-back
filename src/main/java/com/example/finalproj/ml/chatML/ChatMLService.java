@@ -3,7 +3,7 @@ package com.example.finalproj.ml.chatML;
 import com.example.finalproj.domain.chat.context.repository.ChatRepository;
 import com.example.finalproj.domain.notice.inference.entity.AlimInf;
 import com.example.finalproj.domain.chat.context.entity.ChatMessageDTO;
-import com.example.finalproj.domain.memo.entity.Memo;
+import com.example.finalproj.domain.memo.original.entity.Memo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package com.example.finalproj.domain.memo.entity;
+package com.example.finalproj.domain.memo.original.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
