@@ -60,8 +60,6 @@ public class CalendarService {
             updatedCalendar.setUserId(calendarDetails.getUserId());
             updatedCalendar.setBabyId(calendarDetails.getBabyId());
             updatedCalendar.setCalendarPhotoId(calendarDetails.getCalendarPhotoId());
-            updatedCalendar.setTodayId(calendarDetails.getTodayId());
-            updatedCalendar.setBookId(calendarDetails.getBookId());
             updatedCalendar.setTitle(calendarDetails.getTitle());
             updatedCalendar.setStartTime(calendarDetails.getStartTime());
             updatedCalendar.setEndTime(calendarDetails.getEndTime());

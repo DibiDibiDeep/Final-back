@@ -51,7 +51,6 @@ public class MemoService {
             Memo existingMemo = memo.get();
             existingMemo.setUserId(memoDetails.getUserId());
             existingMemo.setTodayId(memoDetails.getTodayId());
-            existingMemo.setBookId(memoDetails.getBookId());
             existingMemo.setDate(memoDetails.getDate());
             existingMemo.setContent(memoDetails.getContent());
             existingMemo.setSendToML(memoDetails.getSendToML());
