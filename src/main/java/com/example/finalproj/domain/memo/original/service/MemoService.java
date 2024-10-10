@@ -1,7 +1,7 @@
-package com.example.finalproj.domain.memo.service;
+package com.example.finalproj.domain.memo.original.service;
 
-import com.example.finalproj.domain.memo.entity.Memo;
-import com.example.finalproj.domain.memo.repository.MemoRepository;
+import com.example.finalproj.domain.memo.original.entity.Memo;
+import com.example.finalproj.domain.memo.original.repository.MemoRepository;
 import com.example.finalproj.ml.chatML.ChatMLService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

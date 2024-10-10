@@ -1,7 +1,7 @@
-package com.example.finalproj.domain.memo.controller;
+package com.example.finalproj.domain.memo.original.controller;
 
-import com.example.finalproj.domain.memo.entity.Memo;
-import com.example.finalproj.domain.memo.service.MemoService;
+import com.example.finalproj.domain.memo.original.entity.Memo;
+import com.example.finalproj.domain.memo.original.service.MemoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
