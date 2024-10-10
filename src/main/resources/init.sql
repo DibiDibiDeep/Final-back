@@ -116,13 +116,11 @@ CREATE TABLE IF NOT EXISTS calendar (
 CREATE TABLE IF NOT EXISTS memo (
                                     memo_id INT NOT NULL AUTO_INCREMENT,
                                     user_id INT NOT NULL,
-                                    today_id INT NULL,
                                     date DATETIME NULL,
                                     content VARCHAR(255) NULL,
                                     sendToML boolean,
                                     PRIMARY KEY (memo_id),
-                                    CONSTRAINT fk_memo_user FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
-                                    CONSTRAINT fk_memo_today_sum FOREIGN KEY (today_id) REFERENCES Today_sum(today_id) ON DELETE CASCADE
+                                    CONSTRAINT fk_memo_user FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
 );
 
 -- 10. Alim 테이블 생성 및 더미 데이터 삽입
