@@ -23,9 +23,6 @@ public class AlimInf {
     @Column(name = "baby_id")
     private Integer babyId;
 
-    @Column(name = "today_id")
-    private Integer todayId;
-
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -54,13 +51,12 @@ public class AlimInf {
     public AlimInf() {
     }
 
-    public AlimInf(Integer alimInfId, Integer alimId, Integer userId, Integer babyId, Integer todayId, String name, String emotion, String health, String nutrition, String activities, String social, String special, String keywords, String diary, LocalDateTime date, String role) {
+    public AlimInf(Integer alimInfId, Integer alimId, Integer userId, Integer babyId, String name, String emotion, String health, String nutrition, String activities, String social, String special, String keywords, String diary, LocalDateTime date, String role) {
 
         this.alimInfId = alimInfId;
         this.alimId = alimId;
         this.userId = userId;
         this.babyId = babyId;
-        this.todayId = todayId;
         this.name = name;
         this.emotion = emotion;
         this.health = health;
@@ -108,14 +104,6 @@ public class AlimInf {
 
     public void setBabyId(Integer babyId) {
         this.babyId = babyId;
-    }
-
-    public Integer getTodayId() {
-        return todayId;
-    }
-
-    public void setTodayId(Integer todayId) {
-        this.todayId = todayId;
     }
 
     public String getName() {
@@ -239,7 +227,6 @@ public class AlimInf {
                 ", alimId=" + alimId +
                 ", userId=" + userId +
                 ", babyId=" + babyId +
-                ", todayId=" + todayId +
                 ", name='" + name + '\'' +
                 ", emotion='" + emotion + '\'' +
                 ", health='" + health + '\'' +
