@@ -20,9 +20,6 @@ public class Memo {
     @Column(name = "today_id")
     private Integer todayId;
 
-    @Column(name = "book_id")
-    private Integer bookId;
-
     @Column(name = "date")
     private LocalDateTime date;
 
@@ -37,12 +34,11 @@ public class Memo {
     }
 
     // 모든 필드를 포함한 생성자
-    public Memo(Integer memoId, Integer userId, Integer babyId, Integer todayId, Integer bookId, LocalDateTime date, String content, Boolean sendToML) {
+    public Memo(Integer memoId, Integer userId, Integer babyId, Integer todayId, LocalDateTime date, String content, Boolean sendToML) {
         this.memoId = memoId;
         this.userId = userId;
         this.babyId = babyId;
         this.todayId = todayId;
-        this.bookId = bookId;
         this.date = date;
         this.content = content;
         this.sendToML = sendToML;
@@ -81,14 +77,6 @@ public class Memo {
         this.todayId = todayId;
     }
 
-    public Integer getBookId() {
-        return bookId;
-    }
-
-    public void setBookId(Integer bookId) {
-        this.bookId = bookId;
-    }
-
     public LocalDateTime getDate() {
         return date;
     }
@@ -121,7 +109,6 @@ public class Memo {
                 ", userId=" + userId +
                 ", babyId=" + babyId +
                 ", todayId=" + todayId +
-                ", bookId=" + bookId +
                 ", date=" + date +
                 ", content='" + content + '\'' +
                 ", sendToML=" + sendToML +

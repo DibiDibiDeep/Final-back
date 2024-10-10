@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS user (
                                     name VARCHAR(255) NOT NULL,
                                     email VARCHAR(255) NOT NULL,
                                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                    privacy_policy_accepted VARCHAR(255),
                                     new_user boolean,
+                                    has_baby boolean,
                                     PRIMARY KEY (user_id)
 );
 
@@ -29,12 +29,13 @@ CREATE TABLE IF NOT EXISTS baby (
 CREATE TABLE IF NOT EXISTS book (
                                     book_id INT NOT NULL AUTO_INCREMENT,
                                     user_id INT NOT NULL,
-                                    book_inf_id INT,
+                                    baby_id INT NOT NULL,
                                     title VARCHAR(255) NOT NULL,
                                     cover_path VARCHAR(255) NOT NULL,
                                     generated_date DATETIME NOT NULL,
                                     PRIMARY KEY (book_id),
-                                    CONSTRAINT fk_book_user FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE
+                                    CONSTRAINT fk_book_user FOREIGN KEY (user_id) REFERENCES Alim_inf(user_id) ON DELETE CASCADE,
+                                    CONSTRAINT fk_book_user FOREIGN KEY (baby_id) REFERENCES Alim_inf(baby_id) ON DELETE CASCADE
 );
 
 -- 4. Baby_Photo 테이블 생성 및 더미 데이터 삽입
@@ -83,14 +84,23 @@ CREATE TABLE IF NOT EXISTS calendar_Photo (
                                               CONSTRAINT fk_calendar_photo_baby FOREIGN KEY (baby_id) REFERENCES Baby(baby_id) ON DELETE CASCADE
 );
 
+-- Calendar_Photo_Inf 테이블 생성 및 더미 데이터 삽입
+CREATE TABLE IF NOT EXISTS calendar_Photo_Inf (
+                                              calendar_photo_inf_id INT NOT NULL AUTO_INCREMENT,
+                                              user_id INT NOT NULL,
+                                              baby_id INT NOT NULL,
+                                              calendar_photo_id INT NOT NULL,
+                                              inference_date DATETIME NULL,
+                                              inference_result TEXT NULL,
+                                              PRIMARY KEY (calendar_photo_inf_id)
+);
+
 -- 8. Calendar 테이블 생성 및 더미 데이터 삽입
 CREATE TABLE IF NOT EXISTS calendar (
                                         calendar_id INT NOT NULL AUTO_INCREMENT,
                                         user_id INT NOT NULL,
                                         baby_id INT NOT NULL,
                                         calendar_photo_id INT NULL,
-                                        today_id INT NULL,
-                                        book_id INT NULL,
                                         title VARCHAR(255) NULL,
                                         start_time DATETIME NULL,
                                         end_time DATETIME NULL,
@@ -98,9 +108,7 @@ CREATE TABLE IF NOT EXISTS calendar (
                                         PRIMARY KEY (calendar_id),
                                         CONSTRAINT fk_calendar_user FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
                                         CONSTRAINT fk_calendar_baby FOREIGN KEY (baby_id) REFERENCES Baby(baby_id) ON DELETE CASCADE,
-                                        CONSTRAINT fk_calendar_calendar_photo FOREIGN KEY (calendar_photo_id) REFERENCES Calendar_Photo(calendar_photo_id) ON DELETE CASCADE,
-                                        CONSTRAINT fk_calendar_today_sum FOREIGN KEY (today_id) REFERENCES Today_sum(today_id) ON DELETE CASCADE,
-                                        CONSTRAINT fk_calendar_book FOREIGN KEY (book_id) REFERENCES Book(book_id) ON DELETE CASCADE
+                                        CONSTRAINT fk_calendar_calendar_photo FOREIGN KEY (calendar_photo_id) REFERENCES Calendar_Photo(calendar_photo_id) ON DELETE CASCADE
 );
 
 
@@ -109,14 +117,12 @@ CREATE TABLE IF NOT EXISTS memo (
                                     memo_id INT NOT NULL AUTO_INCREMENT,
                                     user_id INT NOT NULL,
                                     today_id INT NULL,
-                                    book_id INT NULL,
                                     date DATETIME NULL,
                                     content VARCHAR(255) NULL,
                                     sendToML boolean,
                                     PRIMARY KEY (memo_id),
                                     CONSTRAINT fk_memo_user FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
-                                    CONSTRAINT fk_memo_today_sum FOREIGN KEY (today_id) REFERENCES Today_sum(today_id) ON DELETE CASCADE,
-                                    CONSTRAINT fk_memo_book FOREIGN KEY (book_id) REFERENCES Book(book_id) ON DELETE CASCADE
+                                    CONSTRAINT fk_memo_today_sum FOREIGN KEY (today_id) REFERENCES Today_sum(today_id) ON DELETE CASCADE
 );
 
 -- 10. Alim 테이블 생성 및 더미 데이터 삽입
@@ -137,7 +143,6 @@ CREATE TABLE IF NOT EXISTS alim_inf (
                                         alim_id INT NOT NULL,
                                         user_id INT NOT NULL,
                                         baby_id INT NOT NULL,
-                                        today_id INT NULL,
                                         name VARCHAR(255) NULL,
                                         emotion VARCHAR(255) NULL,
                                         health VARCHAR(255) NULL,
@@ -152,7 +157,6 @@ CREATE TABLE IF NOT EXISTS alim_inf (
                                         PRIMARY KEY (aliminf_id),
                                         CONSTRAINT fk_alim_inf_alim FOREIGN KEY (alim_id) REFERENCES Alim(alim_id) ON DELETE CASCADE,
                                         CONSTRAINT fk_alim_inf_user FOREIGN KEY (user_id) REFERENCES User(user_id) ON DELETE CASCADE,
-                                        CONSTRAINT fk_alim_inf_baby FOREIGN KEY (baby_id) REFERENCES Baby(baby_id) ON DELETE CASCADE,
-                                        CONSTRAINT fk_alim_inf_today_sum FOREIGN KEY (today_id) REFERENCES Today_sum(today_id) ON DELETE CASCADE
+                                        CONSTRAINT fk_alim_inf_baby FOREIGN KEY (baby_id) REFERENCES Baby(baby_id) ON DELETE CASCADE
 );
 

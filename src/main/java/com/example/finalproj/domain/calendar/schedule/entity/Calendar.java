@@ -19,12 +19,6 @@ public class Calendar {
     @Column(name = "calendar_photo_id")
     private Integer calendarPhotoId;
 
-    @Column(name = "today_id")
-    private Integer todayId;
-
-    @Column(name = "book_id")
-    private Integer bookId;
-
     private String title;
 
     @Column(name = "start_time")
@@ -48,8 +42,6 @@ public class Calendar {
         this.userId = userId;
         this.babyId = babyId;
         this.calendarPhotoId = calendarPhotoId;
-        this.todayId = todayId;
-        this.bookId = bookId;
         this.title = title;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -89,22 +81,6 @@ public class Calendar {
 
     public void setCalendarPhotoId(Integer calendarPhotoId) {
         this.calendarPhotoId = calendarPhotoId;
-    }
-
-    public Integer getTodayId() {
-        return todayId;
-    }
-
-    public void setTodayId(Integer todayId) {
-        this.todayId = todayId;
-    }
-
-    public Integer getBookId() {
-        return bookId;
-    }
-
-    public void setBookId(Integer bookId) {
-        this.bookId = bookId;
     }
 
     public String getTitle() {
@@ -170,8 +146,6 @@ public class Calendar {
                 ", userId=" + userId +
                 ", babyId=" + babyId +
                 ", calendarPhotoId=" + calendarPhotoId +
-                ", todayId=" + todayId +
-                ", bookId=" + bookId +
                 ", title='" + title + '\'' +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
