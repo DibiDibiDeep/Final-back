@@ -3,7 +3,7 @@
 ## 역할
 |조은성 |정현수
 |:-:|:-:|
-|<img src='https://github.com/user-attachments/assets/f4f2a101-e705-4c67-826b-9591fe55259a' height=160 width=125></img>|<img src='https://github.com/user-attachments/assets/348a33f6-0b40-4d61-8108-c26f985f13d6' height=160 width=125></img>|<img src='https://github.com/user-attachments/assets/0f4ad3c1-1c59-43be-b332-5fba72660a89' height=160 width=125></img>|
+|<img src='https://github.com/user-attachments/assets/f4f2a101-e705-4c67-826b-9591fe55259a' height=160 width=125></img>|<img src='https://github.com/user-attachments/assets/348a33f6-0b40-4d61-8108-c26f985f13d6' height=160 width=125></img>|<img src='https://github.com/user-attachments/assets/cf72ea75-d8f6-4c7b-899e-fcd7d69ce455' height=160 width=125></img>|
 |- backend api 개발 (캘린더, 챗봇, 알림장)<br>- ml서비스와 연동(캘린더, 챗봇, 알림장) <br> - SpringSecurity 구현<br>- <br> |-backend api 개발<br>- 개발 환경 표준화<br>- Docker 컨테이너화<br>- 모니터링 및 이슈파악
 
 ## API 디렉토리 구조
