@@ -121,6 +121,6 @@ redis-cli ping
 
 결과가 PONG이면 설치 완료
 
-#### api 명세서, ERD, 시스템/인프라 아키텍처 Wiki 참조
+## api 명세서, ERD, 시스템/인프라 아키텍처 Wiki 참조
 <a href="https://github.com/DibiDibiDeep/final-project/wiki">DIBIDIBIDEEP-Wiki</a>
 
