@@ -3,8 +3,9 @@
 ## 역할
 |조은성 |정현수
 |:-:|:-:|
-|<img src='https://github.com/user-attachments/assets/f4f2a101-e705-4c67-826b-9591fe55259a' height=160 width=125></img>|<img src='https://github.com/user-attachments/assets/348a33f6-0b40-4d61-8108-c26f985f13d6' height=160 width=125></img>|<img src='https://github.com/user-attachments/assets/cf72ea75-d8f6-4c7b-899e-fcd7d69ce455' height=160 width=125></img>|
-|- backend api 개발 (캘린더, 챗봇, 알림장)<br>- ml서비스와 연동(캘린더, 챗봇, 알림장) <br> - SpringSecurity 구현<br>- <br> |-backend api 개발(동화 구현)<br>- ml서비스와 연동(동화 구현) <br>- 문서화(api 명세서)
+|<img src='https://github.com/user-attachments/assets/f4f2a101-e705-4c67-826b-9591fe55259a' height=160 width=125></img>|<img src='https://github.com/user-attachments/assets/348a33f6-0b40-4d61-8108-c26f985f13d6' height=160 width=125></img>|<img src='![KakaoTalk_20241012_185939969](https://github.com/user-attachments/assets/eadc750b-bd49-4abc-aa2b-78904b0c6fbd)
+' height=160 width=125></img>|
+|- backend api 개발 (캘린더, 챗봇, 알림장)<br>- ml서비스와 연동(캘린더, 챗봇, 알림장) <br> - SpringSecurity 구현|-backend api 개발(동화 구현)<br>- ml서비스와 연동(동화 구현) <br>- 문서화(api 명세서)
 
 ## API 디렉토리 구조
 ```
